@@ -13,3 +13,12 @@ setup(
     url = 'http://docs.mosky.tw/clime',
     py_modules = ['clime'],
 )
+
+import os
+import stat
+import glob
+
+climepys = glob.glob('/usr/local/lib/python2.*/dist-packages/clime.py')
+climepys.sort()
+os.symlink(climepys[-1], '/usr/bin/clime')
+os.chmod('/usr/bin/clime', 0o755)
