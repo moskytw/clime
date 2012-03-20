@@ -47,6 +47,9 @@ command.
 
 .. code-block:: bash
 
+    $ sudo ln -s /usr/local/lib/python<VERSION>/clime.py /usr/bin/clime
+    $ sudo chmod /usr/bin/clime 755
+
     $ clime <module_name> <args_for_module>
 
 Examples
