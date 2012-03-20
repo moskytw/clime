@@ -1,2 +1,2 @@
-_*
 *.pyc
+/docs/_build
