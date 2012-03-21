@@ -71,22 +71,22 @@ Examples
 
 Here is a example of a script uses Clime:
 
-    ::
+::
 
-        # file: example/singlecmd.py
+    # file: example/singlecmd.py
 
-        '''Here is docstring of module.'''
+    '''Here is docstring of module.'''
 
-        def onlyme(s, b=True, l=None):
-            '''Here is docstring of function.'''
+    def onlyme(s, b=True, l=None):
+        '''Here is docstring of function.'''
 
-            print 's:', s
-            print 'b:', b
-            print 'l:', l
+        print 's:', s
+        print 'b:', b
+        print 'l:', l
 
-        if __name__ == '__main__':
-            import clime
-            clime.main()
+    if __name__ == '__main__':
+        import clime
+        clime.main()
 
 After added the last 2 lines, this script is a CLI program now. Try to use
 it on shell.
