@@ -179,7 +179,7 @@ class Command(object):
             hyphen = '-' * (1 + (len(alias) > 1))
             val = (' VAL', '')[isinstance(self.defaults.get(real, None), bool)]
             usage += '[%s%s%s] ' % (hyphen, alias, val)
-        for argname in self.argnames[:-len(self.defaults) or 1]:
+        for argname in self.argnames[:-len(self.defaults) or None]:
             usage += '%s ' % argname
         if self.varname:
             usage += '[%s]... ' % self.varname
