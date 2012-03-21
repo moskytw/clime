@@ -6,5 +6,6 @@ docs/Makefile
 docs/conf.py
 docs/deeper.rst
 docs/index.rst
+examples/math.py
 examples/prog.py
 examples/singlecmd.py
