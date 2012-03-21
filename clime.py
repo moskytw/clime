@@ -37,6 +37,9 @@ def autotype(s):
         return s
 
 def getargspecfromdoc(func):
+    '''Parse the docstring of func to get the argsepc.
+    
+    .. versionadded:: 0.1.1'''
 
     def strbetween(s, a, b):
         return s[s.find(a): s.rfind(b)]
@@ -118,6 +121,11 @@ class Command(object):
 
         >>> test_cmd('-bbb -x first -x second -x third')
         3 ['first', 'second', 'third']
+
+        .. versionadded:: 0.1.1 
+            Support the type of `built-in function`
+            (``types.BuiltinFunctionType``).
+
         '''
 
         if isinstance(usrargs, str):
