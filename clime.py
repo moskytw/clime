@@ -50,8 +50,15 @@ class Command(object):
 
     def __init__(self, func, aliases=None):
         self.func = func
+        self.opts = None
+        self.argnames = None
+        self.varname = None
+        self.defaults = None
+        try:
+            spec = inspect.getargspec(func)
+        except TypeError:
+            return
 
-        spec = inspect.getargspec(func)
         self.argnames = spec[0] or []
         self.varname  = spec[1]
         defvals       = spec[3] or []
@@ -60,7 +67,7 @@ class Command(object):
         self.opts = ( aliases or getattr(func, 'aliases', {}) ).copy()
         for name in self.defaults:
             self.opts[ name.replace('_', '-') ] = name
-        
+
     def parse(self, usrargs):
         '''Parse the `usrargs`, and return a tuple (`posargs`, `optargs`).
 
@@ -171,6 +178,8 @@ class Command(object):
 
             files [--mode VAL] [paths]...
         '''
+        if self.opts==None:
+            return None
         if ignore_cmd:
             usage = '%s ' % sys.argv[0]
         else:
@@ -179,6 +188,8 @@ class Command(object):
             hyphen = '-' * (1 + (len(alias) > 1))
             val = (' VAL', '')[isinstance(self.defaults.get(real, None), bool)]
             usage += '[%s%s%s] ' % (hyphen, alias, val)
+        if self.defaults == None:
+            return None
         for argname in self.argnames[:-len(self.defaults) or 1]:
             usage += '%s ' % argname
         if self.varname:
@@ -222,7 +233,12 @@ class Program(object):
 
     def get_cmds_usages(self):
         '''Return a list contains the usage of the functions in this program.'''
-        return [ Command(func).get_usage() for func in self.funcs.values() ]
+        cmdlst = []
+        for func in self.funcs.values():
+            c = Command(func)
+            if c:
+               cmdlst.append(c.get_usage())
+        return cmdlst
 
     def get_tip(self, func=None):
         '''Return the 'Try ... for more information.' tip.'''
@@ -241,11 +257,12 @@ class Program(object):
         if self.default:
             usages.insert(0, Command(self.default).get_usage(True))
         for i, usage in enumerate(usages):
+            if usage == None: continue
             if i == 0:
                 print 'usage:',
             else:
                 print '   or:',
-            print usage                
+            print usage
 
         doc = getdoc(self.module)
         if doc:
@@ -277,7 +294,6 @@ class Program(object):
             sys.exit(2)
 
         cmd = Command(func)
-
         try:
             val = cmd(usrargs)
         except (getopt.GetoptError, TypeError), err:
