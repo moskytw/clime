@@ -42,8 +42,8 @@ command.
 
 ::
 
-    $ sudo ln -s /usr/local/lib/python<VERSION>/clime.py /usr/bin/clime
-    $ sudo chmod /usr/bin/clime 755
+    $ sudo ln -s /usr/local/lib/python<VERSION>/dist-packages/clime.py /usr/bin/clime
+    $ sudo chmod 755 /usr/bin/clime 
 
     $ clime <module_name> <args_for_module>
 
