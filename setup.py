@@ -1,5 +1,4 @@
 from distutils.core import setup
-import clime
 
 long_description = open('README.rst').read()
 
