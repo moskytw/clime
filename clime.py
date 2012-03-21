@@ -48,11 +48,12 @@ def getargspecfromdoc(func):
     argpart = strbetween(argspecdoc, '(', ')')
     args = argpart.split(',')
     args = [ arg.strip(' ()[]') for arg in args ]
+    args = [ arg for arg in args if arg ]
 
     defaultpart = strbetween(argspecdoc, '[', ']')
     defaultcount = defaultpart.count(',')
 
-    return (args, None, None, (None,) * defaultcount or None)
+    return (args or None, None, None, (None,) * defaultcount or None)
 
 class Command(object):
     '''Make a function to accpect arguments from command line.
