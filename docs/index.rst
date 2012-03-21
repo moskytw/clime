@@ -14,13 +14,19 @@ functions into a multi-command CLI program.
 Installation
 ------------
 
-Use ``pip`` to install Clime from `PyPI <http://pypi.python.org/>`_.
+Here are two places to get the Clime. 
+
+The stable version will be upload to `PyPI`_.  Install with ``pip`` command.  
 
 .. code-block:: bash
 
     $ sudo pip install clime
 
-Or visit our page for more methods of installation.
+Clime is also on GitHub_. Visit `moskied/clime`_ for the lastest version.
+
+.. _GitHub: http://github.com/
+.. _`moskied/clime`: https://github.com/moskied/clime
+.. _PyPI: http://pypi.python.org/
 
 CLI-ize ME!
 -----------
