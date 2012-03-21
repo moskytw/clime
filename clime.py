@@ -76,7 +76,7 @@ class Command(object):
         >>>     print mode, paths
         >>> 
         >>> files_cmd = Command(files)
-        >>> files_cmd.parse('--mode w f1.txt f2.txt'])
+        >>> files_cmd.parse('--mode w f1.txt f2.txt')
         (['w', 'f1.txt', 'f2.txt'], {})
         >>> files_cmd('--mode w f1.txt f2.txt')
         w ('f1.txt', 'f2.txt')    
