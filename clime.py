@@ -44,7 +44,7 @@ def getargspecfromdoc(func):
     def strbetween(s, a, b):
         return s[s.find(a): s.rfind(b)]
 
-    argspecdoc = func.__doc__.split('\n')[0]
+    argspecdoc = (inspect.getdoc(func) or '').split('\n')[0]
     argpart = strbetween(argspecdoc, '(', ')')
     args = argpart.split(',')
     args = [ arg.strip(' ()[]') for arg in args ]
