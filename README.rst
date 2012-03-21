@@ -29,7 +29,7 @@ Clime is hosted on two different platform, PyPI_ and GitHub_.
    
      $ git clone git://github.com/moskied/clime.git
      
-   to clone a Clime repository or download manually from GitHub_.
+   to clone a Clime repository. Or download manually from GitHub_.
 
 .. _GitHub:
     http://github.com/moskied/clime
