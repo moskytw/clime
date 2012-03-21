@@ -37,7 +37,7 @@ def autotype(s):
         return s
 
 def getargspecfromdoc(func):
-    '''Parse the docstring of func to get the argsepc.
+    '''Parse the docstring of `func` and return `argspec`.
     
     .. versionadded:: 0.1.1'''
 
