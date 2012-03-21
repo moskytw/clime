@@ -91,7 +91,7 @@ Use it in shell:
 
     $ python singlecmd.py test -bbb -l one -l two -l three
     s: test
-    b: 2
+    b: 3
     l: ['one', 'two', 'three']
 
 You can find more examples under the ``clime/examples`` of source tarball of Clime.

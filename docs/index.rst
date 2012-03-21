@@ -96,7 +96,7 @@ Use it in shell:
 
     $ python singlecmd.py test -bbb -l one -l two -l three
     s: test
-    b: 2
+    b: 3
     l: ['one', 'two', 'three']
 
 See the `clime.Command.parse <deeper.html#clime.Command.parse>`_ section for more details
