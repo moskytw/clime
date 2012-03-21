@@ -190,8 +190,8 @@ class Command(object):
                 posargs.insert(pos, val)
                 del optargs[argname]
 
-        # process for Built-in Function
-        # because the Built-in Function only accpect posargs
+        # map all of the optargs to posargs for `built-in function`,
+        # because the `built-in function` only accpects posargs
         if isinstance(self.func, BuiltinFunctionType):
             posargs.extend([None] * (len(self.argnames) - len(posargs)))
             for key, value in optargs.items():
