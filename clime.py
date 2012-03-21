@@ -4,6 +4,7 @@
 import sys, getopt
 import inspect
 import textwrap
+from types import BuiltinFunctionType
 
 def getdoc(obj):
     r'''Get the documentation of `obj`.
@@ -35,6 +36,21 @@ def autotype(s):
     except ValueError:
         return s
 
+def getargspecfromdoc(func):
+
+    def strbetween(s, a, b):
+        return s[s.find(a): s.rfind(b)]
+
+    argspecdoc = func.__doc__.split('\n')[0]
+    argpart = strbetween(argspecdoc, '(', ')')
+    args = argpart.split(',')
+    args = [ arg.strip(' ()[]') for arg in args ]
+
+    defaultpart = strbetween(argspecdoc, '[', ']')
+    defaultcount = defaultpart.count(',')
+
+    return (args, None, None, (None,) * defaultcount or None)
+
 class Command(object):
     '''Make a function to accpect arguments from command line.
     
@@ -51,7 +67,11 @@ class Command(object):
     def __init__(self, func, aliases=None):
         self.func = func
 
-        spec = inspect.getargspec(func)
+        if isinstance(func, BuiltinFunctionType):
+            spec = getargspecfromdoc(func)
+        else:
+            spec = inspect.getargspec(func)
+
         self.argnames = spec[0] or []
         self.varname  = spec[1]
         defvals       = spec[3] or []
@@ -161,6 +181,18 @@ class Command(object):
             else:
                 posargs.insert(pos, val)
                 del optargs[argname]
+
+        # process for Built-in Function
+        # because the Built-in Function only accpect posargs
+        if isinstance(self.func, BuiltinFunctionType):
+            posargs.extend([None] * (len(self.argnames) - len(posargs)))
+            for key, value in optargs.items():
+                posargs[self.argnames.index(key)] = value
+            optargs = {}
+            try:
+                posargs = posargs[:-posargs.index(None) or None]
+            except ValueError:
+                pass
 
         return posargs, optargs
 
