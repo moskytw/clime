@@ -53,7 +53,7 @@ def getargspecfromdoc(func):
     args = [ arg for arg in args if arg ]
 
     defaultpart = strbetween(argspecdoc, '[', ']')
-    defaultcount = defaultpart.count(',')
+    defaultcount = len([d for d in defaultpart.split(',') if d.strip('[]')])
 
     return (args or None, None, None, (None,) * defaultcount or None)
 
