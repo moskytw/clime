@@ -6,7 +6,7 @@ import inspect
 import textwrap
 from types import BuiltinFunctionType
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 def getdoc(obj):
     r'''Get the documentation of `obj`.
