@@ -14,8 +14,6 @@ class TestClime(unittest.TestCase):
 
     def test_argspecfromdoc(self):
 
-        fakef = lambda: ''
-
         docs = [
             None,
             '',
@@ -44,11 +42,12 @@ class TestClime(unittest.TestCase):
             (['a', 'b'], 2),
         ]
 
+        f = lambda: ''
         trans = lambda x: (x[0], len(x[-1] or []))
 
         for doc, answer in zip(docs, answers):
-            fakef.__doc__ = doc
-            self.assertEqual(trans(clime.getargspecfromdoc( fakef )), answer)
+            f.__doc__ = doc
+            self.assertEqual(trans(clime.getargspecfromdoc( f )), answer)
 
 
 if __name__ == '__main__':
