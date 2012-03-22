@@ -126,10 +126,13 @@ about argument parsing.
 More examples are in the `clime/examples`_.
 
 The basic usage of Clime is end here. If you want to know more details or
-help Clime, please visit the below page
+help Clime, please visit `Take a Deeper Look at Clime`_.
 
 .. _`clime.Command.parse`:
     http://docs.mosky.tw/clime/deeper.html#clime.Command.parse
 
 .. _`clime/examples`:
     https://github.com/moskied/clime/tree/master/examples
+
+.. _`Take a Deeper Look at Clime`:
+    http://docs.mosky.tw/clime/deeper.html
