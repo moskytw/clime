@@ -76,18 +76,24 @@ class Command(object):
     '''Make a function, a built-in function or a bound method to accpect
     arguments from command line.
     
-    You can set the aliases is a `dict` which key is the argument name of
-    `func`; the value is the alias of this key.
+    You can set the aliases in a `dict` in ``{alias: real}`` format.
     
     Or you can set aliases as a attribute of the `func`. Example: ::
         
         def cmd(long_option=None): pass
         cmd.aliases = {'s': 'long_option'}
 
+    .. versionadded: 0.1.3
+       Arguments, `name` and `doc`.
     '''
 
-    def __init__(self, func, aliases=None):
+    def __init__(self, func, aliases=None, name=None, doc=None):
+
+        ul2hp = lambda s: s.replace('_', '-')
+
         self.func = func
+        self.name = name or ul2hp( func.__name__ )
+        self.doc  = getdoc(func)
 
         spec = getargspec(func)
 
@@ -101,7 +107,7 @@ class Command(object):
 
         self.opts = ( aliases or getattr(func, 'aliases', {}) ).copy()
         for name in self.defaults:
-            self.opts[ name.replace('_', '-') ] = name
+            self.opts[ ul2hp( name ) ] = name
         
     def parse(self, usrargs):
         '''Parse the `usrargs`, and return a tuple (`posargs`, `optargs`).
@@ -233,7 +239,7 @@ class Command(object):
         if ignore_cmd:
             usage = '%s ' % sys.argv[0]
         else:
-            usage = '%s %s ' % (sys.argv[0], self.func.__name__)
+            usage = '%s %s ' % (sys.argv[0], self.name)
         for alias, real in self.opts.iteritems():
             hyphen = '-' * (1 + (len(alias) > 1))
             val = (' VAL', '')[isinstance(self.defaults.get(real, None), bool)]
@@ -245,14 +251,13 @@ class Command(object):
         return usage
 
     def help(self):
-        '''Print help to stdout. Conatins usage and the docstring of this
+        '''Print help to stdout. Contains usage and the docstring of this
         function.'''
 
         print 'usage:', self.get_usage()
-        doc = getdoc(self.func)
-        if doc:
+        if self.doc:
             print
-            print doc
+            print self.doc
 
     def __call__(self, usrargs):
         '''Parse `usargs` and call the function.'''
