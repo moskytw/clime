@@ -42,12 +42,12 @@ class TestClime(unittest.TestCase):
             (['a', 'b'], 2),
         ]
 
-        f = lambda: ''
+        f = type('Dummy', tuple(), {'__doc__': None})()
         trans = lambda x: (x[0], len(x[-1] or []))
 
         for doc, answer in zip(docs, answers):
             f.__doc__ = doc
-            self.assertEqual(trans(clime.getargspecfromdoc( f )), answer)
+            self.assertEqual(trans(clime.getargspec( f )), answer)
 
 
 if __name__ == '__main__':

@@ -39,9 +39,25 @@ def autotype(s):
         return s
 
 def getargspecfromdoc(func):
-    '''Parse the docstring of `func` and return `argspec`.
+    '''
+    .. deprecated:: 0.1.3
+       Use :func:`getargspec` instead.
+
+    *Removed.*
+    '''
+
+def getargspec(func):
+    '''Get the argument specification of the `func`.
     
-    .. versionadded:: 0.1.1'''
+    `func` is a Python function, built-in function or bound method.
+    
+    It get the argument specification by parsing documentation of the
+    function if `func` is a built-in function.
+    
+    .. versionadded:: 0.1.3'''
+
+    if inspect.isfunction(func):
+        return inspect.getargspec(func)
 
     def strbetween(s, a, b):
         return s[s.find(a): s.rfind(b)]
@@ -58,7 +74,8 @@ def getargspecfromdoc(func):
     return (args or None, None, None, (None,) * defaultcount or None)
 
 class Command(object):
-    '''Make a function to accpect arguments from command line.
+    '''Make a function, a built-in function or a bound method to accpect
+    arguments from command line.
     
     You can set the aliases is a `dict` which key is the argument name of
     `func`; the value is the alias of this key.
@@ -73,15 +90,15 @@ class Command(object):
     def __init__(self, func, aliases=None):
         self.func = func
 
-        if isinstance(func, BuiltinFunctionType):
-            spec = getargspecfromdoc(func)
-        else:
-            spec = inspect.getargspec(func)
+        spec = getargspec(func)
 
         self.argnames = spec[0] or []
         self.varname  = spec[1]
         defvals       = spec[3] or []
         self.defaults = dict( zip(self.argnames[::-1], defvals[::-1]) )
+
+        if inspect.ismethod(func):
+            self.argnames.pop(0)
 
         self.opts = ( aliases or getattr(func, 'aliases', {}) ).copy()
         for name in self.defaults:
