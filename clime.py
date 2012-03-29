@@ -348,7 +348,7 @@ class Program(object):
         
         if not usrargs or usrargs[0] == '--help':
             self.help()
-            sys.exit(0)
+            return 0
 
         try:
             cmd = self.cmds[usrargs[0]]
@@ -360,7 +360,7 @@ class Program(object):
         if cmd is None:
             print '%s: No command \'%s\' found.' % (sys.argv[0], usrargs[0])
             self.help_error()
-            sys.exit(2)
+            return 2
 
         try:
             val = cmd(usrargs)
@@ -372,13 +372,12 @@ class Program(object):
                 print '%s: %s' % (sys.argv[0], str(err))
                 self.help_error(cmd)
 
-            sys.exit(2)
+            return 2
         else:
             if val: print val
-            sys.exit(0)
+            return 0
 
-
-def main(obj=None, defname=None, doc=None):
+def main(obj=None, defname=None, doc=None, exit=False):
     '''Use it to simply convert your program.
 
     `obj` is the target you want to convert. `obj` can be a moudle, a class
@@ -395,7 +394,11 @@ def main(obj=None, defname=None, doc=None):
     '''
 
     prog = Program(obj or sys.modules['__main__'], defname, doc)
-    prog(sys.argv[1:])
+    status = prog(sys.argv[1:])
+    if exit:
+        sys.exit(status)
+    else:
+        return status
 
 if __name__ == '__main__':
 
