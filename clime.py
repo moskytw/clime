@@ -269,35 +269,52 @@ class Command(object):
         return self.func(*posargs, **optargs)
 
 class Program(object):
-    '''Convert module into multi-command CLI program.
+    '''Convert a module, class or dict into multi-command CLI program.
     
-    `default` is the default function when a user calls `Program` object without command.'''
+    .. versionchanged:: 0.1.3
+       Argument `module` is renamed to `obj`. The types it accpect is more
+       specifically.
 
-    def __init__(self, module=None, default=None):
+    .. versionchanged:: 0.1.3
+       Use the name of default command, `defname` instead of `default`.
+    
+    .. versionadded:: 0.1.3
+       Argument `doc`.'''
 
-        self.default = default
-        self.module  = module or sys.modules['__main__']
+    def __init__(self, obj, defname=None, doc=None):
 
-        self.funcs = {}
-        for name, attr in self.module.__dict__.iteritems():
-            if not callable(attr):   continue
+        if not isinstance(obj, dict):
+            self.doc = doc or getdoc(obj)
+            obj = dict( (name, getattr(obj, name)) for name in dir(obj) )
+        else:
+            self.doc = doc
+
+        self.defname = defname
+
+        self.cmds = {}
+        for name, ref in obj.items():
+            if not callable(ref)   : continue
             if name.startswith('_'): continue
-            self.funcs[name] = attr
+            if inspect.isclass(ref): continue 
 
-        if len(self.funcs) == 1 and self.default is None:
-            self.default = self.funcs.values()[0]
+            self.cmds[name] = Command(ref, name=name)
+
+        if len(self.cmds) == 1 and self.defname is None:
+            self.defname = self.cmds.keys()[0]
 
     def get_cmds_usages(self):
         '''Return a list contains the usage of the functions in this program.'''
-        return [ Command(func).get_usage() for func in self.funcs.values() ]
+        return [ cmd.get_usage() for cmd in self.cmds.values() ]
 
-    def get_tip(self, func=None):
-        '''Return the 'Try ... for more information.' tip.'''
+    def get_tip(self, cmd=None):
+        '''Return the 'Try ... for more information.' tip.
+        
+        .. versionchanged:: 0.1.3
+           Take a command as argument instead of a function.'''
 
-        if not func:
-            target = sys.argv[0]
-        else:
-            target = '%s %s' % (sys.argv[0], func.__name__)
+        target = sys.argv[0]
+        if cmd:
+            target += ' ' + cmd.name
 
         return 'Try `%s --help` for more information.' % target
 
@@ -305,8 +322,8 @@ class Program(object):
         '''Print the complete help of this program.'''
 
         usages = self.get_cmds_usages()
-        if self.default:
-            usages.insert(0, Command(self.default).get_usage(True))
+        if self.defname:
+            usages.insert(0, self.cmds[self.defname].get_usage(isdefault=True))
         for i, usage in enumerate(usages):
             if i == 0:
                 print 'usage:',
@@ -314,15 +331,17 @@ class Program(object):
                 print '   or:',
             print usage                
 
-        doc = getdoc(self.module)
-        if doc:
+        if self.doc:
             print
-            print doc
+            print self.doc
 
-    def help_error(self, func=None):
-        '''Print the tip.'''
+    def help_error(self, cmd=None):
+        '''Print the tip.
 
-        print self.get_tip(func)
+        .. versionchanged:: 0.1.3
+           Take a command as argument instead of a function.'''
+
+        print self.get_tip(cmd)
 
     def __call__(self, usrargs):
         '''Use it as a CLI program.'''
@@ -332,18 +351,16 @@ class Program(object):
             sys.exit(0)
 
         try:
-            func = self.funcs[usrargs[0]]
+            cmd = self.cmds[usrargs[0]]
         except KeyError:
-            func = self.default
+            cmd = self.cmds.get(self.defname, None)
         else:
             usrargs.pop(0)
 
-        if func is None:
+        if cmd is None:
             print '%s: No command \'%s\' found.' % (sys.argv[0], usrargs[0])
             self.help_error()
             sys.exit(2)
-
-        cmd = Command(func)
 
         try:
             val = cmd(usrargs)
@@ -353,7 +370,7 @@ class Program(object):
                 cmd.help()
             else:
                 print '%s: %s' % (sys.argv[0], str(err))
-                self.help_error(func)
+                self.help_error(cmd)
 
             sys.exit(2)
         else:
@@ -361,15 +378,23 @@ class Program(object):
             sys.exit(0)
 
 
-def main(default=None, module=None):
+def main(obj=None, defname=None, doc=None):
     '''Use it to simply convert your program.
+
+    `obj` is the target you want to convert. `obj` can be a moudle, a class
+    or a dict. If `obj` is None, it uses the `__main__` module (the
+    first-running Python program).
     
-    `default` is the default function if call this program without command.
+    `defname` is the name of default command, an attribute name or a key in
+    `obj`.
 
-    `module` is the module you want to convert. Default is the '__main__' in
-    ``sys.modules``.'''
+    `doc` is the addational information you want to show on help. Use the
+    docstring of `obj` by default.
 
-    prog = Program(module, default)
+    `exit`, True if you want to exit entire program after calling it.
+    '''
+
+    prog = Program(obj or sys.modules['__main__'], defname, doc)
     prog(sys.argv[1:])
 
 if __name__ == '__main__':
@@ -380,7 +405,4 @@ if __name__ == '__main__':
         prog = Program(module)
         prog(sys.argv[2:])
 
-    fakemodule = lambda: ''
-    fakemodule.clime = clime
-
-    main(module=fakemodule)
+    main({'clime': clime})
