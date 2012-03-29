@@ -248,7 +248,7 @@ class Command(object):
             val = (' VAL', '')[isinstance(self.defaults.get(real, None), bool)]
             usage += '[%s%s%s] ' % (hyphen, alias, val)
         for argname in self.argnames[:-len(self.defaults) or None]:
-            usage += '%s ' % argname
+            usage += '%s ' % argname.upper()
         if self.varname:
             usage += '[%s]... ' % self.varname
         return usage
