@@ -229,14 +229,17 @@ class Command(object):
 
         return posargs, optargs
 
-    def get_usage(self, ignore_cmd=False):
+    def get_usage(self, isdefault=False):
         '''Return the usage of this command.
 
         Example:
 
             files [--mode VAL] [paths]...
+
+        .. versionchanged:: 0.1.3
+           the `ignore_cmd` is renamed to `isdefault`.
         '''
-        if ignore_cmd:
+        if isdefault:
             usage = '%s ' % sys.argv[0]
         else:
             usage = '%s %s ' % (sys.argv[0], self.name)
