@@ -119,7 +119,7 @@ You have two different ways to use Clime.
    See `clime.main`_ for more usages.
     
 .. _`clime.main`:
-    http://docs.mosky.tw/clime/deeper.html#clime.maine
+    http://docs.mosky.tw/clime/deeper.html#clime.main
 
 More Details
 ------------
