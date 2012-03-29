@@ -5,7 +5,7 @@ import sys, getopt
 import inspect
 import textwrap
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 def getdoc(obj):
     r'''Get the documentation of `obj`.
