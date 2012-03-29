@@ -4,7 +4,6 @@
 import sys, getopt
 import inspect
 import textwrap
-from types import BuiltinFunctionType
 
 __version__ = '0.1.2'
 
@@ -56,7 +55,7 @@ def getargspec(func):
     
     .. versionadded:: 0.1.3'''
 
-    if inspect.isfunction(func):
+    if inspect.isfunction(func) or inspect.ismethod(func):
         return inspect.getargspec(func)
 
     def strbetween(s, a, b):
@@ -212,7 +211,7 @@ class Command(object):
 
         # map all of the optargs to posargs for `built-in function`,
         # because the `built-in function` only accpects posargs
-        if isinstance(self.func, BuiltinFunctionType):
+        if inspect.isbuiltin(self.func):
             posargs.extend([None] * (len(self.argnames) - len(posargs)))
             for key, value in optargs.items():
                 posargs[self.argnames.index(key)] = value
