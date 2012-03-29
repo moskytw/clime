@@ -391,6 +391,13 @@ def main(obj=None, defname=None, doc=None, exit=False):
     docstring of `obj` by default.
 
     `exit`, True if you want to exit entire program after calling it.
+
+    .. versionchanged: 0.1.3
+       Arguments `module` is renamed to `obj` and `default` is renamed to
+       `defname` and changed the usage.
+
+    .. versionadded: 0.1.3
+       Arguments `doc` and `exit`.
     '''
 
     prog = Program(obj or sys.modules['__main__'], defname, doc)
