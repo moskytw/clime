@@ -1,10 +1,59 @@
 Clime
 =====
 
-Clime is a simple Python module to let you convert a Python program contains
+Clime is a Python module to let you convert a Python program contains
 functions into a multi-command CLI program.
 
+Clime is *very easy* to use and *low couple* (even not!) with your source.
+It is a better choice than the heavy `optparse` or `argparse` for simple CLI
+tasks. 
+
+Let me show an example for you.
+
 See the full documentaion on http://docs.mosky.tw/clime/ .
+
+CLI-ize ME!
+-----------
+
+A simple script here: ::
+
+    #file: test.py
+    def repeat(string, n=2):
+        for i in range(n):
+            print string
+
+After add two lines, ::
+
+    import clime
+    clime.main()
+
+... you have a CLI program now! ::
+    
+    $ python test.py twice
+    twice
+    twice
+
+    $ python test.py -n3 thrice
+    thrice
+    thrice
+    thrice
+
+And it also support ``--help``: ::
+
+    usage: test.py [-n VAL] STRING 
+       or: test.py repeat [-n VAL] STRING
+
+If you wrote the docstring, it will also show on help.
+    
+You can find more examples in the `clime/examples`_.
+
+See `clime.Command.parse`_ for more details about argument parsing.
+
+.. _`clime/examples`:
+    https://github.com/moskied/clime/tree/master/examples
+    
+.. _`clime.Command.parse`:
+    http://docs.mosky.tw/clime/deeper.html#clime.Command.parse
 
 Installation
 ------------
@@ -37,8 +86,8 @@ Clime is hosted on two different platform, PyPI_ and GitHub_.
 .. _PyPI:
     http://pypi.python.org/pypi/clime
 
-CLI-ize ME!
------------
+Usage
+-----
 
 Here is the basic usage of Clime.
 
@@ -55,84 +104,27 @@ You have two different ways to use Clime.
 
 2. **Use clime.py as A Command**
    
-   `clime.py` is also an executable script. Use it to convert a moudle temporarily.
+   `clime.py` is also an executable script. Use it to convert a moudle or a
+   Python file temporarily.
    
    For convenience, make a command for `clime.py` ::
    
-     $ sudo ln -s /usr/local/lib/python<VERSION>/dist-packages/clime.py /usr/bin/clime
-     $ sudo chmod 755 /usr/bin/clime 
+     $ sudo ln -s /usr/local/lib/python<VERSION>/dist-packages/clime.py /usr/local/bin/clime
+     $ sudo chmod 755 /usr/local/bin/clime 
      
    Then, you can use ``clime`` as a normal command ::
 
-     $ clime <module_name> <args_for_module>
+     $ clime MODULE_OR_FILE ARGS
 
-Examples
-""""""""
+   See `clime.main`_ for more usages.
+    
+.. _`clime.main`:
+    http://docs.mosky.tw/clime/deeper.html#clime.maine
 
-Here is a example of a script uses Clime:
+More Details
+------------
 
-::
-
-    # file: example/singlecmd.py
-
-    '''Here is docstring of module.'''
-
-    def onlyme(s, b=True, l=None):
-        '''Here is docstring of function.'''
-
-        print 's:', s
-        print 'b:', b
-        print 'l:', l
-
-    if __name__ == '__main__':
-        import clime
-        clime.main()
-
-After added the last 2 lines, this script is a CLI program now. Try to use
-it on shell.
-
-1. Call the program with `--help` ::
-
-    $ python singlecmd.py --help
-    usage: singlecmd.py [-b] [-l VAL] s 
-       or: singlecmd.py onlyme [-b] [-l VAL] s 
-
-    Here is docstring of module.
-
-2. Call the program with `Command` and `--help` ::
-
-    $ python singlecmd.py onlyme --help
-    usage: singlecmd.py onlyme [-b] [-l VAL] s 
-
-    Here is docstring of function.
-
-3. The different behaviors decide by default value ::
-
-    $ python singlecmd.py test -b -loption_arg
-    s: test
-    b: False
-    l: option_arg
-
-4. Duplicate options ::
-
-    $ python singlecmd.py test -bbb -l one -l two -l three
-    s: test
-    b: 3
-    l: ['one', 'two', 'three']
-
-See the `clime.Command.parse`_ section for more details
-about argument parsing.
-
-More examples are in the `clime/examples`_.
-
-The basic usage of Clime is end here. If you want to know more details or
-help Clime, please visit `Take a Deeper Look at Clime`_.
-
-.. _`clime.Command.parse`:
-    http://docs.mosky.tw/clime/deeper.html#clime.Command.parse
-
-.. _`clime/examples`:
-    https://github.com/moskied/clime/tree/master/examples
+It is the all of basic of Clime. If you want to know more, please visit `Take a Deeper Look at Clime`_.
 
 .. _`Take a Deeper Look at Clime`:
     http://docs.mosky.tw/clime/deeper.html

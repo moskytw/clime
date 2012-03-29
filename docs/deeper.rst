@@ -8,23 +8,20 @@ What Happen after `clime.main()`
 --------------------------------
 
 When ``clime.main()`` is called, Clime gets the '__main__' module in
-``sys.modules`` and scans the functions in it.
+``sys.modules`` and scans the functions in it. And converts them into
+:class:`.Command` objects.
 
-Next, Clime takes the first argument as function name to find the function
-in this module.
-
-Finally, Clime convert this function into `Command` object and call it with
-the arguments.
+Then, Clime takes the first argument as command name. Find the command out
+and call that command.
 
 Introduce the Classes
 ---------------------
 
-`clime` has two main classes, `Command <#clime.Command>`_ and `Program
-<#clime.Program>`_.
+`clime` has two main classes, :class:`.Command` and :class:`.Program`.
 
-Class `Command` makes a function or callable object to accpect the argument
-from command line. Class `Program` scans the attributes in an object and
-make this object into a CLI program.
+Class `Command` makes a function, built-in function or bound method to
+accpect the argument from command line. Class `Program` scans the attributes
+in an object or a dict and make that into a CLI program.
 
 Two classes are callable. You can call them with the command-line-style argument.
 
