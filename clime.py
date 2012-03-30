@@ -53,10 +53,18 @@ def getargspec(func):
     It get the argument specification by parsing documentation of the
     function if `func` is a built-in function.
     
+    .. versionchanged:: 0.1.4
+       Remove `self` automatively if `func` is a method.
+
     .. versionadded:: 0.1.3'''
 
-    if inspect.isfunction(func) or inspect.ismethod(func):
+    if inspect.isfunction(func):
         return inspect.getargspec(func)
+
+    if inspect.ismethod(func):
+        argspec = inspect.getargspec(func)
+        argspec[0].pop(0)
+        return argspec
 
     def strbetween(s, a, b):
         return s[s.find(a): s.rfind(b)]
@@ -101,9 +109,6 @@ class Command(object):
         self.varname  = spec[1]
         defvals       = spec[3] or []
         self.defaults = dict( zip(self.argnames[::-1], defvals[::-1]) )
-
-        if inspect.ismethod(func):
-            self.argnames.pop(0)
 
         self.opts = ( aliases or getattr(func, 'aliases', {}) ).copy()
         for name in self.defaults:
