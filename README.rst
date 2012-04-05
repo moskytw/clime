@@ -38,7 +38,7 @@ After add two lines, ::
     thrice
     thrice
 
-And it also support ``--help``: ::
+And it also supports ``--help``: ::
 
     usage: test.py [-n VAL] STRING 
        or: test.py repeat [-n VAL] STRING
