@@ -4,6 +4,7 @@
 import sys, getopt
 import inspect
 import textwrap
+import re
 
 __version__ = '0.1.3'
 
@@ -80,6 +81,25 @@ def getargspec(func):
 
     return (args or None, None, None, (None,) * defaultcount or None)
 
+OPTDESC_RE = re.compile(r' {2,}(-.+?) {2,}')
+
+OPT_RE = re.compile(
+
+        r'''(--?{0}) # option
+           (?:
+              \[?
+              [= ]
+              ({0})  # metaval
+           )?
+           ,?
+        ''' \
+       .format('[^\s,=\[\]]+')
+
+   , re.X)
+
+optpicker = lambda text: ( m.groups() for line in text.split('\n')
+                                      if OPTDESC_RE.match(line)
+                                      for m in OPT_RE.finditer(line) )
 class Command(object):
     '''Make a function, a built-in function or a bound method to accpect
     arguments from command line.
