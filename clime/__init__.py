@@ -6,6 +6,8 @@ import inspect
 import textwrap
 import re
 
+from . import actions
+
 __version__ = '0.1.3'
 
 def getdoc(obj):
@@ -81,9 +83,9 @@ def getargspec(func):
 
     return (args or None, None, None, (None,) * defaultcount or None)
 
-OPTDESC_RE = re.compile(r' {2,}(-.+?) {2,}')
+DOCOPTDESC_RE = re.compile(r' {2,}(-.+?) {2,}')
 
-OPT_RE = re.compile(
+DOCOPT_RE = re.compile(
 
         r'''(--?{0}) # option
            (?:
@@ -97,9 +99,71 @@ OPT_RE = re.compile(
 
    , re.X)
 
-optpicker = lambda text: ( m.groups() for line in text.split('\n')
-                                      if OPTDESC_RE.match(line)
-                                      for m in OPT_RE.finditer(line) )
+docoptpicker = lambda text: ( m.groups() for line in text.split('\n')
+                                         if DOCOPTDESC_RE.match(line)
+                                         for m in DOCOPT_RE.finditer(line) )
+
+OPT_RE = re.compile('(--[^\s]+)(?:[ =]?([^\s]))?')
+
+class Parser(object):
+
+
+    def __init__(self, f):
+        args, varargs, keywords, defs = getargspec(f)
+        args = args or []
+        defs = defs or []
+
+        bindings = {}
+        defaults = {}
+        for arg, val in zip(args[::-1], defs[::-1]):
+            bindings['%s%s' % ('-' * (1 + len(arg) > 1), arg)] = arg
+            defaults[arg] = val
+
+        self.args = args
+        self.varargs  = varargs
+        self.keywords = keywords
+        self.bindings = bindings
+        self.defaults = defaults
+        self.actions  = {}
+
+    def parse(self, pieces):
+
+        if isinstance(pieces, str):
+            pieces = pieces.split()
+
+        poses = {}
+        for i, arg in enumerate(self.args):
+            poses[i] = arg
+            poses[arg] = i
+
+        kargs = self.defaults.copy()
+        pargs = []
+
+        while pieces:
+            piece = pieces.pop(0)
+
+            if piece.startswith('-'):
+                argname = None
+
+                try:
+                    argname = self.bindings[piece]
+                except KeyError:
+                    if self.keywords:
+                        argname = piece.lstrip('-')
+
+                if argname:
+                    if pieces and pieces[0] not in self.bindings:
+                        val = autotype( pieces.pop(0) )
+                    else:
+                        val = None
+                    action = self.actions.get(argname, actions.default)
+                    kargs[argname] = action(kargs[argname], val)
+                    continue
+
+            pargs.append(piece)
+
+        return pargs, kargs
+
 class Command(object):
     '''Make a function, a built-in function or a bound method to accpect
     arguments from command line.
