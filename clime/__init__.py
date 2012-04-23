@@ -103,7 +103,6 @@ docoptpicker = lambda text: ( m.groups() for line in text.split('\n')
                                          if DOCOPTDESC_RE.match(line)
                                          for m in DOCOPT_RE.finditer(line) )
 
-OPT_RE = re.compile('(--[^\s]+)(?:[ =]?([^\s]))?')
 
 class Parser(object):
 
