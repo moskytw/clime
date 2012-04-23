@@ -33,12 +33,12 @@ class Parser(object):
 
         for opts in docoptpicker(f.__doc__):
             try:
-                target = next(opt for opt, meta in opts if opt in bindings)
+                boundopt = next(opt for opt, meta in opts if opt in bindings)
             except StopIteration:
                 pass
             else:
                 for opt, meta in opts:
-                    bindings.setdefault(opt, bindings[target])
+                    bindings.setdefault(opt, bindings[boundopt])
 
         self.args = args
         self.bindings = bindings
