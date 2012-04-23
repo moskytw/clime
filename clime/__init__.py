@@ -139,10 +139,6 @@ class Parser(object):
         if isinstance(pieces, str):
             pieces = pieces.split()
 
-        poses = {}
-        for i, arg in enumerate(self.args):
-            poses[i] = arg
-            poses[arg] = i
         pieces = list( self.sepopt(pieces) )
 
         kargs = self.defaults.copy()
@@ -167,9 +163,15 @@ class Parser(object):
                         val = None
                     action = self.actions.get(argname, actions.default)
                     kargs[argname] = action(kargs[argname], val)
+
                     continue
 
             pargs.append(piece)
+
+        poses = {}
+        for i, arg in enumerate(self.args):
+            poses[i] = arg
+            poses[arg] = i
 
         return pargs, kargs
 
