@@ -4,7 +4,7 @@
 import sys, getopt
 import inspect
 
-from . import actions
+from . import action
 from .helper import *
 
 __version__ = '0.1.3'
@@ -74,7 +74,7 @@ class Parser(object):
                         val = autotype( pieces.pop(0) )
                     else:
                         val = None
-                    action = self.actions.get(argname, actions.default)
+                    action = self.actions.get(argname, action.default)
                     kargs[argname] = action(kargs[argname], val)
 
                     continue
