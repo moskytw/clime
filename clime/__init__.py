@@ -26,10 +26,10 @@ class Parser(object):
         defs = defs or []
 
         bindings = {}
-        defaults = {}
+        defvals  = {}
         for arg, val in zip(args[::-1], defs[::-1]):
             bindings['%s%s' % ('-' * (1 + (len(arg) > 1)), arg)] = arg
-            defaults[arg] = val
+            defvals[arg] = val
 
         for opts in docoptpicker(f.__doc__):
             try:
@@ -42,7 +42,7 @@ class Parser(object):
 
         self.args = args
         self.bindings = bindings
-        self.defaults = defaults
+        self.defvals = defvals
         self.actions  = {}
 
         self.varargs  = varargs
@@ -55,7 +55,7 @@ class Parser(object):
 
         pieces = list( self.septightopt(rawargs) )
 
-        kargs = self.defaults.copy()
+        kargs = self.defvals.copy()
         pargs = []
 
         while pieces:
