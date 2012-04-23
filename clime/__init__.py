@@ -99,10 +99,13 @@ DOCOPT_RE = re.compile(
 
    , re.X)
 
-docoptpicker = lambda text: ( m.groups() for line in text.split('\n')
-                                         if DOCOPTDESC_RE.match(line)
-                                         for m in DOCOPT_RE.finditer(line) )
+def docoptpicker(text):
 
+    for line in text.split('\n'):
+        m = DOCOPTDESC_RE.match(line)
+        if m is None: continue
+
+        yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
 
 class Parser(object):
 
@@ -125,6 +128,15 @@ class Parser(object):
         for arg, val in zip(args[::-1], defs[::-1]):
             bindings['%s%s' % ('-' * (1 + (len(arg) > 1)), arg)] = arg
             defaults[arg] = val
+
+        for opts in docoptpicker(f.__doc__):
+            try:
+                target = next(opt for opt, meta in opts if opt in bindings)
+            except StopIteration:
+                pass
+            else:
+                for opt, meta in opts:
+                    bindings.setdefault(opt, bindings[target])
 
         self.args = args
         self.varargs  = varargs
