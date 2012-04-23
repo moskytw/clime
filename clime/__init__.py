@@ -41,11 +41,12 @@ class Parser(object):
                     bindings.setdefault(opt, bindings[target])
 
         self.args = args
-        self.varargs  = varargs
-        self.keywords = keywords
         self.bindings = bindings
         self.defaults = defaults
         self.actions  = {}
+
+        self.varargs  = varargs
+        self.keywords = keywords
 
     def parse(self, rawargs):
 
