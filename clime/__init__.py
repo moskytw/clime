@@ -40,9 +40,9 @@ class Parser(object):
                 for opt, meta in opts:
                     bindings.setdefault(opt, bindings[boundopt])
 
-        self.args = args
+        self.args     = args
         self.bindings = bindings
-        self.defvals = defvals
+        self.defvals  = defvals
         self.actions  = {}
 
         self.varargs  = varargs
