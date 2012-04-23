@@ -12,8 +12,8 @@ __version__ = '0.1.3'
 class Parser(object):
 
     @staticmethod
-    def sepopt(args):
-        for arg in args:
+    def sepopt(rawargs):
+        for arg in rawargs:
             if len(arg) > 2 and arg[0] == '-' and arg[1] != '-':
                 yield arg[:2]
                 yield arg[2:]
@@ -47,12 +47,12 @@ class Parser(object):
         self.defaults = defaults
         self.actions  = {}
 
-    def parse(self, pieces):
+    def parse(self, rawargs):
 
-        if isinstance(pieces, str):
-            pieces = pieces.split()
+        if isinstance(rawargs, str):
+            rawargs = rawargs.split()
 
-        pieces = list( self.sepopt(pieces) )
+        pieces = list( self.sepopt(rawargs) )
 
         kargs = self.defaults.copy()
         pargs = []
