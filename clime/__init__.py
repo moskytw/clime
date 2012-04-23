@@ -107,6 +107,14 @@ OPT_RE = re.compile('(--[^\s]+)(?:[ =]?([^\s]))?')
 
 class Parser(object):
 
+    @staticmethod
+    def sepopt(args):
+        for arg in args:
+            if len(arg) > 2 and arg[0] == '-' and arg[1] != '-':
+                yield arg[:2]
+                yield arg[2:]
+            else:
+                yield arg
 
     def __init__(self, f):
         args, varargs, keywords, defs = getargspec(f)
@@ -135,6 +143,7 @@ class Parser(object):
         for i, arg in enumerate(self.args):
             poses[i] = arg
             poses[arg] = i
+        pieces = list( self.sepopt(pieces) )
 
         kargs = self.defaults.copy()
         pargs = []
