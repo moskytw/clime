@@ -116,7 +116,7 @@ class Parser(object):
         bindings = {}
         defaults = {}
         for arg, val in zip(args[::-1], defs[::-1]):
-            bindings['%s%s' % ('-' * (1 + len(arg) > 1), arg)] = arg
+            bindings['%s%s' % ('-' * (1 + (len(arg) > 1)), arg)] = arg
             defaults[arg] = val
 
         self.args = args
