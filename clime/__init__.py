@@ -31,7 +31,7 @@ class Parser(object):
             bindings['%s%s' % ('-' * (1 + (len(arg) > 1)), arg)] = arg
             defvals[arg] = val
 
-        for opts in docoptpicker(f.__doc__):
+        for opts in docoptpicker(f.__doc__ or ''):
             try:
                 boundopt = next(opt for opt, meta in opts if opt in bindings)
             except StopIteration:
