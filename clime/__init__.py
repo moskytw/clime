@@ -27,7 +27,7 @@ class Parser(object):
 
         bindings = {}
         defvals  = {}
-        for arg, val in zip(args[::-1], defs[::-1]):
+        for arg, val in zip( *map(reversed, (args, defs)) ):
             bindings['%s%s' % ('-' * (1 + (len(arg) > 1)), arg)] = arg
             defvals[arg] = val
 
