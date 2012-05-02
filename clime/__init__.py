@@ -11,28 +11,6 @@ __version__ = '0.1.3'
 
 class Parser(object):
 
-    @staticmethod
-    def sepopt(rawargs):
-        for piece in rawargs:
-
-            # piece is an optional argument
-            if piece.startswith('-'):
-
-                # case: -o=.* | --option=.*
-                equalsign = piece.find('=')
-                if equalsign != -1:
-                    yield piece[:equalsign]
-                    yield piece[equalsign+1:]
-                    continue
-
-                # case: -o.+
-                if piece[1] != '-' and len(piece) > 2:
-                    yield piece[:2]
-                    yield piece[2:]
-                    continue
-
-            yield piece
-
     def __init__(self, f):
         args, varargs, keywords, defs = getargspec(f)
         args = args or []
@@ -66,7 +44,7 @@ class Parser(object):
         if isinstance(rawargs, str):
             rawargs = rawargs.split()
 
-        pieces = list( self.sepopt(rawargs) )
+        pieces = list( sepopt(rawargs) )
 
         kargs = self.defvals.copy()
         pargs = []

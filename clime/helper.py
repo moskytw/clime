@@ -101,3 +101,24 @@ def getoptmetas(doc):
         if m is None: continue
 
         yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
+
+def sepopt(rawargs):
+    for piece in rawargs:
+
+        # piece is an optional argument
+        if piece.startswith('-'):
+
+            # case: -o=.* | --option=.*
+            equalsign = piece.find('=')
+            if equalsign != -1:
+                yield piece[:equalsign]
+                yield piece[equalsign+1:]
+                continue
+
+            # case: -o.+
+            if piece[1] != '-' and len(piece) > 2:
+                yield piece[:2]
+                yield piece[2:]
+                continue
+
+        yield piece
