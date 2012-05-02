@@ -122,3 +122,25 @@ def sepopt(rawargs):
                 continue
 
         yield piece
+
+def parse(rawargs):
+
+    if isinstance(rawargs, str):
+        rawargs = rawargs.split()
+
+    kargs = {}
+    pargs = []
+
+    key = None
+    for piece in sepopt(rawargs):
+        if piece.startswith('-'):
+            kargs[piece] = []
+            key = piece
+        else:
+            if key:
+                kargs[key].append(piece)
+                key = None
+            else:
+                pargs.append(piece)
+
+    return pargs, kargs
