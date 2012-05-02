@@ -44,13 +44,13 @@ class Parser(object):
             bindings['%s%s' % ('-' * (1 + (len(arg) > 1)), arg)] = arg
             defvals[arg] = val
 
-        for opts in docoptpicker(f.__doc__ or ''):
+        for optmetas in getoptmetas(f.__doc__ or ''):
             try:
-                boundopt = next(opt for opt, meta in opts if opt in bindings)
+                boundopt = next(opt for opt, meta in optmetas if opt in bindings)
             except StopIteration:
                 pass
             else:
-                for opt, meta in opts:
+                for opt, meta in optmetas:
                     bindings.setdefault(opt, bindings[boundopt])
 
         self.args     = args

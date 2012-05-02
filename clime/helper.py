@@ -94,9 +94,9 @@ DOCOPT_RE = re.compile(
 
    , re.X)
 
-def docoptpicker(text):
+def getoptmetas(doc):
 
-    for line in text.split('\n'):
+    for line in doc.split('\n'):
         m = DOCOPTDESC_RE.match(line)
         if m is None: continue
 
