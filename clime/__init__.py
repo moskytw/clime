@@ -5,7 +5,7 @@ import sys, getopt
 import inspect
 
 from . import actions
-from .helper import *
+from .helper import autotype, getargspec, getoptmetas, sepopt, smartreduce
 
 __version__ = '0.1.3'
 
@@ -16,11 +16,13 @@ class Parser(object):
         args = args or []
         defs = defs or []
 
-        bindings = {}
-        defvals  = {}
+        bindings  = {}
+        defvals   = {}
+        mflags    = set()
         for arg, val in zip( *map(reversed, (args, defs)) ):
             bindings['%s%s' % ('-' * (1 + (len(arg) > 1)), arg)] = arg
             defvals[arg] = val
+            if isinstance(val, bool): mflags.add(arg)
 
         for optmetas in getoptmetas(f.__doc__ or ''):
             try:
@@ -34,49 +36,39 @@ class Parser(object):
         self.args     = args
         self.bindings = bindings
         self.defvals  = defvals
-        self.actions  = {}
+        self.mflags   = mflags
 
-        self.varargs  = varargs
-        self.keywords = keywords
+        self.reducers = {}
+        #self.varargs  = varargs
+        #self.keywords = keywords
 
     def parse(self, rawargs):
 
         if isinstance(rawargs, str):
             rawargs = rawargs.split()
 
-        pieces = list( sepopt(rawargs) )
-
-        kargs = self.defvals.copy()
+        kargs = {}
         pargs = []
 
-        while pieces:
-            piece = pieces.pop(0)
-
+        key = None
+        for piece in sepopt(rawargs):
             if piece.startswith('-'):
-                argname = None
+                key = piece.lstrip('-')
+                key = self.bindings.get(piece, key)
+                if key in self.mflags:
+                    kargs[key] = kargs.get(key, 0) + 1
+            else:
+                if key is None:
+                    pargs.append(piece)
+                else:
+                    reducer = self.reducers.get(key, smartreduce)
+                    a = kargs.get(key, None)
+                    b = autotype(piece)
+                    kargs[key] = reducer(a, b)
 
-                try:
-                    argname = self.bindings[piece]
-                except KeyError:
-                    if self.keywords:
-                        argname = piece.lstrip('-')
-
-                if argname:
-                    if pieces and pieces[0] not in self.bindings:
-                        val = autotype( pieces.pop(0) )
-                    else:
-                        val = None
-                    action = self.actions.get(argname, actions.default)
-                    kargs[argname] = action(kargs[argname], val)
-
-                    continue
-
-            pargs.append(piece)
-
-        poses = {}
-        for i, arg in enumerate(self.args):
-            poses[i] = arg
-            poses[arg] = i
+        for arg in self.mflags:
+            if kargs.get(arg, 0) == 1:
+                kargs[arg] = not self.defvals[arg]
 
         return pargs, kargs
 

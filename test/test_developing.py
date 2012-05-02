@@ -4,7 +4,7 @@
 from clime import *
 from clime.helper import parse
 
-def repeat(s, times=10):
+def repeat(s, times=10, debug=False):
     ''' Repeat a string n times.
     
     -t, --times  repeat n times.'''
@@ -12,8 +12,6 @@ def repeat(s, times=10):
 
 if __name__ == '__main__':
 
-    print parse('--long first --long second -m string --long=string -s1 -s -s 2 -s=3', {}, ['-m'])
-
     p = Parser(repeat)
-    print p.parse('string -t -t 123 ')
+    print p.parse('string -t 10 -t 123 --debug --debug')
 
