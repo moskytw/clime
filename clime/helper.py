@@ -123,23 +123,29 @@ def sepopt(rawargs):
 
         yield piece
 
-def parse(rawargs):
+def parse(rawargs, mapping=None, modeflags=None):
 
     if isinstance(rawargs, str):
         rawargs = rawargs.split()
 
+    if mapping   is None: mapping = {}
+    if modeflags is None: modeflags = set()
+
     kargs = {}
     pargs = []
 
-    key = None
+    collected = None
     for piece in sepopt(rawargs):
         if piece.startswith('-'):
-            kargs.setdefault(piece, [])
-            key = piece
+            real = mapping.get(piece, piece.lstrip('-'))
+            collected = kargs.setdefault(real, [])
+            if piece in modeflags:
+                collected.append(1)
+                collected = None
         else:
-            if key:
-                kargs[key].append(piece)
-                key = None
+            if collected is not None:
+                collected.append(piece)
+                collected = None
             else:
                 pargs.append(piece)
 
