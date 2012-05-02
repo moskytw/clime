@@ -102,7 +102,10 @@ def getoptmetas(doc):
 
         yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
 
-def sepopt(rawargs):
+def sepopt(rawargs, mflags=None):
+
+    if mflags is None: mflags = set()
+
     for piece in rawargs:
 
         # piece is an optional argument
@@ -116,9 +119,14 @@ def sepopt(rawargs):
                 continue
 
             # case: -o.+
-            if piece[1] != '-' and len(piece) > 2:
-                yield piece[:2]
-                yield piece[2:]
+            if piece[1] != '-':
+                for i, p in enumerate(piece[1:]):
+                    if p in mflags:
+                        yield '-%s' % p
+                    else:
+                        yield '-%s' % p
+                        break
+                yield piece[i+1:]
                 continue
 
         yield piece
