@@ -134,7 +134,7 @@ def parse(rawargs):
     key = None
     for piece in sepopt(rawargs):
         if piece.startswith('-'):
-            kargs[piece] = []
+            kargs.setdefault(piece, [])
             key = piece
         else:
             if key:
