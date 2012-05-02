@@ -150,3 +150,12 @@ def parse(rawargs, mapping=None, modeflags=None):
                 pargs.append(piece)
 
     return pargs, kargs
+
+def smartreduce(a, b):
+    if a is None:
+        return b
+    elif hasattr(a, 'append'):
+        a.append(b)
+        return a
+    else:
+        return [a, b]
