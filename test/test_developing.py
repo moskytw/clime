@@ -12,6 +12,9 @@ def repeat(s, times=10):
 if __name__ == '__main__':
 
     p = Parser(repeat)
+    print p.parse('string --times 10')
     print p.parse('string --times=10')
+    print p.parse('string -t10')
+    print p.parse('string -t 10')
     print p.parse('string -t=10')
 
