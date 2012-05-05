@@ -7,9 +7,11 @@ import inspect
 from . import actions
 from .helper import autotype, getargspec, getoptmetas, sepopt, smartreduce
 
+
 __version__ = '0.1.3'
 
 class Parser(object):
+
 
     def __init__(self, f):
         args, varargs, keywords, defs = getargspec(f)
@@ -73,7 +75,7 @@ class Parser(object):
         return pargs, kargs
 
 class Command(object):
-    '''Make a function, a built-in function or a bound method to accpect
+    '''Make a function, a built-in function or a bound method accept
     arguments from command line.
     
     You can set the aliases in a `dict` in ``{alias: real}`` format.
@@ -111,7 +113,7 @@ class Command(object):
 
         `usargs` can be `string` or `list`.
 
-        It uses the *keyword-first resolving* -- If keyword and positional
+        Uses *keyword-first resolving* -- If keyword and positional
         arguments are at same place, the keyword argument will take this
         place and push the positional argument to next.
         
@@ -213,7 +215,7 @@ class Command(object):
                 del optargs[argname]
 
         # map all of the optargs to posargs for `built-in function`,
-        # because the `built-in function` only accpects posargs
+        # because a `built-in function` only accept positional arguments
         if inspect.isbuiltin(self.func):
             posargs.extend([None] * (len(self.argnames) - len(posargs)))
             for key, value in optargs.items():
@@ -342,14 +344,14 @@ class Program(object):
 
     def __call__(self, usrargs):
         '''Use it as a CLI program.'''
-        
+
         if not usrargs or usrargs[0] == '--help':
             self.help()
             return 0
-
+        
         try:
             cmd = self.cmds[usrargs[0]]
-        except KeyError:
+        except KeyError: # Assume no command given, use default. (Does not handle misspelled command.)
             cmd = self.cmds.get(self.defname, None)
         else:
             usrargs.pop(0)
@@ -375,16 +377,16 @@ class Program(object):
             return 0
 
 def main(obj=None, defname=None, doc=None, exit=False):
-    '''Use it to simply convert your program.
+    '''Use this to convert your program.
 
-    `obj` is the target you want to convert. `obj` can be a moudle, a class
+    `obj` is the target you want to convert. `obj` can be a module, a class
     or a dict. If `obj` is None, it uses the `__main__` module (the
     first-running Python program).
     
     `defname` is the name of default command, an attribute name or a key in
     `obj`.
 
-    `doc` is the addational information you want to show on help. Use the
+    `doc` is the additional information you want to show on help. Use the
     docstring of `obj` by default.
 
     `exit`, True if you want to exit entire program after calling it.
