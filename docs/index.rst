@@ -3,34 +3,34 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Introduce
+Introduction
 =========
 
-Clime is a Python module to let you convert a Python program contains
+Clime is a Python module which lets you convert a Python program containing
 functions into a multi-command CLI program.
 
-Clime is *very easy* to use and *low couple* (even not!) with your source.
-It is a better choice than the heavy `optparse` or `argparse` for simple CLI
-tasks. 
+Clime is *very easy* to use and can highly to completely decoupled from your source.
+For simple CLI tasks, Clime is a better choice than the heavyduty `optparse` or `argparse`
+libraries.
 
-Let me show an example for you.
+Let me show you an example.
 
 CLI-ize ME!
 -----------
 
-A simple script here: ::
+Here we have a simple script: ::
 
     #file: test.py
     def repeat(string, n=2):
         for i in range(n):
             print string
 
-After add two lines, ::
+After adding these two lines, ::
 
     import clime
     clime.main()
 
-... you have a CLI program now! ::
+... you now have a CLI program! ::
     
     $ python test.py twice
     twice
@@ -41,12 +41,12 @@ After add two lines, ::
     thrice
     thrice
 
-And it also support ``--help``: ::
+And it also supports ``--help``: ::
 
     usage: test.py [-n VAL] STRING 
        or: test.py repeat [-n VAL] STRING
 
-If you wrote the docstring, it will also show on help.
+If you wrote a docstring, it will show up as help text.
     
 You can find more examples in the `clime/examples`_.
 
@@ -59,7 +59,7 @@ You can find more examples in the `clime/examples`_.
 Installation
 ------------
 
-Clime is hosted on two different platform, PyPI_ and GitHub_.
+Clime is hosted on two different platforms, PyPI_ and GitHub_.
 
 1. **Install from PyPI**
    
@@ -96,16 +96,16 @@ You have two different ways to use Clime.
 
 1. **Insert Lines into Source**
    
-   Just add two lines below into your source ::
+   Just add the two lines below into your source code::
    
      import clime
      clime.main()
    
-   Recommend to put the codes into the ``if __name__ == '__main__':`` block.
+   It is recommended to add this into the ``if __name__ == '__main__':`` block.
 
 2. **Use clime.py as A Command**
    
-   `clime.py` is also an executable script. Use it to convert a moudle or a
+   `clime.py` is also an executable script. Use it to convert a module or a
    Python file temporarily.
    
    For convenience, make a command for `clime.py` ::
@@ -123,7 +123,7 @@ You have two different ways to use Clime.
 More Details
 ------------
 
-It is the all of basic of Clime. If you want to know more, details are here:
+These are the basics of Clime usage. If you want to know more, details are here:
 
 .. toctree::
    :maxdepth: 2
