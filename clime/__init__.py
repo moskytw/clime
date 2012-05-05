@@ -373,7 +373,7 @@ class Program(object):
 
             return 2
         else:
-            if val: print val
+            if val!=None: print val
             return 0
 
 def main(obj=None, defname=None, doc=None, exit=False):
