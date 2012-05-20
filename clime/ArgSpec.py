@@ -48,10 +48,6 @@ class ArgSpec(object):
 
     def parse(self, rawargs):
 
-        def sepequal(piece):
-            piece, _, npiece = piece.partition('=')
-            return piece, npiece
-
         def mktypewrapper(t):
             def typewrpper(o):
                 try:
@@ -78,7 +74,7 @@ class ArgSpec(object):
         kargs = {}
 
         while rawargs:
-            piece, npiece = sepequal( rawargs.pop(0) )
+            piece, _, npiece = rawargs.pop(0).partition('=')
             if npiece: rawargs.insert(0, npiece)
 
             plen = len(piece)
