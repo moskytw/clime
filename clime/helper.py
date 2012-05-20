@@ -37,21 +37,24 @@ def getargspec(func):
         argspec[0].pop(0)
         return argspec
 
-    def strbetween(s, a, b):
-        return s[s.find(a): s.rfind(b)]
+    if inspect.isbuiltin(func):
+        def strbetween(s, a, b):
+            return s[s.find(a): s.rfind(b)]
 
-    argspecdoc = (inspect.getdoc(func) or '').split('\n')[0]
-    argpart = strbetween(argspecdoc, '(', ')')
-    args = argpart.split(',')
-    args = [ arg.strip(' ()[]') for arg in args ]
-    args = [ arg for arg in args if arg ]
+        argspecdoc = (inspect.getdoc(func) or '').split('\n')[0]
+        argpart = strbetween(argspecdoc, '(', ')')
+        args = argpart.split(',')
+        args = ( arg.strip(' ()[]') for arg in args )
+        args = [ arg for arg in args if arg ]
 
-    defaultpart = strbetween(argspecdoc, '[', ']')
-    defaultcount = len([d for d in defaultpart.split(',') if d.strip('[]')])
+        defaultpart = strbetween(argspecdoc, '[', ']')
+        defaultcount = len([d for d in defaultpart.split(',') if d.strip('[]')])
 
-    return (args or None, None, None, (None,) * defaultcount or None)
+        return (args or None, None, None, (None,) * defaultcount or None)
 
-DOCOPTDESC_RE = re.compile(r' {2,}(-.+?) {2,}')
+    return None
+
+DOCOPTDESC_RE = re.compile(r' *(-.+?) {2,}')
 
 DOCOPT_RE = re.compile(
 
