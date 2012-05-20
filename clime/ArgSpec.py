@@ -49,11 +49,7 @@ class ArgSpec(object):
     def parse(self, rawargs):
 
         def sepequal(piece):
-            equalsign = piece.find('=')
-            npiece = ''
-            if equalsign != -1:
-                npiece = piece[equalsign+1:]
-                piece = piece[:equalsign]
+            piece, _, npiece = piece.partition('=')
             return piece, npiece
 
         def mktypewrapper(t):
