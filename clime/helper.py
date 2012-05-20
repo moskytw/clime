@@ -1,28 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re
-import textwrap
-import inspect
-
-def getdoc(obj):
-    r'''Get the documentation of `obj`.
-    
-    And the documentation will be
-
-    1. de-indented; and
-    2. added newline char (\\n) at the end.
-    '''
-    text = inspect.getdoc(obj)
-    if text is None: return None
-
-    text += '\n'
-
-    sep = text.index('\n')
-    return text[:sep] + textwrap.dedent(text[sep:])
+import re, inspect
 
 def autotype(s):
-    '''Automative detect the type of `s` and convert `s` into it.'''
 
     if not isinstance(s, str):
         return s
@@ -34,14 +15,6 @@ def autotype(s):
         return float(s)
     except ValueError:
         return s
-
-def getargspecfromdoc(func):
-    '''
-    .. deprecated:: 0.1.3
-       Use :func:`getargspec` instead.
-
-    *Removed.*
-    '''
 
 def getargspec(func):
     '''Get the argument specification of the `func`.
@@ -95,63 +68,12 @@ DOCOPT_RE = re.compile(
    , re.X)
 
 def getoptmetas(doc):
+    '''yield the option and the metavar in each line'''
 
     for line in doc.split('\n'):
         m = DOCOPTDESC_RE.match(line)
         if m is None: continue
-
         yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
-
-def sepopt(rawargs):
-
-    for piece in rawargs:
-
-        # piece is an optional argument
-        if piece.startswith('-'):
-
-            # case: -o=val | --option=val
-            equalsign = piece.find('=')
-            if equalsign != -1:
-                yield piece[:equalsign]
-                yield piece[equalsign+1:]
-                continue
-
-            # case: -oval
-            if piece[1] != '-':
-                yield piece[:2]
-                val = piece[2:]
-                if val: yield val
-                continue
-
-        yield piece
-
-def parse(rawargs, mapping=None, modeflags=None):
-
-    if isinstance(rawargs, str):
-        rawargs = rawargs.split()
-
-    if mapping   is None: mapping = {}
-    if modeflags is None: modeflags = set()
-
-    kargs = {}
-    pargs = []
-
-    collected = None
-    for piece in sepopt(rawargs):
-        if piece.startswith('-'):
-            real = mapping.get(piece, piece.lstrip('-'))
-            collected = kargs.setdefault(real, [])
-            if piece in modeflags:
-                collected.append(1)
-                collected = None
-        else:
-            if collected is not None:
-                collected.append(piece)
-                collected = None
-            else:
-                pargs.append(piece)
-
-    return pargs, kargs
 
 def smartreduce(a, b):
     if a is None:
