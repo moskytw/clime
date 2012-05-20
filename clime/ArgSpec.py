@@ -14,11 +14,14 @@ class ArgSpec(object):
     def __init__(self, func):
         args, vararg, keyword, defvals = getargspec(func)
 
+        # basic infomation
         self.func = func
         self.args = args
         self.vararg = vararg
         self.keyword = keyword
 
+        # 1. put the args and defvals into a dict
+        # 2. collect the mode-flags
         self.defaults = {}
         self.mflags = set()
         for arg, defval in zip( *map(reversed, (args, defvals)) ):
@@ -26,6 +29,7 @@ class ArgSpec(object):
             if isinstance(defval, bool):
                 self.mflags.add(arg)
 
+        # collect the aliases and metavars
         self.bindings = {}
         self.metavars = {}
         doc = getdoc(func)
@@ -85,7 +89,7 @@ class ArgSpec(object):
             if piece.startswith('-'):
 
                 if plen >= 3 and piece[1] == '-':
-                    # keyword option
+                    # keyword option: --options [value]
                     opt = piece[2:]
                     key = self.bindings.get(opt, opt)
                     vals = kargs.setdefault(key, [])
@@ -96,7 +100,7 @@ class ArgSpec(object):
                     continue
 
                 if plen >= 2:
-                    # letter option
+                    # letter option: -abco[value] or --abco [value]
                     epiece = enumerate(piece); next(epiece)
                     for i, opt in epiece:
                         key = self.bindings.get(opt, opt)
@@ -105,8 +109,10 @@ class ArgSpec(object):
                             vals.append( None )
                         else:
                             if i == plen-1:
-                                val = nextarg() 
+                                # -abco value
+                                val = nextarg()
                             else:
+                                # -abcovalue
                                 val = piece[i+1:]
                             vals.append( gettype(opt)(val) )
                             break
@@ -115,10 +121,12 @@ class ArgSpec(object):
             # if doesnt start with '-' or length of piece is not enough
             pargs.append(piece)
 
+        # reduce the collected values
         for key, vals in kargs.iteritems():
             val = reduce(smartreducer, vals, object)
             kargs[key] = val
 
+        # toggle the bool default value
         for mflag in self.mflags:
             if kargs.get(mflag, 0) is None:
                 kargs[mflag] = not self.defaults[mflag]
