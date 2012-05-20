@@ -73,7 +73,7 @@ class ArgSpec(object):
             if rawargs and not rawargs[0].startswith('-'):
                 return rawargs.pop(0)
             else:
-                raise ParseError("option '%s' need a value" % opt)
+                raise ParseError("option '%s' needs a value" % opt)
 
         if isinstance(rawargs, str):
             rawargs = rawargs.split()
