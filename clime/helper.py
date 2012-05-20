@@ -78,9 +78,16 @@ def getoptmetas(doc):
         if m is None: continue
         yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
 
-def smartreduce(a, b):
-    if a is None:
+def smartreducer(a, b):
+    if a is object:
         return b
+    elif a is None:
+        if b is None:
+            return 2
+        else:
+            return b
+    elif isinstance(a, int) and b is None:
+        return a+1
     elif hasattr(a, 'append'):
         a.append(b)
         return a
