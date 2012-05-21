@@ -58,7 +58,7 @@ DOCOPTDESC_RE = re.compile(r' *(-.+?) {2,}')
 
 DOCOPT_RE = re.compile(
 
-        r'''(--?{0}) # option
+        r'''--?({0}) # option
            (?:
               \[?
               [= ]

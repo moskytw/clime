@@ -38,9 +38,9 @@ class ArgSpec(object):
         args = set(args)
         for optmetas in getoptmetas(doc):
             for opt, meta in optmetas:
-                self.metavars[opt.lstrip('-')] = meta
+                self.metavars[opt] = meta
             opts, metas = zip(*optmetas)
-            opts = set( opt.lstrip('-') for opt in opts )
+            opts = set(opts)
             target = (opts & args).pop()
             opts -= args
             for opt in opts:
