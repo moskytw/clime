@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from inspect import getdoc
-from .helper import getargspec, getoptmetas, autotype, smartreducer
+from .helper import getargspec, getoptmetas, autotype, smartadd 
 
 class ParseError(Exception): pass
 
@@ -115,7 +115,7 @@ class ArgSpec(object):
 
         # reduce the collected values
         for key, vals in kargs.iteritems():
-            val = reduce(smartreducer, vals, object)
+            val = reduce(smartadd, vals, object)
             kargs[key] = val
 
         # toggle the bool default value

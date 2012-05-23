@@ -78,7 +78,7 @@ def getoptmetas(doc):
         if m is None: continue
         yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
 
-def smartreducer(a, b):
+def smartadd(a, b):
     if a is object:
         return b
     elif a is None:
