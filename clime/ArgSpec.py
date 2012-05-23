@@ -69,6 +69,8 @@ class ArgSpec(object):
 
         if isinstance(rawargs, str):
             rawargs = rawargs.split()
+        else:
+            rawargs = rawargs[:]
 
         pargs = []
         kargs = {}
