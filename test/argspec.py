@@ -14,5 +14,6 @@ def repeat(s, time=2, debug=False):
 if __name__ == '__main__':
     repeat_spec = ArgSpec(repeat)
 
-    print repeat_spec.parse('-t 1 -t2 -t=3 --time 4 --time=5 hey1 -dddd hey2')
-
+    a = '-t 1 -t2 -t=3 --time 4 --time=5 hey1 -dddd hey2'.split();
+    print repeat_spec.parse(a)
+    print repeat_spec.normalize(a)

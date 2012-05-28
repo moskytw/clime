@@ -45,6 +45,13 @@ class ArgSpec(object):
             opts -= args
             for opt in opts:
                 self.bindings[opt] = target
+    
+    def normalize(self, rawargs):
+
+        if isinstance(rawargs, str):
+            stack = rawargs.split()
+        else:
+            stack = rawargs[:]
 
     def parse(self, rawargs):
 
