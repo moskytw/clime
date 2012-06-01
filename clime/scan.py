@@ -4,9 +4,9 @@
 from inspect import getdoc
 from .helper import getargspec, getoptmetas, autotype, smartadd 
 
-class ParseError(Exception): pass
+class ScanError(Exception): pass
 
-class ArgSpec(object):
+class Scanner(object):
 
     deftype = staticmethod(autotype)
     metatypes = {'N': int, 'NUM': int}
@@ -46,14 +46,14 @@ class ArgSpec(object):
             for opt in opts:
                 self.bindings[opt] = target
 
-    def parse(self, rawargs):
+    def scan(self, rawargs):
 
         def mktypewrapper(t):
             def typewrpper(o):
                 try:
                     return t(o)
                 except ValueError:
-                    raise ParseError("option '%s' must be %s" % (opt, t.__name__))
+                    raise ScanError("option '%s' must be %s" % (opt, t.__name__))
             return typewrpper
 
         def gettype(opt):
@@ -65,7 +65,7 @@ class ArgSpec(object):
             if rawargs and not rawargs[0].startswith('-'):
                 return rawargs.pop(0)
             else:
-                raise ParseError("option '%s' needs a value" % opt)
+                raise ScanError("option '%s' needs a value" % opt)
 
         if isinstance(rawargs, str):
             rawargs = rawargs.split()

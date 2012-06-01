@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from clime import ArgSpec
+from clime import Scanner
 
 def repeat(s, time=2, debug=False):
     '''repeat s n times
@@ -12,7 +12,7 @@ def repeat(s, time=2, debug=False):
     print s * time
 
 if __name__ == '__main__':
-    repeat_spec = ArgSpec(repeat)
+    repeat_scanner = Scanner(repeat)
 
-    print repeat_spec.parse('-t 1 -t2 -t=3 --time 4 --time=5 hey1 -dddd hey2')
+    print repeat_scanner.scan('-t 1 -t2 -t=3 --time 4 --time=5 hey1 -dddd hey2')
 
