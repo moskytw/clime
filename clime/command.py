@@ -24,7 +24,7 @@ class Command(object):
         # 2. collect the mode-flags
         self.defaults = {}
         self.mflags = set()
-        for arg, defval in zip( *map(reversed, (args, defvals)) ):
+        for arg, defval in zip( *map(reversed, (args or [], defvals or [])) ):
             self.defaults[arg] = defval
             if isinstance(defval, bool):
                 self.mflags.add(arg)
