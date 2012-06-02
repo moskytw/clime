@@ -141,15 +141,15 @@ class Command(object):
 
         for optarg in optargs:
             opts = [optarg]
-            opts.extend( rbindings[optarg] )
+            opts.extend( rbindings.get(optarg, []) )
             for i, opt in enumerate(opts):
                 opts[i] ='%s%s' % ('-' * (1+(len(opt)>1)), opt)
-                meta = self.metavars[opt]
+                meta = self.metavars.get(opt, None)
                 if meta:
                     opts[i] += ' '+meta
             usage.append('[%s]' % ' | '.join(opts))
 
-        posargs = self.args[:len(optargs)-1]
+        posargs = self.args[:-len(optargs) or None]
         usage.extend( map(str.upper, posargs) )
             
         return ' '.join(usage)
