@@ -6,7 +6,7 @@ from .helper import getargspec, getoptmetas, autotype, smartadd
 
 class ScanError(Exception): pass
 
-class Scanner(object):
+class Command(object):
 
     deftype = staticmethod(autotype)
     metatypes = {'N': int, 'NUM': int}
