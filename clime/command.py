@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from inspect import getdoc
+from inspect import getdoc, isbuiltin
 from .helper import getargspec, getoptmetas, autotype, smartadd 
 
 class ScanError(Exception): pass
@@ -136,6 +136,18 @@ class Command(object):
             else:
                 pargs.insert(pos, val)
                 del kargs[argname]
+
+        # map all of the optargs to posargs for `built-in function`,
+        # because a `built-in function` only accept positional arguments
+        if isbuiltin(self.func):
+            print 'test'
+            for key, value in kargs.items():
+                pargs[self.args.index(key)] = value
+            kargs = {}
+            try:
+                pargs = pargs[:-pargs.index(None) or None]
+            except ValueError:
+                pass
 
         return pargs, kargs
 
