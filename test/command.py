@@ -17,4 +17,4 @@ if __name__ == '__main__':
     s = '-t 1 -t2 -t=3 --time 4 --time=5 hey1 -dddd hey2'
     print s
     print repeat_cmd.scan(s)
-
+    print repeat_cmd.usage()

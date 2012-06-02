@@ -126,3 +126,30 @@ class Command(object):
                 kargs[mflag] = not self.defaults[mflag]
 
         return pargs, kargs
+
+    def usage(self):
+
+        optargs = self.defaults.keys()
+        optargs.sort()
+
+        rbindings = {}
+        for opt, target in self.bindings.iteritems():
+            shortcuts = rbindings.setdefault(target, [])
+            shortcuts.append(opt)
+
+        usage = []
+
+        for optarg in optargs:
+            opts = [optarg]
+            opts.extend( rbindings[optarg] )
+            for i, opt in enumerate(opts):
+                opts[i] ='%s%s' % ('-' * (1+(len(opt)>1)), opt)
+                meta = self.metavars[opt]
+                if meta:
+                    opts[i] += ' '+meta
+            usage.append('[%s]' % ' | '.join(opts))
+
+        posargs = self.args[:len(optargs)-1]
+        usage.extend( map(str.upper, posargs) )
+            
+        return ' '.join(usage)
