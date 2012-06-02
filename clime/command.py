@@ -125,6 +125,18 @@ class Command(object):
             if kargs.get(mflag, 0) is None:
                 kargs[mflag] = not self.defaults[mflag]
 
+        # de-keyword (keyword-first resolving)
+        for pos, argname in enumerate(self.args):
+            plen = len(pargs)
+            if pos > plen: break
+            try:
+                val = kargs[argname]
+            except KeyError:
+                pass
+            else:
+                pargs.insert(pos, val)
+                del kargs[argname]
+
         return pargs, kargs
 
     def usage(self):
