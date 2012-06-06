@@ -27,6 +27,9 @@ class Program(object):
             self.defcmdname = self.cmdfs.keys()[0]
         self.progname = progname or sys.argv[0]
 
+    def complain(self, s):
+        print >> sys.stderr, '%s: %s' % (self.progname, s)
+
     def main(self, rawargs=None):
 
         if rawargs is None:
@@ -59,7 +62,13 @@ class Program(object):
             return
 
         cmd = Command(cmdf)
-        obj = cmd(rawargs)
+
+        try:
+            obj = cmd(rawargs)
+        except (TypeError, ScanError), e:
+            self.complain(e)
+            return
+
         if obj:
             if isgenerator(obj):
                 for result in obj:
