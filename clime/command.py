@@ -150,7 +150,11 @@ class Command(object):
 
         return pargs, kargs
 
-    def usage(self, name=None):
+    def __call__(self, rawargs):
+        pargs, kargs = self.scan(rawargs)
+        return self.func(*pargs, **kargs)
+
+    def getusage(self, name=None):
 
         optargs = self.defaults.keys()
         optargs.sort()
