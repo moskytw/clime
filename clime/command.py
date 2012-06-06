@@ -17,8 +17,8 @@ class Command(object):
         # basic infomation
         self.func = func
         self.args = args
-        self.vararg = vararg
-        self.keyword = keyword
+        #self.vararg = vararg
+        #self.keyword = keyword
 
         # 1. put the args and defvals into a dict
         # 2. collect the mode-flags
