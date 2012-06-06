@@ -140,7 +140,6 @@ class Command(object):
         # map all of the optargs to posargs for `built-in function`,
         # because a `built-in function` only accept positional arguments
         if isbuiltin(self.func):
-            print 'test'
             for key, value in kargs.items():
                 pargs[self.args.index(key)] = value
             kargs = {}
