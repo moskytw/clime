@@ -141,8 +141,12 @@ class Command(object):
         # because a `built-in function` only accept positional arguments
         if isbuiltin(self.func):
             for key, value in kargs.items():
-                pargs[self.args.index(key)] = value
-            kargs = {}
+                try:
+                    pargs[self.args.index(key)] = value
+                except ValueError:
+                    pass
+                else:
+                    kargs = {}
             try:
                 pargs = pargs[:-pargs.index(None) or None]
             except ValueError:
