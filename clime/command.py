@@ -151,7 +151,7 @@ class Command(object):
 
         return pargs, kargs
 
-    def usage(self):
+    def usage(self, name=None):
 
         optargs = self.defaults.keys()
         optargs.sort()
@@ -175,5 +175,8 @@ class Command(object):
 
         posargs = self.args[:-len(optargs) or None]
         usage.extend( map(str.upper, posargs) )
+
+        if name is None:
+            name = self.func.__name__
             
-        return ' '.join(usage)
+        return '%s %s' % (name, ' '.join(usage))
