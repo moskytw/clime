@@ -113,7 +113,7 @@ class Command(object):
                     continue
 
             # if doesnt start with '-' or length of piece is not enough
-            pargs.append( autotype(piece) )
+            pargs.append( self.deftype(piece) )
 
         # reduce the collected values
         for key, vals in kargs.iteritems():
