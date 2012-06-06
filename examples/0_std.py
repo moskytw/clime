@@ -1,4 +1,6 @@
-from clime import Program
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from math import log, hypot
 
 def repeat(string, time=2, debug=False):
@@ -11,5 +13,4 @@ def repeat(string, time=2, debug=False):
     print string * time
 
 if __name__ == '__main__':
-    p = Program()
-    p.main()
+    import clime.now
