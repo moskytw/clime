@@ -3,13 +3,13 @@
 
 from clime import Command
 
-def repeat(s, time=2, debug=False):
+def repeat(string, time=2, debug=False):
     '''repeat s n times
 
     -t N, --time N   repeat N times.
     -d, --debug      for dubug'''
 
-    print s * time
+    print string * time
 
 if __name__ == '__main__':
 
