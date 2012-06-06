@@ -24,12 +24,14 @@ if __name__ == '__main__':
 
     hypot_cmd = Command(hypot)
 
-    s = '3 4'
+    s = '-y3 4'
+    print s
     print hypot_cmd.scan(s)
     print hypot_cmd.usage()
 
     log_cmd = Command(log)
 
     s = '10'
+    print s
     print log_cmd.scan(s)
     print log_cmd.usage()
