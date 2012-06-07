@@ -17,10 +17,10 @@ class Program(object):
         if obj is None:
             obj = sys.modules['__main__']
 
-        if ismodule(obj):
-            obj = getmembers(obj)
-        elif isinstance(obj, dict):
+        if isinstance(obj, dict):
             obj = obj.iteritems()
+        else:
+            obj = getmembers(obj)
 
         self.cmdfs = {}
         iskinds = (isbuiltin, isfunction, ismethod)
