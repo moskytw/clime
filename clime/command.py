@@ -7,25 +7,11 @@ from .helper import getargspec, getoptmetas, autotype, smartlyadd
 class ScanError(Exception): pass
 
 class Command(object):
-    """Make a function, a built-in function or a bound method accept
+    '''Make a function, a built-in function or a bound method accepts
     arguments from command line.
 
-    Set the alias of option in your documentation of function. Example:
-
-    ::
-
-        def repeat(string, time=2, debug=False):
-            '''repeat s n times
-
-            options:
-                -t N, --time N   repeat N times.
-                -d, --debug      for dubug'''
-
-            print string * time
-    .. versionchange:: 0.1.4
-       1. It is almost rewritten.
-       2. Get aliases by parsing documentaion of function. Removed the argumnets, `aliases`, `name` and `doc`.
-    """
+    .. versionchanged:: 0.1.4
+       It is almost rewritten.'''
 
     metatypes = {'N': int, 'NUM': int}
 
@@ -75,9 +61,9 @@ class Command(object):
 
         `rawargs` can be `string` or `list`.
 
-        It uses *keyword-first resolving* -- If keyword and positional
-        arguments are at same place, the keyword argument will take this
-        place and push the positional argument to next.
+        Uses *keyword-first resolving* -- If keyword and positional arguments
+        are at same place, the keyword argument will take this place and push
+        the positional argument to next.
 
         Example:
 
@@ -108,9 +94,12 @@ class Command(object):
         >>> test_cmd('-bbb -x first -x second -x third')
         3 ['first', 'second', 'third']
 
-        .. versionchange:: 0.1.4
-           1. It is rewritten from `Command.parse` (0.1.3).
-           2. Use custom parser instead of `getopt`.
+        .. versionchanged:: 0.1.4
+           Use custom parser instead of `getopt`.
+
+        .. versionchanged:: 0.1.4
+           It is rewritten from `Command.parse` (0.1.3).
+
         '''
 
         def mktypewrapper(t):
@@ -123,7 +112,7 @@ class Command(object):
 
         def gettype(opt):
             meta = self.metavars.get(opt, None)
-            t = self.metatypes.get(meta, self.deftype)
+            t = self.metatypes.get(meta, self.defautotype)
             return mktypewrapper(t)
 
         def nextarg():
@@ -178,7 +167,7 @@ class Command(object):
                     continue
 
             # if doesnt start with '-' or length of piece is not enough
-            pargs.append( self.deftype(piece) )
+            pargs.append( self.defautotype(piece) )
 
         # reduce the collected values
         for key, vals in kargs.iteritems():
@@ -228,7 +217,7 @@ class Command(object):
     def getusage(self, isdefault=False):
         '''Return the usage of this command.
 
-        Example:
+        Example: ::
 
             files [--mode VAL] [PATHS]...
 

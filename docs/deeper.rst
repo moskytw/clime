@@ -1,33 +1,73 @@
 Take a Deeper Look at Clime
 ===========================
 
-This page contains the many details of Clime. If you just want to use, you can
+This page contains the details of Clime. If you just want to use Clime, you can
 skip this page.
 
-What Happen after `clime.main()`
---------------------------------
+About ``import clime.now``
+--------------------------
 
-When ``clime.main()`` is called, Clime gets the '__main__' module in
-``sys.modules`` and scans the functions in it. And converts them into
-:class:`.Command` objects.
+The content in `clime.now` is roughly same as: ::
 
-Then, Clime takes the first argument as command name. Find the command out
-and call that command.
+    from clime import Program
+    Program().main()
 
-Introduce the Classes
----------------------
+If you want to customize the CLI program, see :class:`.Program` for more details.
 
-`clime` has two main classes, :class:`.Command` and :class:`.Program`.
+Options in Docstring
+--------------------
 
-Class `Command` makes a function, built-in function or bound method to
-accpect the argument from command line. Class `Program` scans the attributes
-in an object or a dict and make that into a CLI program.
+The class, :class:`.Command`, will scan the options and metavars in docstring.
 
-Two classes are callable. You can call them with the command-line-style argument.
+The lines match the following regex will be picked. ::
+
+    r'*(-.+?) {2,}'
+
+Then Clime will use this regex to find out options and metavars in picked
+lines. ::
+
+    r'''--?({0}) # option
+       (?:
+          \[?
+          [= ]
+          ({0})  # metavar
+       )?
+       ,?
+    ''' \
+    .format('[^\s,=\[\]]+')
+
+Some examples: ::
+
+    -d, --debug                enable debug mode
+    -q, -s, --quiet, --slient  enable slient mode
+    -n N, --times N            how many times do you want
+
+Meta Variables
+--------------
+
+A meta variable also represent the type. By default, `N`, `NUM` is ``int``. You
+can add the mapping of metavar and the type at :attr:`.Command.metatypes`.
+
+Introducing the Classes
+-----------------------
+
+Clime has two main classes, :class:`.Command` and :class:`.Program`.
+
+Class `Command` makes a function, built-in function or bound method accpects
+the argument from command line. Class `Program` scans the attributes in an
+object or a dict and make them into a CLI program.
 
 The API of Clime
 ----------------
 
-.. automodule:: clime
+.. autoclass:: clime.Program
+    :members:
+    :undoc-members:
+
+.. autoclass:: clime.Command
+    :members:
+    :undoc-members:
+
+.. automodule:: clime.helper
     :members:
     :undoc-members:

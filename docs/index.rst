@@ -3,8 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Introduce
-=========
+Introduction
+============
+
+.. note::
+    The 0.1.4 is a rewrote version and it does **not** provide backward
+    compatibility.
 
 Clime is a Python module to let you convert a Python program contains
 functions into a multi-command CLI program.
@@ -18,40 +22,55 @@ Let me show an example for you.
 CLI-ize ME!
 -----------
 
-A simple script here: ::
+Here we have a simple script with docstring here: ::
 
-    #file: test.py
-    def repeat(string, n=2):
-        for i in range(n):
-            print string
-
-After add two lines, ::
-
-    import clime
-    clime.main()
-
-... you have a CLI program now! ::
+    # filename: repeat.py
     
-    $ python test.py twice
+    def repeat(string, time=2):
+        '''repeat string n times
+
+        options:
+            -n N, --time N  repeat N times.
+        '''
+        
+        print string * time
+
+After add this line, ::
+
+    import clime.now
+
+... you now have a CLI program! ::
+    
+    $ python repeat.py twice
     twice
     twice
 
-    $ python test.py -n3 thrice
+    $ python repeat.py -n3 thrice
     thrice
     thrice
     thrice
 
-And it also support ``--help``: ::
+And it can gerneate the usage from your source: ::
 
-    usage: test.py [-n VAL] STRING 
-       or: test.py repeat [-n VAL] STRING
+    $ python repeat.py --help
+    usage: [--time N | -n N] STRING
+       or: repeat [--time N | -n N] STRING
 
-If you wrote the docstring, it will also show on help.
+If you wrote a docstring, it will also show up in help text. ::
+
+    $ python repeat.py repeat --help
+    usage: [--time N | -n N] STRING
+       or: repeat [--time N | -n N] STRING
+
+    repeat string n times
+
+    options:
+        -n N, --time N  repeat N times.
     
 You can find more examples in the `clime/examples`_.
 
 .. seealso::
-   :meth:`clime.Command.parse` for more details about argument parsing.
+   :meth:`.Command.scan` for more details about argument parsing.
 
 .. _`clime/examples`:
     https://github.com/moskied/clime/tree/master/examples
@@ -94,36 +113,28 @@ Here is the basic usage of Clime.
 
 You have two different ways to use Clime.
 
-1. **Insert Lines into Source**
+1. **Insert A Line into Your Source**
    
-   Just add two lines below into your source ::
+   Just add this line into your source ::
    
-     import clime
-     clime.main()
+     import clime.now
    
-   Recommend to put the codes into the ``if __name__ == '__main__':`` block.
+   It is recommend to put the codes into the ``if __name__ == '__main__':`` block.
 
 2. **Use clime.py as A Command**
    
-   `clime.py` is also an executable script. Use it to convert a moudle or a
-   Python file temporarily.
+   `clime` is also an executable module. Use it to convert a module or a
+   Python file temporarily. ::
    
-   For convenience, make a command for `clime.py` ::
-   
-     $ sudo ln -s /usr/local/lib/python<VERSION>/dist-packages/clime.py /usr/local/bin/clime
-     $ sudo chmod 755 /usr/local/bin/clime 
-     
-   Then, you can use ``clime`` as a normal command ::
-
-     $ clime MODULE_OR_FILE ARGS
+     $ python -m clime TARGET
 
 .. seealso::
-    :func:`clime.main` for more usages.
+    :func:`clime.Program` for more usages.
 
 More Details
 ------------
 
-It is the all of basic of Clime. If you want to know more, details are here:
+These are the basics of Clime usage. If you want to know more, details are here:
 
 .. toctree::
    :maxdepth: 2

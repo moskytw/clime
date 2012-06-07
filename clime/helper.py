@@ -4,7 +4,8 @@
 import re, inspect
 
 def autotype(s):
-    '''Automative detect the type of `s` and convert `s` into it.'''
+    '''Automative detect the type (int, float or string) of `s` and convert `s`
+    into it.'''
 
     if not isinstance(s, str):
         return s
@@ -20,7 +21,7 @@ def autotype(s):
 def getargspec(func):
     '''Get the argument specification of the `func`.
     
-    `func` is a Python function, built-in function or bound method.
+    The `func` is a Python function, built-in function or bound method.
     
     It get the argument specification by parsing documentation of the
     function if `func` is a built-in function.
@@ -28,7 +29,8 @@ def getargspec(func):
     .. versionchanged:: 0.1.4
        Remove `self` automatively if `func` is a method.
 
-    .. versionadded:: 0.1.3'''
+    .. versionadded:: 0.1.3
+    '''
 
     if inspect.isfunction(func):
         return inspect.getargspec(func)
@@ -63,7 +65,7 @@ DOCOPT_RE = re.compile(
            (?:
               \[?
               [= ]
-              ({0})  # metaval
+              ({0})  # metavar
            )?
            ,?
         ''' \
@@ -72,7 +74,14 @@ DOCOPT_RE = re.compile(
    , re.X)
 
 def getoptmetas(doc):
-    '''Yield the option and the metavar in each line'''
+    '''Yield the option and the metavar in each line.
+    
+    In each iteration, it will yield a list like: ::
+        
+        [('opt1', 'META'), ('opt2', None), ...]
+
+    .. versionadded:: 0.1.4
+    '''
 
     for line in doc.split('\n'):
         m = DOCOPTDESC_RE.match(line)
@@ -80,7 +89,29 @@ def getoptmetas(doc):
         yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
 
 def smartlyadd(a, b):
-    '''Smartly add `a` and `b`.'''
+    '''Smartly add `a` and `b`.
+    
+    +------------+--------+----------------+
+    | a          | b      | return         |
+    +============+========+================+
+    | object     | <any>  | b              |
+    +------------+--------+----------------+
+    | None       | None   | 2              |
+    +------------+--------+----------------+
+    | None       | <else> | b              |
+    +------------+--------+----------------+
+    | int        | None   | a+1            |
+    +------------+--------+----------------+
+    | appendable | <any>  | a.append(b); a |
+    +------------+--------+----------------+
+    | <else>     | <any>  | [a, b]         |
+    +------------+--------+----------------+
+    
+    The `object` which is class ``object`` repersents the hyper None.
+
+    .. versionadded:: 0.1.4
+    '''
+
     if a is object:
         return b
     elif a is None:

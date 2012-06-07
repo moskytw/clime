@@ -6,13 +6,19 @@ from inspect  import getmembers, ismodule, isbuiltin, isfunction, ismethod, isge
 from .command import Command, ScanError
 
 class Program(object):
+    '''Convert a module, class or dict into multi-command CLI program.
+
+    The `obj` is a module, class or dict.
+
+    The `defcmdname` is the default command name.
+
+    The `progname` is the program name while printing error (:meth:`.complain`).
+
+    .. versionchanged:: 0.1.4
+       It is almost rewritten.
+    '''
 
     def __init__(self, obj=None, defcmdname=None, progname=None):
-        '''Convert a module, class or dict into multi-command CLI program.
-
-        .. versionchanged:: 0.1.4
-           Almost rewrited.'''
-
 
         if obj is None:
             obj = sys.modules['__main__']
@@ -39,7 +45,9 @@ class Program(object):
         print >> sys.stderr, '%s: %s' % (self.progname, s)
 
     def main(self, rawargs=None):
-        '''Main process of program.
+        '''The main process of CLI program.
+
+        The `rawargs` is the arguments from command line.
 
         If `rawargs` is None, it will take `sys.argv[1:]`.'''
 
@@ -50,6 +58,7 @@ class Program(object):
         else:
             rawargs = rawargs[:]
 
+        # decide the command name
         cmdname = None
         cmdf = None
         try:
@@ -57,20 +66,24 @@ class Program(object):
         except IndexError:
             pass
         else:
+            # user requires the help
             if cmdname == '--help':
                 self.printusage()
                 return
             cmdf = self.cmdfs.get(cmdname, None)
-
+        
+        # use default command name
         if cmdf is None and self.defcmdname:
             if cmdname is not None:
                 rawargs.insert(0, cmdname)
             cmdf = self.cmdfs.get(self.defcmdname, None)
         
+        # print usage if still get nothing
         if cmdf is None:
             self.printusage()
             return
 
+        # user requires the help of this command
         if '--help' in rawargs:
             self.printusage(cmdname)
             return
@@ -83,7 +96,7 @@ class Program(object):
             self.complain(e)
             return
 
-        if obj:
+        if obj is not None:
             if isgenerator(obj):
                 for result in obj:
                     print result
@@ -91,7 +104,7 @@ class Program(object):
                 print obj
 
     def printusage(self, cmdname=None):
-        '''Print usage of all or partial command.'''
+        '''Print usage of all commands or partial command.'''
 
         def appendusage(cmdname, isdefault=False):
             cmdf = self.cmdfs[cmdname]
@@ -102,6 +115,7 @@ class Program(object):
         cmdf = None
 
         if cmdname is None:
+            # print all usages
 
             if self.defcmdname is not None:
                 appendusage(self.defcmdname, True)
@@ -110,6 +124,8 @@ class Program(object):
                 appendusage(cmdname)
 
         else:
+            # print partial usage
+
             if self.defcmdname == cmdname:
                 appendusage(cmdname, isdefault=True)
             cmdf = appendusage(cmdname)
@@ -121,6 +137,7 @@ class Program(object):
                 print '   or:',
             print usage
 
-        if cmdf:
+        if cmdf is not None:
+            # print doc if requires partial usage
             print
             print getdoc(cmdf)
