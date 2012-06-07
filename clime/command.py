@@ -36,7 +36,7 @@ class Command(object):
         # basic infomation
         self.func = func
         self.args = args
-        #self.vararg = vararg
+        self.vararg = vararg
         #self.keyword = keyword
 
         # 1. put the args and defvals into a dict
@@ -225,7 +225,7 @@ class Command(object):
 
         Example:
 
-            files [--mode VAL] [paths]...
+            files [--mode VAL] [PATHS]...
 
         If `isdefault` is True, it will render usage without function name.
         '''
@@ -252,6 +252,9 @@ class Command(object):
 
         posargs = self.args[:-len(optargs) or None]
         usage.extend( map(str.upper, posargs) )
+
+        if self.vararg:
+            usage.append('[%s]... ' % self.vararg.upper())
 
         if isdefault:
             return '%s' % ' '.join(usage)
