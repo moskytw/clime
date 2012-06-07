@@ -2,25 +2,28 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from inspect  import getmembers, isclass, isgenerator, getdoc
+from inspect  import getmembers, ismodule, isbuiltin, isfunction, ismethod, isgenerator, getdoc
 from .command import Command, ScanError
 
 class Program(object):
 
     def __init__(self, obj=None, defcmdname=None, progname=None):
 
-        self.cmdfs = {}
+
         if obj is None:
             obj = sys.modules['__main__']
 
-        if isinstance(obj, dict):
-            self.cmdfs = obj
-        else:
-            for name, obj in getmembers(obj):
-                if not callable(obj): continue
-                if isclass(obj): continue
-                if name.startswith('_'): continue
-                self.cmdfs[name] = obj
+        if ismodule(obj):
+            obj = getmembers(obj)
+        elif isinstance(obj, dict):
+            obj = obj.iteritems()
+
+        self.cmdfs = {}
+        iskinds = (isbuiltin, isfunction, ismethod)
+        for name, obj in obj:
+            if name.startswith('_'): continue
+            if not any( iskind(obj) for iskind in iskinds ): continue
+            self.cmdfs[name] = obj
 
         self.defcmdname = defcmdname
         if len(self.cmdfs) == 1:
