@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from inspect import getdoc, isbuiltin
-from .helper import getargspec, getoptmetas, autotype, smartadd 
+from .helper import getargspec, getoptmetas, autotype, smartlyadd 
 
 class ScanError(Exception): pass
 
@@ -117,7 +117,7 @@ class Command(object):
 
         # reduce the collected values
         for key, vals in kargs.iteritems():
-            val = reduce(smartadd, vals, object)
+            val = reduce(smartlyadd, vals, object)
             kargs[key] = val
 
         # toggle the bool default value
