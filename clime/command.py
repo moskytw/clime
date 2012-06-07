@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from inspect import getdoc, isbuiltin
-from .helper import getargspec, getoptmetas, autotype, smartlyadd 
+from inspect  import getdoc, isbuiltin
+from .helpers import getargspec, getoptmetas, autotype, smartlyadd 
 
 class ScanError(Exception): pass
 

@@ -3,7 +3,7 @@
 
 import unittest
 from types import BuiltinFunctionType
-from clime.helper import *
+from clime.helpers import *
 
 class TestClimeHelper(unittest.TestCase):
 
