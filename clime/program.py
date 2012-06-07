@@ -49,6 +49,9 @@ class Program(object):
         except IndexError:
             pass
         else:
+            if cmdname == '--help':
+                self.printusage()
+                return
             cmdf = self.cmdfs.get(cmdname, None)
 
         if cmdf is None and self.defcmdname:
@@ -61,7 +64,7 @@ class Program(object):
             return
 
         if '--help' in rawargs:
-            self.printusage(cmdf)
+            self.printusage(cmdname)
             return
 
         cmd = Command(cmdf)
@@ -79,25 +82,29 @@ class Program(object):
             else:
                 print obj
 
-    def printusage(self, cmdf=None):
+    def printusage(self, cmdname=None):
+
+
+        def appendusage(cmdname, isdefault=False):
+            cmdf = self.cmdfs[cmdname]
+            usages.append( Command(cmdf).getusage(isdefault) )
+            return cmdf
 
         usages = []
-        cmd = None
+        cmdf = None
 
-        if cmdf is None:
+        if cmdname is None:
 
             if self.defcmdname is not None:
-                cmdf = self.cmdfs[self.defcmdname]
-                usages.append( Command(cmdf).getusage() )
+                appendusage(self.defcmdname, True)
 
             for cmdname in sorted(self.cmdfs.keys()):
-                if cmdname != self.defcmdname:
-                    cmdf = self.cmdfs[cmdname]
-                    usages.append( Command(cmdf).getusage() )
+                appendusage(cmdname)
 
         else:
-            cmd = Command(cmdf)
-            usages.append(cmd.getusage())
+            if self.defcmdname == cmdname:
+                appendusage(cmdname, isdefault=True)
+            cmdf = appendusage(cmdname)
 
         for i, usage in enumerate(usages):
             if i == 0:
@@ -106,6 +113,6 @@ class Program(object):
                 print '   or:',
             print usage
 
-        if cmd:
+        if cmdf:
             print
-            print getdoc(cmd.func)
+            print getdoc(cmdf)
