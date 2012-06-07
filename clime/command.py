@@ -27,8 +27,13 @@ class Command(object):
        2. Get aliases by parsing documentaion of function. Removed the argumnets, `aliases`, `name` and `doc`.
     """
 
-    deftype = staticmethod(autotype)
     metatypes = {'N': int, 'NUM': int}
+
+    @staticmethod
+    def defautotype(x):
+        '''The default type auto-detection function. It use `autotype` by
+        default.'''
+        return autotype(x)
 
     def __init__(self, func):
         args, vararg, keyword, defvals = getargspec(func)
