@@ -4,6 +4,7 @@
 import re, inspect
 
 def autotype(s):
+    '''Automative detect the type of `s` and convert `s` into it.'''
 
     if not isinstance(s, str):
         return s
@@ -71,7 +72,7 @@ DOCOPT_RE = re.compile(
    , re.X)
 
 def getoptmetas(doc):
-    '''yield the option and the metavar in each line'''
+    '''Yield the option and the metavar in each line'''
 
     for line in doc.split('\n'):
         m = DOCOPTDESC_RE.match(line)
@@ -79,6 +80,7 @@ def getoptmetas(doc):
         yield [m.groups() for m in DOCOPT_RE.finditer(m.group(1))]
 
 def smartlyadd(a, b):
+    '''Smartly add `a` and `b`.'''
     if a is object:
         return b
     elif a is None:

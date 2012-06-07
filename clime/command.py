@@ -7,6 +7,25 @@ from .helper import getargspec, getoptmetas, autotype, smartlyadd
 class ScanError(Exception): pass
 
 class Command(object):
+    """Make a function, a built-in function or a bound method accept
+    arguments from command line.
+
+    Set the alias of option in your documentation of function. Example:
+
+    ::
+
+        def repeat(string, time=2, debug=False):
+            '''repeat s n times
+
+            options:
+                -t N, --time N   repeat N times.
+                -d, --debug      for dubug'''
+
+            print string * time
+    .. versionchange:: 0.1.4
+       1. It is almost rewritten.
+       2. Get aliases by parsing documentaion of function. Removed the argumnets, `aliases`, `name` and `doc`.
+    """
 
     deftype = staticmethod(autotype)
     metatypes = {'N': int, 'NUM': int}
@@ -47,6 +66,47 @@ class Command(object):
                 self.bindings[opt] = target
 
     def scan(self, rawargs):
+        '''Scan the `rawargs`, and return a tuple (`pargs`, `kargs`).
+
+        `rawargs` can be `string` or `list`.
+
+        It uses *keyword-first resolving* -- If keyword and positional
+        arguments are at same place, the keyword argument will take this
+        place and push the positional argument to next.
+
+        Example:
+
+        >>> def files(mode='r', *paths):
+        >>>     print mode, paths
+        >>> 
+        >>> files_cmd = Command(files)
+        >>> files_cmd.scan('--mode w f1.txt f2.txt')
+        (['w', 'f1.txt', 'f2.txt'], {})
+        >>> files_cmd('--mode w f1.txt f2.txt')
+        w ('f1.txt', 'f2.txt')    
+
+        If an no-value options is found and the value in default of function is
+        boolean, it will put the opposite boolean into `optargs`.
+
+        >>> def test(b=True, x=None):
+        >>>     print b, x
+        >>> 
+        >>> test_cmd = Command(test)
+        >>> test_cmd('-b')
+        False None
+
+        If duplicate options are found and
+
+        1. the default of function is boolean: it will count this options;
+        2. otherwise: it will put the value into a list.
+
+        >>> test_cmd('-bbb -x first -x second -x third')
+        3 ['first', 'second', 'third']
+
+        .. versionchange:: 0.1.4
+           1. It is rewritten from `Command.parse` (0.1.3).
+           2. Use custom parser instead of `getopt`.
+        '''
 
         def mktypewrapper(t):
             def typewrpper(o):
@@ -155,10 +215,20 @@ class Command(object):
         return pargs, kargs
 
     def __call__(self, rawargs):
+        '''Scan `rawargs` and call the function.'''
+
         pargs, kargs = self.scan(rawargs)
         return self.func(*pargs, **kargs)
 
     def getusage(self, isdefault=False):
+        '''Return the usage of this command.
+
+        Example:
+
+            files [--mode VAL] [paths]...
+
+        If `isdefault` is True, it will render usage without function name.
+        '''
 
         optargs = self.defaults.keys()
         optargs.sort()

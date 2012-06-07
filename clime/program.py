@@ -8,6 +8,10 @@ from .command import Command, ScanError
 class Program(object):
 
     def __init__(self, obj=None, defcmdname=None, progname=None):
+        '''Convert a module, class or dict into multi-command CLI program.
+
+        .. versionchanged:: 0.1.4
+           Almost rewrited.'''
 
 
         if obj is None:
@@ -31,9 +35,13 @@ class Program(object):
         self.progname = progname or sys.argv[0]
 
     def complain(self, s):
+        '''Print `s` to `stderr` with the program name prefix'''
         print >> sys.stderr, '%s: %s' % (self.progname, s)
 
     def main(self, rawargs=None):
+        '''Main process of program.
+
+        If `rawargs` is None, it will take `sys.argv[1:]`.'''
 
         if rawargs is None:
             rawargs = sys.argv[1:]
@@ -83,7 +91,7 @@ class Program(object):
                 print obj
 
     def printusage(self, cmdname=None):
-
+        '''Print usage of all or partial command.'''
 
         def appendusage(cmdname, isdefault=False):
             cmdf = self.cmdfs[cmdname]
