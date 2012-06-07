@@ -214,8 +214,8 @@ class Command(object):
 
         return pargs, kargs
 
-    def __call__(self, rawargs):
-        '''Scan `rawargs` and call the function.'''
+    def execute(self, rawargs):
+        '''Execute this command with `rawargs`.'''
 
         pargs, kargs = self.scan(rawargs)
         return self.func(*pargs, **kargs)

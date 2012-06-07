@@ -78,7 +78,7 @@ class Program(object):
         cmd = Command(cmdf)
 
         try:
-            obj = cmd(rawargs)
+            obj = cmd.execute(rawargs)
         except (TypeError, ScanError), e:
             self.complain(e)
             return
