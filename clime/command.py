@@ -138,7 +138,7 @@ class Command(object):
 
                 if plen >= 3 and piece[1] == '-':
                     # keyword option: --options [value]
-                    opt = piece[2:]
+                    opt = piece[2:].replace('-', '_')
                     key = self.bindings.get(opt, opt)
                     vals = kargs.setdefault(key, [])
                     if key in self.mflags:
@@ -238,7 +238,7 @@ class Command(object):
             opts = [optarg]
             opts.extend( rbindings.get(optarg, []) )
             for i, opt in enumerate(opts):
-                opts[i] ='%s%s' % ('-' * (1+(len(opt)>1)), opt)
+                opts[i] ='%s%s' % ('-' * (1+(len(opt)>1)), opt.replace('_', '-'))
                 meta = self.metavars.get(opt, None)
                 if meta:
                     opts[i] += ' '+meta
