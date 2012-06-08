@@ -66,7 +66,7 @@ class Program(object):
         except IndexError:
             pass
         else:
-            # user requires the help
+            # user requires the global help
             if cmdname == '--help':
                 self.printusage()
                 return
@@ -78,7 +78,7 @@ class Program(object):
                 rawargs.insert(0, cmdname)
             cmdf = self.cmdfs.get(self.defcmdname, None)
         
-        # print usage if still get nothing
+        # print usage if still got nothing
         if cmdf is None:
             self.printusage()
             return
