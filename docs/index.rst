@@ -4,16 +4,6 @@
    contain the root `toctree` directive.
 
 Introduction
-<<<<<<< HEAD
-=========
-
-Clime is a Python module which lets you convert a Python program containing
-functions into a multi-command CLI program.
-
-Clime is *very easy* to use and can highly to completely decoupled from your source.
-For simple CLI tasks, Clime is a better choice than the heavyduty `optparse` or `argparse`
-libraries.
-=======
 ============
 
 .. note::
@@ -31,18 +21,13 @@ from writing the settings of options. You can focus on writing the help text of
 your CLI program.
 
 It is a better choice than the heavy `optparse` or `argparse` for simple CLI tasks.
->>>>>>> develop
 
 Let me show you an example.
 
 CLI-ize ME!
 -----------
 
-<<<<<<< HEAD
-Here we have a simple script: ::
-=======
 Here we have a simple script with docstring here: ::
->>>>>>> develop
 
     # filename: repeat.py
     
@@ -55,11 +40,7 @@ Here we have a simple script with docstring here: ::
         
         print string * time
 
-<<<<<<< HEAD
-After adding these two lines, ::
-=======
 After add this line, ::
->>>>>>> develop
 
     import clime.now
 
@@ -74,21 +55,14 @@ After add this line, ::
     thrice
     thrice
 
-<<<<<<< HEAD
-And it also supports ``--help``: ::
-=======
 And it gerneate the usage from your function: ::
 
     $ python repeat.py --help
     usage: [--time N | -n N] STRING
        or: repeat [--time N | -n N] STRING
->>>>>>> develop
 
 If you wrote a docstring, it will also show up in help text. ::
 
-<<<<<<< HEAD
-If you wrote a docstring, it will show up as help text.
-=======
     $ python repeat.py repeat --help
     usage: [--time N | -n N] STRING
        or: repeat [--time N | -n N] STRING
@@ -97,7 +71,6 @@ If you wrote a docstring, it will show up as help text.
 
     options:
         -n N, --time N  repeat N times.
->>>>>>> develop
     
 You can find more examples in the `clime/examples`_.
 
@@ -147,26 +120,13 @@ You have two different ways to use Clime.
 
 1. **Insert A Line into Your Source**
    
-<<<<<<< HEAD
-   Just add the two lines below into your source code::
-=======
    Just add this line into your source ::
->>>>>>> develop
    
      import clime.now
    
-<<<<<<< HEAD
-   It is recommended to add this into the ``if __name__ == '__main__':`` block.
-
-2. **Use clime.py as A Command**
-   
-   `clime.py` is also an executable script. Use it to convert a module or a
-   Python file temporarily.
-=======
    It is recommend to put the codes into the ``if __name__ == '__main__':`` block.
 
 2. **Use Clime as A Command**
->>>>>>> develop
    
    `clime` is also an executable module. Use it to convert a module or a
    Python file temporarily. ::
