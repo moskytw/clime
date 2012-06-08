@@ -179,6 +179,11 @@ class Command(object):
             if kargs.get(mflag, 0) is None:
                 kargs[mflag] = not self.defaults[mflag]
 
+        # copy the default value
+        for key, value in self.defaults.iteritems():
+            if key not in kargs:
+                kargs[key] = value
+
         # de-keyword (keyword-first resolving)
         for pos, argname in enumerate(self.args):
             plen = len(pargs)
