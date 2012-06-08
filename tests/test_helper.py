@@ -2,17 +2,18 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import clime
+from types import BuiltinFunctionType
+from clime.helpers import *
 
-class TestClime(unittest.TestCase):
+class TestClimeHelper(unittest.TestCase):
 
     def test_autotype(self):
         cases   = ('string', '100', '100.0', None)
         answers = ('string',  100 ,  100.0 , None)
         for case, answer in zip(cases, answers):
-            self.assertEqual(clime.autotype(case), answer)
+            self.assertEqual(autotype(case), answer)
 
-    def test_argspecfromdoc(self):
+    def test_getargspec(self):
 
         docs = [
             None,
@@ -47,8 +48,21 @@ class TestClime(unittest.TestCase):
 
         for doc, answer in zip(docs, answers):
             f.__doc__ = doc
-            self.assertEqual(trans(clime.getargspec( f )), answer)
+            self.assertEqual(trans(getargspec( f )), answer)
 
+    def test_getoptmetas(self):
+
+        doc = """
+        -d, --debug                enable debug mode
+        -q, -s, --quiet, --slient  enable slient mode
+        -n N, --times N            how many times do you want
+        """
+
+        answer = [ [('d', None), ('debug', None)],
+                   [('q', None), ('s', None), ('quiet', None), ('slient', None)],
+                   [('n', 'N'), ('times', 'N')] ]
+
+        self.assertEqual(list(getoptmetas(doc)), answer)
 
 if __name__ == '__main__':
     unittest.main()
