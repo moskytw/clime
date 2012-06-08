@@ -10,12 +10,17 @@ Introduction
     The 0.1.4 is a rewrote version and it does **not** provide backward
     compatibility.
 
-Clime is a Python module to let you convert a Python program contains
-functions into a multi-command CLI program.
+Clime let you convert a module, a dict or an instance into a multi-command CLI
+program.
 
-Clime is *very easy* to use and *low couple* (even not!) with your source.
-It is a better choice than the heavy `optparse` or `argparse` for simple CLI
-tasks. 
+It scans the object to find the functions out, so it is **low couple** with
+your source.
+
+It scan the aliases and metavars of options from docstring, so you are free
+from writing the settings of options. You can focus on writing the help text of
+your CLI program.
+
+It is a better choice than the heavy `optparse` or `argparse` for simple CLI tasks.
 
 Let me show an example for you.
 
@@ -50,7 +55,7 @@ After add this line, ::
     thrice
     thrice
 
-And it can gerneate the usage from your source: ::
+And it gerneate the usage from your function: ::
 
     $ python repeat.py --help
     usage: [--time N | -n N] STRING
