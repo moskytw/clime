@@ -137,7 +137,7 @@ class Program(object):
                 print '   or:',
             print usage
 
-        if cmdf is not None:
-            # print doc if requires partial usage
+        doc = getdoc(cmdf)
+        if cmdf is not None and doc:
             print
-            print getdoc(cmdf)
+            print doc
