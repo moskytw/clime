@@ -138,7 +138,7 @@ See `clime.Program`_ for more usages.
 More Details
 ------------
 
-These are the basics of Clime usage. If you want to know more, details are here: `Take a Deeper Look at Clime`_
+These are the basics of Clime usage. If you want to know more, details are here: `Take a Deeper Look at Clime`_.
 
 .. _`Take a Deeper Look at Clime`:
     http://docs.mosky.tw/clime/deeper.html
