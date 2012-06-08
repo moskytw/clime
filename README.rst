@@ -9,7 +9,7 @@ program.
 It scans the object to find the functions out, so it is **low couple** with
 your source.
 
-It scan the aliases and metavars of options from docstring, so you are free
+And, it scan the aliases and metavars of options from docstring, so you are free
 from writing the settings of options. You can focus on writing the help text of
 your CLI program.
 
