@@ -17,6 +17,8 @@ It is a better choice than the heavy `optparse` or `argparse` for simple CLI tas
 
 Let me show an example for you.
 
+See the full documentaion on http://docs.mosky.tw/clime/ .
+
 CLI-ize ME!
 -----------
 
@@ -128,7 +130,7 @@ You have two different ways to use Clime.
    
      $ python -m clime TARGET
 
-see `clime.Program`_ for more usages.
+See `clime.Program`_ for more usages.
 
 .. _`clime.Program`:
     http://docs.mosky.tw/clime/deeper.html#clime.Program
