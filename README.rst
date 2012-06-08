@@ -80,7 +80,7 @@ See `Command.scan`_ for more details about argument parsing.
 Installation
 ------------
 
-Clime is hosted on two different platform, PyPI_ and GitHub_.
+Clime is hosted on two different platforms, PyPI_ and GitHub_.
 
 1. **Install from PyPI**
    
@@ -123,7 +123,7 @@ You have two different ways to use Clime.
    
    It is recommend to put the codes into the ``if __name__ == '__main__':`` block.
 
-2. **Use clime.py as A Command**
+2. **Use Clime as A Command**
    
    `clime` is also an executable module. Use it to convert a module or a
    Python file temporarily. ::
