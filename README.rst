@@ -42,13 +42,10 @@ After add this line, ::
 ... you now have a CLI program! ::
     
     $ python repeat.py twice
-    twice
-    twice
+    twicetwice
 
     $ python repeat.py -n3 thrice
-    thrice
-    thrice
-    thrice
+    thricethricethrice
 
 And it gerneate the usage from your function: ::
 
