@@ -54,8 +54,6 @@ def getargspec(func):
 
     return (args or None, None, None, (None,) * defaultcount or None)
 
-    return None
-
 DOCOPTDESC_RE = re.compile(r' *(-.+?) {2,}')
 
 DOCOPT_RE = re.compile(
