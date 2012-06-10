@@ -14,7 +14,7 @@ tasks.
 
 Let me show an example for you.
 
-(See the full documentaion on http://docs.mosky.tw/clime/ .)
+See the full documentaion on http://docs.mosky.tw/clime/ .
 
 **Note**: The 0.1.4 is a rewrote version and it does **not** provide
 backward compatibility.
