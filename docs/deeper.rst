@@ -9,8 +9,8 @@ About ``import clime.now``
 
 The content in `clime.now` is roughly same as: ::
 
-    from clime import
-    Program Program().main()
+    from clime import Program
+    Program().main()
 
 If you want to customize the CLI program, see :class:`.Program` for more
 details.
