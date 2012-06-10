@@ -180,8 +180,10 @@ class Command(object):
                 kargs[mflag] = not self.defaults[mflag]
 
         # copy the default value
+        kposes = dict( (k,i) for i, k in enumerate(self.args))
+        plen = len(pargs)
         for key, value in self.defaults.iteritems():
-            if key not in kargs:
+            if key not in kargs and plen < kposes[key]:
                 kargs[key] = value
 
         # de-keyword (keyword-first resolving)
