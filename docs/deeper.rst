@@ -9,7 +9,8 @@ About ``import clime.now``
 
 The content in `clime.now` is roughly same as: ::
 
-    from clime import Program Program().main()
+    from clime import
+    Program Program().main()
 
 If you want to customize the CLI program, see :class:`.Program` for more
 details.
@@ -27,13 +28,21 @@ The lines match the following regex will be picked. ::
 Then Clime will use this regex to find out options and metavars in picked
 lines. ::
 
-    r'''--?({0}) # option (?: \[?  [= ] ({0})  # metavar)?  ,?  ''' \
-    .format('[^\s,=\[\]]+')
+    r'''--?({0}) # option
+       (?:
+          \[?
+          [= ]
+          ({0})  # metavar
+       )?
+       ,?
+    ''' \
+   .format('[^\s,=\[\]]+')
 
 Some examples: ::
 
-    -d, --debug                enable debug mode -q, -s, --quiet, --slient
-    enable slient mode -n N, --times N            how many times do you want
+    -d, --debug                enable debug mode
+    -q, -s, --quiet, --slient  enable slient mode
+    -n N, --times N            how many times do you want
 
 Meta Variables
 --------------
