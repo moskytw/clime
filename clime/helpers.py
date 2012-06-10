@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re, inspect
+import sys, re, inspect
 
 def autotype(s):
     '''Automative detect the type (int, float or string) of `s` and convert `s`
@@ -123,3 +123,19 @@ def smartlyadd(a, b):
         return a
     else:
         return [a, b]
+
+def ensureargs(args=None):
+    '''Ensure the args is a list.
+    
+    return sys.argv if args is None'''
+
+    if args is None:
+        return sys.argv
+    elif isinstance(args, str):
+        return args.split()
+    elif isinstance(args, list):
+        return args
+    elif hasattr(args, '__iter__'):
+        return list(args)
+    else:
+        return None
