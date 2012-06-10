@@ -6,23 +6,22 @@
 Introduction
 ============
 
+Clime let you convert a module, a dict or an instance into a multi-command
+CLI program.
+
+It just scans the members of an object to find the functions out, so it is
+**low couple** with your source. It also scans the aliases and metavars of
+options from docstring, so you are free from writing the settings of
+options. You can focus on writing the help text of your CLI program.
+
+It is a better choice than the heavy `optparse` or `argparse` for simple CLI
+tasks.
+
+Let me show an example for you.
+
 .. note::
     The 0.1.4 is a rewrote version and it does **not** provide backward
     compatibility.
-
-Clime let you convert a module, a dict or an instance into a multi-command CLI
-program.
-
-It scans the object to find the functions out, so it is **low couple** with
-your source.
-
-And, it scans the aliases and metavars of options from docstring, so you are free
-from writing the settings of options. You can focus on writing the help text of
-your CLI program.
-
-It is a better choice than the heavy `optparse` or `argparse` for simple CLI tasks.
-
-Let me show you an example.
 
 CLI-ize ME!
 -----------
@@ -136,7 +135,8 @@ You have two different ways to use Clime.
 More Details
 ------------
 
-These are the basics of Clime usage. If you want to know more, details are here:
+These are the basics of Clime usage. If you want to know more, details are
+here:
 
 .. toctree::
    :maxdepth: 2
