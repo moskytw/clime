@@ -14,7 +14,7 @@ tasks.
 
 Let me show an example for you.
 
-See the full documentaion on http://docs.mosky.tw/clime/ .
+See the full documentaion on http://packages.python.org/clime .
 
 **Note**: The 0.1.4 is a rewrote version and it does **not** provide
 backward compatibility.
@@ -72,7 +72,7 @@ See `Command.scan`_ for more details about argument parsing.
     https://github.com/moskied/clime/tree/master/examples
     
 .. _`Command.scan`:
-    http://docs.mosky.tw/clime/deeper.html#clime.Command.scan
+    http://packages.python.org/clime/deeper.html#clime.Command.scan
 
 Installation
 ------------
@@ -130,7 +130,7 @@ You have two different ways to use Clime.
 See `clime.Program`_ for more usages.
 
 .. _`clime.Program`:
-    http://docs.mosky.tw/clime/deeper.html#clime.Program
+    http://packages.python.org/clime/deeper.html#clime.Program
 
 More Details
 ------------
@@ -139,4 +139,4 @@ These are the basics of Clime usage. If you want to know more, details are
 here: `Take a Deeper Look at Clime`_.
 
 .. _`Take a Deeper Look at Clime`:
-    http://docs.mosky.tw/clime/deeper.html
+    http://packages.python.org/climedeeper.html
