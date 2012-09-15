@@ -139,4 +139,4 @@ These are the basics of Clime usage. If you want to know more, details are
 here: `Take a Deeper Look at Clime`_.
 
 .. _`Take a Deeper Look at Clime`:
-    http://packages.python.org/climedeeper.html
+    http://packages.python.org/clime/deeper.html
