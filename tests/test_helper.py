@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from types import BuiltinFunctionType
 from clime.helpers import *
 
 class TestClimeHelper(unittest.TestCase):
