@@ -4,21 +4,26 @@
 # author: takano32 <tak@no32 dot tk>
 #
 
-def clime_dirname(file_name):
+def climebox_dirname(file_name):
 	# NOTE os.path.dirname
 	# http://www.python.jp/doc/2.4/lib/module-os.path.html
-	print("dirname")
+	print("this is climebox dirname")
 
-def clime_foo():
+def climebox_foo():
 	pass
 
 if __name__ == '__main__':
 	import clime
 	import sys, os
-	cmdname = os.path.basename(sys.argv[0])
-	print(cmdname)
-	for cmdnames in clime.Program().cmdfs.keys():
-		print(cmdnames)
+	import inspect
+	execname = os.path.basename(sys.argv[0])
+
+	import __main__
+	for cmdname in clime.Program().cmdfs.keys():
+		attr = getattr(__main__, cmdname)
+		if 'climebox_' + execname == attr.func_name:
+			print(execname)
+
 	# import clime.now
 
 	# NOTE exec
