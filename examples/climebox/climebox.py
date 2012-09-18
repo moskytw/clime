@@ -5,11 +5,9 @@
 #
 
 def clime_dirname(file_name):
-	if suffix == None:
-		pass
-	else:
-		pass
-	print("basename")
+	# NOTE os.path.dirname
+	# http://www.python.jp/doc/2.4/lib/module-os.path.html
+	print("dirname")
 
 def clime_foo():
 	pass
@@ -22,4 +20,7 @@ if __name__ == '__main__':
 	for cmdnames in clime.Program().cmdfs.keys():
 		print(cmdnames)
 	# import clime.now
+
+	# NOTE exec
+	# http://docs.python.org/library/os.html?highlight=exec#os.execve
 
