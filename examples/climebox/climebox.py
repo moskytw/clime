@@ -5,11 +5,16 @@
 #
 
 def climebox_dirname(file_name):
-	# http://www.python.jp/doc/2.4/lib/module-os.path.html
+	# http://docs.python.org/release/2.7.3/library/os.path.html#module-os.path
 	print(os.path.dirname(file_name))
 
 def climebox_false():
 	exit(1)
+
+def climebox_pwd():
+	# http://docs.python.org/release/2.7.3/library/os.path.html#module-os.path
+	print(os.getcwd())
+
 
 if __name__ == '__main__':
 	import clime
@@ -23,4 +28,6 @@ if __name__ == '__main__':
 		cmdname = 'climebox_' + execname
 		if cmdname == attr.func_name:
 			clime.Program(defcmdname = cmdname, progname = execname).main()
+
+	if execname == 'climebox.py': import clime.now
 
