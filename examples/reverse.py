@@ -5,7 +5,7 @@ def reverse(string):
     '''reverse string
     '''
 
-    print string[::-1]
+    print string.decode('UTF-8')[::-1]
 
 if __name__ == '__main__':
     import clime.now
