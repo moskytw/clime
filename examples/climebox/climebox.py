@@ -25,7 +25,7 @@ if __name__ == '__main__':
 	import inspect
 	execname = os.path.basename(sys.argv[0])
 
-	if execname == 'climebox':
+	if execname == 'climebox' or execname == 'climebox.py':
 		clime.Program(defcmdname = 'climebox_usage').main()
 		exit(0)
 
