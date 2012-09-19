@@ -8,8 +8,8 @@ def climebox_dirname(file_name):
 	# http://www.python.jp/doc/2.4/lib/module-os.path.html
 	print(os.path.dirname(file_name))
 
-def climebox_foo():
-	pass
+def climebox_false():
+	exit(1)
 
 if __name__ == '__main__':
 	import clime
