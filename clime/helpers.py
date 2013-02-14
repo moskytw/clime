@@ -20,12 +20,12 @@ def autotype(s):
 
 def getargspec(func):
     '''Get the argument specification of the `func`.
-    
-    The `func` is a Python function, built-in function or bound method.
-    
+
+    `func` can be a Python function, built-in function or bound method.
+
     It get the argument specification by parsing documentation of the
     function if `func` is a built-in function.
-    
+
     .. versionchanged:: 0.1.4
        Remove `self` automatively if `func` is a method.
 
@@ -72,9 +72,9 @@ DOCOPT_RE = re.compile(
 
 def getoptmetas(doc):
     '''Yield the option and the metavar in each line.
-    
+
     In each iteration, it will yield a list like: ::
-        
+
         [('opt1', 'META'), ('opt2', None), ...]
 
     .. versionadded:: 0.1.4
@@ -87,7 +87,7 @@ def getoptmetas(doc):
 
 def smartlyadd(a, b):
     '''Smartly add `a` and `b`.
-    
+
     +------------+--------+----------------+
     | a          | b      | return         |
     +============+========+================+
@@ -103,7 +103,7 @@ def smartlyadd(a, b):
     +------------+--------+----------------+
     | <else>     | <any>  | [a, b]         |
     +------------+--------+----------------+
-    
+
     The `object` which is class ``object`` repersents the hyper None.
 
     .. versionadded:: 0.1.4
@@ -126,7 +126,7 @@ def smartlyadd(a, b):
 
 def ensureargs(args=None):
     '''Ensure the args is a list.
-    
+
     return sys.argv if args is None'''
 
     if args is None:

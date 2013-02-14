@@ -7,7 +7,7 @@ can skip this page.
 About ``import clime.now``
 --------------------------
 
-The content in `clime.now` is roughly same as: ::
+The content in ``clime.now`` is roughly the same as: ::
 
     from clime import Program
     Program().main()
@@ -18,15 +18,14 @@ details.
 Options in Docstring
 --------------------
 
-The class, :class:`.Command`, will scan the options and metavars in
+The class, :class:`.Command`, scans the options and metavars in
 docstring.
 
-The lines match the following regex will be picked. ::
+Lines match the following regex will be selected. ::
 
     r'*(-.+?) {2,}'
 
-Then Clime will use this regex to find out options and metavars in picked
-lines. ::
+Then Clime will use this regex to parse the options and metavars from the lines selected ::
 
     r'''--?({0}) # option
        (?:
@@ -47,7 +46,7 @@ Some examples: ::
 Meta Variables
 --------------
 
-A meta variable also represent the type. By default, `N`, `NUM` is ``int``.
+A meta variable also represents the type. By default, `N`, `NUM` is ``int``.
 You can add the mapping of metavar and the type at
 :attr:`.Command.metatypes`.
 
@@ -57,7 +56,7 @@ Introducing the Classes
 Clime has two main classes, :class:`.Command` and :class:`.Program`.
 
 Class `Command` makes a function, built-in function or bound method accpects
-the argument from command line. Class `Program` scans the attributes in an
+the argument(s) from command line. Class `Program` scans the attributes in an
 object or a dict and make them into a CLI program.
 
 The API of Clime

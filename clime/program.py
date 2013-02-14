@@ -6,13 +6,13 @@ from inspect  import getmembers, ismodule, isbuiltin, isfunction, ismethod, isge
 from .command import Command, ScanError
 
 class Program(object):
-    '''Convert a module, class or dict into multi-command CLI program.
+    '''Convert a module, class or dict into a multi-command CLI program.
 
     The `obj` is a module, class or dict.
 
     The `defcmdname` is the default command name.
 
-    The `progname` is the program name while printing error (:meth:`.complain`).
+    The `progname` is the program name that prints error (:meth:`.complain`).
 
     .. versionchanged:: 0.1.4
        It is almost rewritten.
@@ -71,13 +71,13 @@ class Program(object):
                 self.printusage()
                 return
             cmdf = self.cmdfs.get(cmdname, None)
-        
+
         # use default command name
         if cmdf is None and self.defcmdname:
             if cmdname is not None:
                 rawargs.insert(0, cmdname)
             cmdf = self.cmdfs.get(self.defcmdname, None)
-        
+
         # print usage if still got nothing
         if cmdf is None:
             self.printusage()

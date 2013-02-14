@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from inspect  import getdoc, isbuiltin
-from .helpers import getargspec, getoptmetas, autotype, smartlyadd 
+from .helpers import getargspec, getoptmetas, autotype, smartlyadd
 
 class ScanError(Exception): pass
 
 class Command(object):
-    '''Make a function, a built-in function or a bound method accepts
+    '''Make a function, a built-in function or a bound method accept
     arguments from command line.
 
     .. versionchanged:: 0.1.4
@@ -43,7 +43,7 @@ class Command(object):
         self.bindings = {}
         self.metavars = {}
         doc = getdoc(func)
-        if not doc: return 
+        if not doc: return
 
         args = set(args)
         for optmetas in getoptmetas(doc):
@@ -62,31 +62,32 @@ class Command(object):
         `rawargs` can be `string` or `list`.
 
         Uses *keyword-first resolving* -- If keyword and positional arguments
-        are at same place, the keyword argument will take this place and push
-        the positional argument to next.
+        are at same place, the keyword argument takes this place and pushes
+        the positional argument to next one.
 
         Example:
 
         >>> def files(mode='r', *paths):
         >>>     print mode, paths
-        >>> 
+        >>>
         >>> files_cmd = Command(files)
         >>> files_cmd.scan('--mode w f1.txt f2.txt')
         (['w', 'f1.txt', 'f2.txt'], {})
         >>> files_cmd('--mode w f1.txt f2.txt')
-        w ('f1.txt', 'f2.txt')    
+        w ('f1.txt', 'f2.txt')
 
-        If an no-value options is found and the value in default of function is
-        boolean, it will put the opposite boolean into `optargs`.
+        If an no-value options is given a function in which a default value is boolean type, it will put the opposite boolean into `optargs`.
+
+        If no option is given to a function in which a default value is boolean type, it will put the opposite boolean value into `optargs`.
 
         >>> def test(b=True, x=None):
         >>>     print b, x
-        >>> 
+        >>>
         >>> test_cmd = Command(test)
         >>> test_cmd('-b')
         False None
 
-        If duplicate options are found and
+        On the other hand, if more than one options are given to a function and
 
         1. the default of function is boolean: it will count this options;
         2. otherwise: it will put the value into a list.
