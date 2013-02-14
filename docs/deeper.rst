@@ -70,5 +70,5 @@ The API of Clime
     :members:
     :undoc-members:
 
-.. automodule:: clime.helper
+.. automodule:: clime.helpers
     :members:
