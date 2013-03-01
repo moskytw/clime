@@ -69,7 +69,7 @@ You can find more examples in the `clime/examples`_.
 See `Command.scan`_ for more details about argument parsing.
 
 .. _`clime/examples`:
-    https://github.com/moskied/clime/tree/master/examples
+    https://github.com/moskytw/clime/tree/master/examples
     
 .. _`Command.scan`:
     http://packages.python.org/clime/deeper.html#clime.Command.scan
@@ -95,12 +95,12 @@ Clime is hosted on two different platforms, PyPI_ and GitHub_.
    
    If you want to follow the lastest version of Clime, use ::
    
-     $ git clone git://github.com/moskied/clime.git
+     $ git clone git://github.com/moskytw/clime.git
      
    to clone a Clime repository. Or download manually from GitHub_.
 
 .. _GitHub:
-    http://github.com/moskied/clime
+    http://github.com/moskytw/clime
 
 .. _PyPI:
     http://pypi.python.org/pypi/clime
