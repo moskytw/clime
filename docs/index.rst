@@ -6,10 +6,10 @@
 Introduction
 ============
 
-Clime let you convert a module, a dict or an instance into a multi-command
+Clime lets you convert a module, a dict or an instance into a multi-command
 CLI program.
 
-It just scans the members of an object to find the functions out, so it is
+It scans the members of an object to find the functions out, so it is
 **low couple** with your source. It also scans the aliases and metavars of
 options from docstring, so you are free from writing the settings of
 options. You can focus on writing the help text of your CLI program.
@@ -17,7 +17,7 @@ options. You can focus on writing the help text of your CLI program.
 It is a better choice than the heavy `optparse` or `argparse` for simple CLI
 tasks.
 
-Let me show an example for you.
+Let me show you Clime with an example.
 
 .. note::
     The 0.1.4 is a rewrote version and it does **not** provide backward
@@ -39,11 +39,11 @@ Here we have a simple script with docstring here: ::
         
         print string * time
 
-After add this line, ::
+By adding this line, ::
 
     import clime.now
 
-... you now have a CLI program! ::
+... your CLI program is ready! ::
     
     $ python repeat.py twice
     twicetwice
@@ -51,13 +51,13 @@ After add this line, ::
     $ python repeat.py -n3 thrice
     thricethricethrice
 
-And it gerneate the usage from your function: ::
+And it generates the usage manual from the docstring your function: ::
 
     $ python repeat.py --help
     usage: [--time N | -n N] STRING
        or: repeat [--time N | -n N] STRING
 
-If you wrote a docstring, it will also show up in help text. ::
+If you have a docstring in your function, it also show up in usage manual with '--help'. ::
 
     $ python repeat.py repeat --help
     usage: [--time N | -n N] STRING
@@ -110,7 +110,7 @@ Clime is hosted on two different platforms, PyPI_ and GitHub_.
 Usage
 -----
 
-Here is the basic usage of Clime.
+Below illustrates the basic usage of Clime.
 
 You have two different ways to use Clime.
 
@@ -120,12 +120,11 @@ You have two different ways to use Clime.
    
      import clime.now
    
-   It is recommend to put the codes into the ``if __name__ == '__main__':`` block.
+   It is recommended to put the line in the ``if __name__ == '__main__':`` block.
 
 2. **Use Clime as A Command**
    
-   `clime` is also an executable module. Use it to convert a module or a
-   Python file temporarily. ::
+   `clime` is also an executable module. You can use it to convert a module or a stand-alone program temporarily. ::
    
      $ python -m clime TARGET
 
@@ -135,8 +134,7 @@ You have two different ways to use Clime.
 More Details
 ------------
 
-These are the basics of Clime usage. If you want to know more, details are
-here:
+These are the basics of Clime usage. If you want to know more, details are listed here:
 
 .. toctree::
    :maxdepth: 2
