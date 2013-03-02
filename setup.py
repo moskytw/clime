@@ -11,6 +11,6 @@ setup(
     version = __version__,
     author  = 'Mosky',
     author_email = 'mosky.tw@gmail.com',
-    url = 'http://docs.mosky.tw/clime',
+    url = 'http://github.com/moskytw/clime',
     packages = ['clime'],
 )
