@@ -143,9 +143,9 @@ class Command(object):
                     key = self.bindings.get(opt, opt)
                     vals = kargs.setdefault(key, [])
                     if key in self.mflags:
-                        vals.append( None )
+                        vals.append(None)
                     else:
-                        vals.append( gettype(opt)( nextarg() ) )
+                        vals.append(gettype(opt)(nextarg()))
                     continue
 
                 if plen >= 2:
@@ -163,12 +163,12 @@ class Command(object):
                             else:
                                 # -abcovalue
                                 val = piece[i+1:]
-                            vals.append( gettype(opt)(val) )
+                            vals.append(gettype(opt)(val))
                             break
                     continue
 
             # if doesnt start with '-' or length of piece is not enough
-            pargs.append( self.defautotype(piece) )
+            pargs.append(self.defautotype(piece))
 
         # reduce the collected values
         for key, vals in kargs.iteritems():

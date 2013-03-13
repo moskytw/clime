@@ -32,7 +32,7 @@ class Program(object):
         iskinds = (isbuiltin, isfunction, ismethod)
         for name, obj in obj:
             if name.startswith('_'): continue
-            if not any( iskind(obj) for iskind in iskinds ): continue
+            if not any(iskind(obj) for iskind in iskinds): continue
             self.cmdfs[name] = obj
 
         self.defcmdname = defcmdname
@@ -108,7 +108,7 @@ class Program(object):
 
         def appendusage(cmdname, isdefault=False):
             cmdf = self.cmdfs[cmdname]
-            usages.append( Command(cmdf).getusage(isdefault) )
+            usages.append(Command(cmdf).getusage(isdefault))
             return cmdf
 
         usages = []

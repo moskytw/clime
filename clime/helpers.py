@@ -46,8 +46,8 @@ def getargspec(func):
     argspecdoc = (inspect.getdoc(func) or '').split('\n')[0]
     argpart = strbetween(argspecdoc, '(', ')')
     args = argpart.split(',')
-    args = ( arg.strip(' ()[]') for arg in args )
-    args = [ arg for arg in args if arg ]
+    args = (arg.strip(' ()[]') for arg in args)
+    args = [arg for arg in args if arg]
 
     defaultpart = strbetween(argspecdoc, '[', ']')
     defaultcount = len([d for d in defaultpart.split(',') if d.strip('[]')])
