@@ -6,138 +6,166 @@ from inspect  import getmembers, ismodule, isbuiltin, isfunction, ismethod, isge
 from .command import Command, ScanError
 
 class Program(object):
-    '''Convert a module, class or dict into a multi-command CLI program.
+    '''Convert a module or dict into a multi-command CLI program.
 
-    The `obj` is a module, class or dict.
+    :param obj: The `object` you want to convert.
+    :type obj: a module or a mapping
+    :param default: The default command name.
+    :type default: str
+    :param white_list: The white list of the commands. By default, it uses the attribute, ``__all__``, of a module.
+    :type white_list: list
+    :param black_list: The black list of the commands.
+    :type black_list: list
+    :param name: The name of this program. It is used to show the error messages.
+    :type name: str
+    :param doc: The documentation on module level.
+    :type doc: str
+    :param debug: It prints the full traceback if True.
+    :type name: bool
 
-    The `defcmdname` is the default command name.
+    .. versionadded:: 0.1.5
+        Added `white_list`, `black_list`, `doc` and `debug`.
 
-    The `progname` is the program name that prints error (:meth:`.complain`).
+    .. versionchanged:: 0.1.5
+        Renamed `defcmd` and `progname`.
 
     .. versionchanged:: 0.1.4
        It is almost rewritten.
     '''
 
-    def __init__(self, obj=None, defcmdname=None, progname=None):
+    def __init__(self, obj=None, default=None, white_list=None, black_list=None, name=None, doc=None, debug=False):
 
-        if obj is None:
-            obj = sys.modules['__main__']
+        obj = obj or sys.modules['__main__']
+        self.obj = obj
 
-        if isinstance(obj, dict):
-            obj = obj.iteritems()
+        if hasattr(obj, 'items'):
+            obj_items = obj.items()
         else:
-            obj = getmembers(obj)
+            obj_items = getmembers(obj)
 
-        self.cmdfs = {}
-        iskinds = (isbuiltin, isfunction, ismethod)
-        for name, obj in obj:
+        if hasattr(obj, '__all__'):
+            white_list = obj.__all__
+
+        tests = (isbuiltin, isfunction, ismethod)
+
+        self.command_funcs = {}
+        for name, obj in obj_items:
             if name.startswith('_'): continue
-            if not any(iskind(obj) for iskind in iskinds): continue
-            self.cmdfs[name] = obj
+            if not any(test(obj) for test in tests): continue
+            if white_list is not None and name not in white_list: continue
+            if black_list is not None and name in black_list: continue
+            self.command_funcs[name] = obj
 
-        self.defcmdname = defcmdname
-        if len(self.cmdfs) == 1:
-            self.defcmdname = self.cmdfs.keys()[0]
-        self.progname = progname or sys.argv[0]
+        self.default = default
+        if len(self.command_funcs) == 1:
+            self.default = self.command_funcs.keys()[0]
 
-    def complain(self, s):
-        '''Print `s` to `stderr` with the program name prefix'''
-        print >> sys.stderr, '%s: %s' % (self.progname, s)
+        self.name = name or sys.argv[0]
+        self.doc = doc
+        self.debug = debug
 
-    def main(self, rawargs=None):
-        '''The main process of CLI program.
+    def complain(self, msg):
+        '''Print an error message `msg` with the name of this program to stderr.'''
+        print >> sys.stderr, '%s: %s' % (self.name, msg)
 
-        The `rawargs` is the arguments from command line.
+    def main(self, raw_args=None):
+        '''Start to parse the arguments from CLI and send them to a command.
 
-        If `rawargs` is None, it will take `sys.argv[1:]`.'''
+        :param raw_args: The arguments from command line. By default, it takes from ``sys.argv``.
+        :type raw_args: list
+        '''
 
-        if rawargs is None:
-            rawargs = sys.argv[1:]
-        elif isinstance(rawargs, str):
-            rawargs = rawargs.split()
-        else:
-            rawargs = rawargs[:]
+        if raw_args is None:
+            raw_args = sys.argv[1:]
+        elif isinstance(raw_args, str):
+            raw_args = raw_args.split()
 
-        # decide the command name
-        cmdname = None
-        cmdf = None
-        try:
-            cmdname = rawargs.pop(0)
-        except IndexError:
+        # try to find the command name in the raw arguments.
+        cmd_name = None
+        cmd_func = None
+
+        if len(raw_args) == 0:
             pass
+        elif raw_args[0] == '--help':
+            self.print_usage()
+            return
         else:
-            # user requires the global help
-            if cmdname == '--help':
-                self.printusage()
+            cmd_func = self.command_funcs.get(raw_args[0])
+            if cmd_func is not None:
+                cmd_name = raw_args.pop(0)
+
+        if cmd_func is None:
+            # we can't find the command name in normal procedure
+            if self.default:
+                cmd_name = cmd_name
+                cmd_func = self.command_funcs[self.default]
+            else:
+                self.print_usage()
                 return
-            cmdf = self.cmdfs.get(cmdname, None)
 
-        # use default command name
-        if cmdf is None and self.defcmdname:
-            if cmdname is not None:
-                rawargs.insert(0, cmdname)
-            cmdf = self.cmdfs.get(self.defcmdname, None)
-
-        # print usage if still got nothing
-        if cmdf is None:
-            self.printusage()
+        if '--help' in raw_args:
+            # the user requires help of this command.
+            self.print_usage(cmd_name)
             return
 
-        # user requires the help of this command
-        if '--help' in rawargs:
-            self.printusage(cmdname)
-            return
-
-        cmd = Command(cmdf)
+        # convert the function to Command object.
+        cmd = Command(cmd_func)
 
         try:
-            obj = cmd.execute(rawargs)
-        except (TypeError, ScanError), e:
-            self.complain(e)
-            return
+            # execute the command with the raw arguments.
+            return_val = cmd.execute(raw_args)
+        except Exception, e:
+            if self.debug:
+                from traceback import print_last
+                print_last()
+                return
+            else:
+                self.complain(e)
+                return
 
-        if obj is not None:
-            if isgenerator(obj):
-                for result in obj:
+        if return_val is not None:
+            if isgenerator(return_val):
+                for return_val in return_val:
                     print result
             else:
-                print obj
+                print return_val
 
-    def printusage(self, cmdname=None):
-        '''Print usage of all commands or partial command.'''
+    def print_usage(self, cmd_name=None):
+        '''Print the usages of all commands or a command.'''
 
-        def appendusage(cmdname, isdefault=False):
-            cmdf = self.cmdfs[cmdname]
-            usages.append(Command(cmdf).getusage(isdefault))
-            return cmdf
+        def append_usage(cmd_name, is_default=False):
+            # nonlocal usages
+            cmd_func = self.command_funcs[cmd_name]
+            usages.append(Command(cmd_func).get_usage(is_default))
 
         usages = []
-        cmdf = None
+        cmd_func = None
 
-        if cmdname is None:
-            # print all usages
-
-            if self.defcmdname is not None:
-                appendusage(self.defcmdname, True)
-
-            for cmdname in sorted(self.cmdfs.keys()):
-                appendusage(cmdname)
-
+        if cmd_name is None:
+            # prepare all usages.
+            if self.default is not None:
+                append_usage(self.default, True)
+            for name in sorted(self.command_funcs.keys()):
+                append_usage(name)
         else:
-            # print partial usage
+            # prepare the usage of a command.
+            if self.default == cmd_name:
+                append_usage(cmd_name, is_default=True)
+            append_usage(cmd_name)
 
-            if self.defcmdname == cmdname:
-                appendusage(cmdname, isdefault=True)
-            cmdf = appendusage(cmdname)
+        # print the usages.
+        iusages = iter(usages)
+        print 'usage:', next(iusages)
+        for usage in iusages:
+            print '   or:', usage
 
-        for i, usage in enumerate(usages):
-            if i == 0:
-                print 'usage:',
-            else:
-                print '   or:',
-            print usage
+        # find the doc.
+        if cmd_name is None:
+            doc = self.doc if self.doc else getdoc(self.obj)
+        else:
+            doc = getdoc(self.command_funcs[cmd_name])
 
-        doc = getdoc(cmdf)
-        if cmdf is not None and doc:
+        # print the doc.
+        if doc:
             print
             print doc

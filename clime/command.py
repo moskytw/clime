@@ -222,7 +222,7 @@ class Command(object):
         pargs, kargs = self.scan(rawargs)
         return self.func(*pargs, **kargs)
 
-    def getusage(self, isdefault=False):
+    def get_usage(self, isdefault=False):
         '''Return the usage of this command.
 
         Example: ::
