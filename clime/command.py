@@ -68,12 +68,12 @@ class Command(object):
         Example:
 
         >>> def files(mode='r', *paths):
-        >>>     print mode, paths
-        >>>
+        ...     print mode, paths
+        ...
         >>> files_cmd = Command(files)
         >>> files_cmd.scan('--mode w f1.txt f2.txt')
         (['w', 'f1.txt', 'f2.txt'], {})
-        >>> files_cmd('--mode w f1.txt f2.txt')
+        >>> files_cmd.execute('--mode w f1.txt f2.txt')
         w ('f1.txt', 'f2.txt')
 
         If an no-value options is given a function in which a default value is boolean type, it will put the opposite boolean into `optargs`.
@@ -81,10 +81,10 @@ class Command(object):
         If no option is given to a function in which a default value is boolean type, it will put the opposite boolean value into `optargs`.
 
         >>> def test(b=True, x=None):
-        >>>     print b, x
-        >>>
+        ...     print b, x
+        ...
         >>> test_cmd = Command(test)
-        >>> test_cmd('-b')
+        >>> test_cmd.execute('-b')
         False None
 
         On the other hand, if more than one options are given to a function and
@@ -92,7 +92,7 @@ class Command(object):
         1. the default of function is boolean: it will count this options;
         2. otherwise: it will put the value into a list.
 
-        >>> test_cmd('-bbb -x first -x second -x third')
+        >>> test_cmd.execute('-bbb -x first -x second -x third')
         3 ['first', 'second', 'third']
 
         .. versionchanged:: 0.1.4
@@ -263,3 +263,7 @@ class Command(object):
         else:
             name = self.func.__name__
             return '%s %s' % (name, ' '.join(usage))
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
