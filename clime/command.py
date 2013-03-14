@@ -5,7 +5,7 @@ import sys
 from re import compile
 from collections import defaultdict
 from inspect  import getdoc, isbuiltin
-from .helpers import getargspec, getoptmetas, autotype
+from .helpers import getargspec, autotype
 
 Empty = type('Empty', (object, ), {
     '__nonzero__': lambda self: False,
