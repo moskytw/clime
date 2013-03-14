@@ -150,15 +150,24 @@ class Command(object):
                 if key.startswith('--'):
                     key = key[2:]
                 else:
-                    if not val:
-                        val = key[2:]
-                    key = key[1]
+                    for i, c in enumerate(key[1:]):
+                        arg_name = self.dealias(c)
+                        if self.is_flag(arg_name):
+                            if arg_name in kargs:
+                                kargs[arg_name] += 1
+                            else:
+                                kargs[arg_name] = not self.arg_default_map.get(arg_name)
+                        else:
+                            break
+                    else:
+                        continue
+
+                    key = key[i+1]
+                    val = key[i+2:]
 
                 arg_name = self.dealias(key)
 
-                if self.is_flag(arg_name):
-                    val = not self.arg_default_map.get(arg_name)
-                elif not val:
+                if not val:
                     if raw_args and not raw_args[0].startswith('-'):
                         val = raw_args.pop(0)
                     else:
@@ -239,7 +248,7 @@ class Command(object):
 
 if __name__ == '__main__':
 
-    def f(number=1, message='default msg', switcher=False, *args, **kargs):
+    def f(number=1, b=False, message='default msg', switcher=False, *args, **kargs):
         '''It is just a test function.
 
         -n=<n>, --number=<n>       The number.
@@ -257,4 +266,4 @@ if __name__ == '__main__':
     print cmd.arg_meta_map
     print cmd.arg_alias_map
     print cmd.get_usage()
-    print cmd.scan(['--number', '-n', '1'])
+    print cmd.scan(['--number', '123', '-n', '1', '-bbn', '1'])
