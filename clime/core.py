@@ -74,7 +74,7 @@ class Command(object):
                     for alias in aliases_set:
                         self.alias_arg_map[alias] = arg_name
 
-    def dealias(self, key):
+    def _dealias(self, key):
         return self.alias_arg_map.get(key, key)
 
     def cast(self, arg_name, val):
@@ -126,7 +126,7 @@ class Command(object):
                     # '-nnn'       -> 'nn'
                     # '-nnnmhello' -> 'nnn'
                     for c in key[1:sep-1]:
-                        arg_name = self.dealias(c)
+                        arg_name = self._dealias(c)
                         kargs[arg_name].append(Empty)
 
                     if not val:
@@ -146,7 +146,7 @@ class Command(object):
             casted_val = self.cast(key, val)
 
             if key:
-                arg_name = self.dealias(key)
+                arg_name = self._dealias(key)
                 kargs[arg_name].append(casted_val)
             else:
                 pargs.append(casted_val)
