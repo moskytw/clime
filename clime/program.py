@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from inspect  import getmembers, ismodule, isbuiltin, isfunction, ismethod, isgenerator, getdoc
-from .command import Command, ScanError
+from inspect import getmembers, ismodule, isbuiltin, isfunction, ismethod, isgenerator, getdoc
+from .command import Command
 
 class Program(object):
     '''Convert a module or dict into a multi-command CLI program.

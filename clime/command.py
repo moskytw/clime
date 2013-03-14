@@ -6,8 +6,6 @@ from re import compile
 from inspect  import getdoc, isbuiltin
 from .helpers import getargspec, getoptmetas, autotype, smartlyadd
 
-class ScanError(Exception): pass
-
 class Command(object):
     '''Make a function, a built-in function or a bound method accept
     arguments from command line.
