@@ -41,11 +41,11 @@ class Command(object):
 
         # try to find the metas and aliases out
 
-        doc = getdoc(func)
-        if not doc: return
-
         self.arg_meta_map = {}
         self.arg_alias_map = {}
+
+        doc = getdoc(func)
+        if not doc: return
 
         for line in doc.splitlines():
             if self.arg_desc_re.match(line):
@@ -105,12 +105,12 @@ class Command(object):
 
         If no option is given to a function in which a default value is boolean type, it will put the opposite boolean value into `optargs`.
 
-        >>> def test(b=True, x=None):
+        >>> def test(b=False, x=None):
         ...     print b, x
         ...
         >>> test_cmd = Command(test)
         >>> test_cmd.execute('-b')
-        False None
+        True None
 
         On the other hand, if more than one options are given to a function and
 
@@ -247,6 +247,9 @@ class Command(object):
             return '%s %s' % (self.func.__name__, ' '.join(usage))
 
 if __name__ == '__main__':
+
+    import doctest
+    doctest.testmod()
 
     def f(number=1, b=False, message='default msg', switcher=False, *args, **kargs):
         '''It is just a test function.
