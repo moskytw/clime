@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from re import compile
 from inspect  import getdoc, isbuiltin
 from .helpers import getargspec, getoptmetas, autotype, smartlyadd
 
@@ -13,52 +14,54 @@ class Command(object):
     .. versionchanged:: 0.1.4
        It is almost rewritten.'''
 
-    metatypes = {'N': int, 'NUM': int}
-
-    def cast(self, x):
-        '''The default type auto-detection function. It use `autotype` by
-        default.'''
-        return autotype(x)
+    arg_desc_re = compile(r'^-')
+    arg_re = compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
+    arg_metas_map = {'N': int, 'NUM': int, '<n>': int, '<number>': int, None: autotype}
 
     def __init__(self, func):
-        args, vararg, keyword, defvals = getargspec(func)
 
-        # basic infomation
         self.func = func
-        self.args = args
-        self.vararg = vararg
-        #self.keyword = keyword
 
-        # 1. put the args and defvals into a dict
-        # 2. collect the mode-flags
-        self.defaults = {}
-        self.mflags = set()
-        for arg, defval in zip( *map(reversed, (args or [], defvals or [])) ):
-            self.defaults[arg] = defval
-            if isinstance(defval, bool):
-                self.mflags.add(arg)
+        arg_names, vararg_name, keyarg_name, arg_defaults = getargspec(func)
 
-        # collect the aliases and metavars
-        self.bindings = {}
-        self.metavars = {}
-        doc = getdoc(func)
-        if not doc: return
+        self.arg_names = arg_names
+        self.vararg_name = vararg_name
+        self.keyarg_name = keyarg_name
+        self.arg_defaults = arg_defaults
 
-        args = set(args)
-        for optmetas in getoptmetas(doc):
-            for opt, meta in optmetas:
-                self.metavars[opt] = meta
-            opts, metas = zip(*optmetas)
-            opts = set(opts)
-            target = (opts & args).pop()
-            opts -= args
-            for opt in opts:
-                self.bindings[opt] = target
+        self.arg_names_set = set(arg_names)
+        self.arg_defaults_map = dict((k, v) for k, v in zip(
+            *map(reversed, (arg_names or [], arg_defaults or []))
+        ))
 
-    def scan(self, rawargs):
-        '''Scan the `rawargs`, and return a tuple (`pargs`, `kargs`).
+        self.arg_aliases_map = {}
+        self.arg_metas_map = {}
+        for line in getdoc(func).split('\n'):
+            if self.arg_desc_re.match(line):
+                aliases = set()
+                for m in self.arg_re.finditer(line):
+                    key, meta = m.group('key', 'meta')
+                    self.arg_metas_map[key] = meta
+                    aliases.add(key)
+                alias_for = self.arg_names_set & aliases
+                #assert len(alias_for) == 0
+                #assert len(alias_for) == 1
+                if alias_for:
+                    aliases -= alias_for
+                    alias_for = alias_for.pop()
+                    for alias in aliases:
+                        self.arg_aliases_map[alias] = alias_for
 
-        `rawargs` can be `string` or `list`.
+    def cast(self, key, val, meta=None):
+        return self.arg_meta_map.get(meta)(val)
+
+    def merge(self, key, val, new_val):
+        return smartlyadd(val, new_val)
+
+    def scan(self, raw_args):
+        '''Scan the `raw_args`, and return a tuple (`pargs`, `kargs`).
+
+        `raw_args` can be `string` or `list`.
 
         Uses *keyword-first resolving* -- If keyword and positional arguments
         are at same place, the keyword argument takes this place and pushes
@@ -102,126 +105,15 @@ class Command(object):
 
         '''
 
-        def mktypewrapper(t):
-            def typewrpper(o):
-                try:
-                    return t(o)
-                except ValueError:
-                    raise ScanError("option '%s' must be %s" % (opt, t.__name__))
-            return typewrpper
+        pass
 
-        def gettype(opt):
-            meta = self.metavars.get(opt, None)
-            t = self.metatypes.get(meta, self.cast)
-            return mktypewrapper(t)
+    def execute(self, raw_args):
+        '''Execute this command with `raw_args`.'''
 
-        def nextarg():
-            if rawargs and not rawargs[0].startswith('-'):
-                return rawargs.pop(0)
-            else:
-                raise ScanError("option '%s' needs a value" % opt)
-
-        if isinstance(rawargs, str):
-            rawargs = rawargs.split()
-        else:
-            rawargs = rawargs[:]
-
-        pargs = []
-        kargs = {}
-
-        while rawargs:
-            piece, _, npiece = rawargs.pop(0).partition('=')
-            if npiece: rawargs.insert(0, npiece)
-
-            plen = len(piece)
-            if piece.startswith('-'):
-
-                if plen >= 3 and piece[1] == '-':
-                    # keyword option: --options [value]
-                    opt = piece[2:].replace('-', '_')
-                    key = self.bindings.get(opt, opt)
-                    vals = kargs.setdefault(key, [])
-                    if key in self.mflags:
-                        vals.append(None)
-                    else:
-                        vals.append(gettype(opt)(nextarg()))
-                    continue
-
-                if plen >= 2:
-                    # letter option: -abco[value] or --abco [value]
-                    epiece = enumerate(piece); next(epiece)
-                    for i, opt in epiece:
-                        key = self.bindings.get(opt, opt)
-                        vals = kargs.setdefault(key, [])
-                        if key in self.mflags:
-                            vals.append( None )
-                        else:
-                            if i == plen-1:
-                                # -abco value
-                                val = nextarg()
-                            else:
-                                # -abcovalue
-                                val = piece[i+1:]
-                            vals.append(gettype(opt)(val))
-                            break
-                    continue
-
-            # if doesnt start with '-' or length of piece is not enough
-            pargs.append(self.cast(piece))
-
-        # reduce the collected values
-        for key, vals in kargs.iteritems():
-            val = reduce(smartlyadd, vals, object)
-            kargs[key] = val
-
-        # toggle the bool default value
-        for mflag in self.mflags:
-            if kargs.get(mflag, 0) is None:
-                kargs[mflag] = not self.defaults[mflag]
-
-        # copy the default value
-        kposes = dict( (k,i) for i, k in enumerate(self.args))
-        plen = len(pargs)
-        for key, value in self.defaults.iteritems():
-            if key not in kargs and plen < kposes[key]:
-                kargs[key] = value
-
-        # de-keyword (keyword-first resolving)
-        for pos, argname in enumerate(self.args):
-            plen = len(pargs)
-            if pos > plen: break
-            try:
-                val = kargs[argname]
-            except KeyError:
-                pass
-            else:
-                pargs.insert(pos, val)
-                del kargs[argname]
-
-        # map all of the optargs to posargs for `built-in function`,
-        # because a `built-in function` only accept positional arguments
-        if isbuiltin(self.func):
-            for key, value in kargs.items():
-                try:
-                    pargs[self.args.index(key)] = value
-                except ValueError:
-                    pass
-                else:
-                    kargs = {}
-            try:
-                pargs = pargs[:-pargs.index(None) or None]
-            except ValueError:
-                pass
-
-        return pargs, kargs
-
-    def execute(self, rawargs):
-        '''Execute this command with `rawargs`.'''
-
-        pargs, kargs = self.scan(rawargs)
+        pargs, kargs = self.scan(raw_args)
         return self.func(*pargs, **kargs)
 
-    def get_usage(self, isdefault=False):
+    def get_usage(self, is_default=False):
         '''Return the usage of this command.
 
         Example: ::
@@ -230,9 +122,6 @@ class Command(object):
 
         If `isdefault` is True, it will render usage without function name.
         '''
-
-        optargs = self.defaults.keys()
-        optargs.sort()
 
         rbindings = {}
         for opt, target in self.bindings.iteritems():
@@ -257,12 +146,28 @@ class Command(object):
         if self.vararg:
             usage.append('[%s]... ' % self.vararg.upper())
 
-        if isdefault:
+        if is_default:
             return '%s' % ' '.join(usage)
         else:
             name = self.func.__name__
             return '%s %s' % (name, ' '.join(usage))
 
 if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+
+    def f(number, message='default messagea', switcher=False):
+        '''It is just a test function.
+
+        -n=<n>, --number=<n>       The number.
+        -m=<str>, --message=<str>  The default.
+        -s, --switcher             The switcher.
+        '''
+        return number, message
+
+    cmd = Command(f)
+    print cmd.arg_names
+    print cmd.arg_names_set
+    print cmd.vararg_name
+    print cmd.keyarg_name
+    print cmd.arg_defaults_map
+    print cmd.arg_metas_map
+    print cmd.arg_aliases_map
