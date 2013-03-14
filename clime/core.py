@@ -42,7 +42,7 @@ class Command(object):
         self.arg_names = arg_names
         self.vararg_name = vararg_name
         self.keyarg_name = keyarg_name
-        self.arg_defaults = arg_defaults or []
+        self.arg_defaults = arg_defaults or tuple()
 
         # additional information
         self.arg_name_set = set(arg_names)
