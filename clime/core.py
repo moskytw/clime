@@ -86,7 +86,7 @@ class Command(object):
                     for alias in aliases_set:
                         self.alias_arg_map[alias] = arg_name
 
-    def _dealias(self, key):
+    def dealias(self, key):
         '''Return the argument name if the `key` is an alias.
 
         :param key: An argument name or an alias.
@@ -243,7 +243,7 @@ class Command(object):
                     # '-nnn'       -> 'nn'
                     # '-nnnmhello' -> 'nnn'
                     for c in key[1:sep-1]:
-                        arg_name = self._dealias(c)
+                        arg_name = self.dealias(c)
                         kargs[arg_name].append(Empty)
 
                     if not val:
@@ -261,7 +261,7 @@ class Command(object):
                 val = raw_args.pop(0)
 
             if key:
-                arg_name = self._dealias(key)
+                arg_name = self.dealias(key)
                 kargs[arg_name].append(val)
             else:
                 pargs.append(val)
