@@ -16,7 +16,7 @@ class Command(object):
 
     arg_desc_re = compile(r'^-')
     arg_re = compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
-    arg_metas_map = {'N': int, 'NUM': int, '<n>': int, '<number>': int, None: autotype}
+    arg_meta_map = {'N': int, 'NUM': int, '<n>': int, '<number>': int, None: autotype}
 
     def __init__(self, func):
 
@@ -30,8 +30,9 @@ class Command(object):
         self.keyarg_name = keyarg_name
         self.arg_defaults = arg_defaults
 
-        self.arg_names_set = set(arg_names)
-        self.arg_defaults_map = dict((k, v) for k, v in zip(
+        # additional information
+        self.arg_name_set = set(arg_names)
+        self.arg_default_map = dict((k, v) for k, v in zip(
             *map(reversed, (arg_names or [], arg_defaults or []))
         ))
 
@@ -40,27 +41,27 @@ class Command(object):
         doc = getdoc(func)
         if not doc: return
 
-        self.arg_aliases_map = {}
-        self.arg_metas_map = {}
+        self.arg_alias_map = {}
+        self.arg_meta_map = {}
 
         for line in doc.splitlines():
             if self.arg_desc_re.match(line):
 
-                metas_map = {}
+                meta_map = {}
                 aliases_set = set()
                 for m in self.arg_re.finditer(line):
                     key, meta = m.group('key', 'meta')
                     aliases_set.add(key)
-                    metas_map[key] = meta
+                    meta_map[key] = meta
 
-                arg_names_set = self.arg_names_set & aliases_set
-                aliases_set -= arg_names_set
+                arg_name_set = self.arg_name_set & aliases_set
+                aliases_set -= arg_name_set
 
                 if arg_names:
-                    arg_name = arg_names_set.pop()
-                    self.arg_metas_map[arg_name] = metas_map[arg_name]
+                    arg_name = arg_name_set.pop()
+                    self.arg_meta_map[arg_name] = meta_map[arg_name]
                     for alias in aliases_set:
-                        self.arg_aliases_map[alias] = arg_name
+                        self.arg_alias_map[alias] = arg_name
 
     def cast(self, key, val, meta=None):
         return self.arg_meta_map.get(meta)(val)
@@ -175,9 +176,9 @@ if __name__ == '__main__':
 
     cmd = Command(f)
     print cmd.arg_names
-    print cmd.arg_names_set
+    print cmd.arg_name_set
     print cmd.vararg_name
     print cmd.keyarg_name
-    print cmd.arg_defaults_map
-    print cmd.arg_metas_map
-    print cmd.arg_aliases_map
+    print cmd.arg_default_map
+    print cmd.arg_meta_map
+    print cmd.arg_alias_map
