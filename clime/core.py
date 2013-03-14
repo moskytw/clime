@@ -7,7 +7,7 @@ import sys
 import inspect
 import re
 from collections import defaultdict
-from .helpers import *
+from .util import *
 
 Empty = type('Empty', (object, ), {
     '__nonzero__': lambda self: False,
