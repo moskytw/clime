@@ -18,8 +18,17 @@ class Command(object):
     '''Make a function, a built-in function or a bound method accept
     arguments from command line.
 
+    :param func: A function you want to convert to command.
+    :type func: a Python function or built-in function
+
+    .. versionchanged:: 0.1.5
+        It had been rewritten. The API is same as the previous verison, but some
+        behaviors may be different. Please read :py:meth:`Command.parse` for
+        more details.
+
     .. versionchanged:: 0.1.4
-       It is almost rewritten.'''
+        It is almost rewritten.
+    '''
 
     arg_desc_re = re.compile(r'^\s*-')
 
@@ -76,9 +85,23 @@ class Command(object):
                         self.alias_arg_map[alias] = arg_name
 
     def _dealias(self, key):
+        '''Return the argument name if the `key` is an alias.
+
+        :param key: An argument name or an alias.
+        :type key: str
+        '''
         return self.alias_arg_map.get(key, key)
 
     def cast(self, arg_name, val):
+        '''Convert the val from a str to a comportable type.
+
+        It get the type function from :py:attr:`Command.arg_type_map`.
+
+        :param arg_name: The argument name.
+        :type arg_name: str
+        :param val: The value which got from CLI.
+        :type val: any
+        '''
         meta = self.arg_meta_map.get(arg_name)
         if meta is not None:
             meta = meta.strip('<>').lower()
@@ -86,10 +109,101 @@ class Command(object):
         return type(val)
 
     def scan(self, raw_args=None):
-        '''For backward compatibility.'''
+        '''.. deprecated:: 0.1.5
+            Use :py:meth:`Command.parse` instead.
+        '''
         return self.parse(raw_args)
 
     def parse(self, raw_args=None):
+        """Parse the raw arguments from CLI.
+
+        :param raw_args: The raw arguments from CLI.
+        :type raw_args: a list or a str
+
+        .. versionadded:: 0.1.5
+
+        Here is an example:
+
+        >>> def repeat(message, times=2, count=False):
+        ...     '''It repeat the message.
+        ...
+        ...     -m=<str>, --message=<str>  The message.
+        ...     -t=<int>, --times=<int>
+        ...     -c, --count
+        ...     '''
+        ...     s = message * times
+        ...     if count:
+        ...         return len(s)
+        ...     else:
+        ...         return s
+        ...
+
+        >>> repeat('string', 3)
+        'stringstringstring'
+
+        >>> repeat_cmd = Command(repeat)
+
+        >>> repeat_cmd.get_usage()
+        'repeat [-t<int> | --times=<int>] [-c | --count] <message>'
+
+        >>> repeat_cmd.execute('Hi!')
+        'Hi!Hi!'
+
+        >>> repeat_cmd.execute('Hi! 4')
+        'Hi!Hi!Hi!Hi!'
+
+        It just maps the CLI arguments to Python function call, so they also
+        work well.
+
+        >>> repeat_cmd.execute('--message=Hi!')
+        'Hi!Hi!'
+        >>> repeat_cmd.execute('--message Hi!')
+        'Hi!Hi!'
+
+        >>> repeat_cmd.execute('-mHi!')
+        'Hi!Hi!'
+        >>> repeat_cmd.execute('-m=Hi!')
+        'Hi!Hi!'
+        >>> repeat_cmd.execute('-m Hi!')
+        'Hi!Hi!'
+
+        Both short or long options are supported to use '=' or ' ' as the
+        separator.
+
+        >>> repeat_cmd.execute('Hi! --times=4')
+        'Hi!Hi!Hi!Hi!'
+        >>> repeat_cmd.execute('Hi! -tttt')
+        'Hi!Hi!Hi!Hi!'
+
+        It counts the amount of options, if you don't specify a value.
+
+        >>> repeat_cmd.execute('-m Hi! -tttt --count')
+        12
+        >>> repeat_cmd.execute('-m Hi! -ttctt')
+        12
+        >>> repeat_cmd.execute('-ttcttmHi!')
+        12
+        >>> repeat_cmd.execute('-ttccttmHi!')
+        12
+
+        However, it just switchs the boolean value and only does it one time, if
+        a default value is a boolen.
+
+        It is also supported to collect arbitrary arguments:
+
+        >>> def everything(*args, **kargs):
+        ...     return args, kargs
+
+        >>> everything_cmd = Command(everything)
+        >>> everything_cmd.get_usage()
+        'everything [--<key>=<value>...] [<args>...]'
+
+        >>> everything_cmd.execute('1 2 3')
+        ((1, 2, 3), {})
+
+        >>> everything_cmd.execute('--x=1 --y=2 --z=3')
+        ((), {'y': 2, 'x': 1, 'z': 3})
+        """
 
         if raw_args is None:
             raw_args = sys.argv[1:]
@@ -185,7 +299,11 @@ class Command(object):
         return (pargs, kargs)
 
     def execute(self, raw_args=None):
-        '''Execute this command with `raw_args`.'''
+        '''Execute this command with `raw_args`.
+
+        :param raw_args: The raw arguments from CLI.
+        :type raw_args: a list or a str
+        '''
 
         pargs, kargs = self.parse(raw_args)
         return self.func(*pargs, **kargs)
@@ -193,11 +311,8 @@ class Command(object):
     def get_usage(self, without_name=False):
         '''Return the usage of this command.
 
-        Example: ::
-
-            files [--mode VAL] [PATHS]...
-
-        If `is_default` is True, it will render usage without function name.
+        :param without_name: Return an usage without function name.
+        :type without_name: bool
         '''
 
         # build the reverse alias map
@@ -405,33 +520,5 @@ class Program(object):
             print doc
 
 if __name__ == '__main__':
-
     import doctest
     doctest.testmod()
-
-    def func(msg, default='default value', flag=False, level=0):
-        '''It is just a test function.
-
-        -d <str>, --default <str>
-        -f, --flag
-        -l, --level
-        '''
-        return number, message
-
-    cmd = Command(func)
-    print cmd.arg_names
-    print cmd.arg_name_set
-    print cmd.vararg_name
-    print cmd.keyarg_name
-    print cmd.arg_default_map
-    print cmd.arg_meta_map
-    print cmd.alias_arg_map
-    print cmd.get_usage()
-    print cmd.parse(['-dhello,world', '-f', '-lll'])
-    print cmd.parse(['--default', 'hello,world', '--flag', '--level=3'])
-    print cmd.parse(['--default', 'hello,world', '--level=3', '-flllll'])
-    print cmd.parse(['--default', 'hello,world', '-flll'])
-    print cmd.parse(['-fllldhello,world'])
-    print cmd.parse(['-fllld', 'hello,world'])
-    print cmd.parse(['-fllld=hello,world'])
-    print cmd.parse(['-fllld=1234'])
