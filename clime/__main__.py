@@ -7,6 +7,8 @@ Use ``python -m clime`` to execute any module or Python file as a CLI program.
 
 The examples:
 
+::
+
     $ python -m clime math
     usage: acos [-x] <x>
     or: acosh [-x] <x>
