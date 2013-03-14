@@ -1,45 +1,45 @@
+The full version of this documentaion is at `clime.mosky.tw <http://clime.mosky.tw>`_.
+
 Clime
 =====
 
-Clime let you convert a module, a dict or an instance into a multi-command
-CLI program.
+Let you convert *any* module into a multi-command CLI program *without* any
+configuration.
 
-It just scans the members of an object to find the functions out, so it is
-**low couple** with your source. It also scans the aliases and metavars of
-options from docstring, so you are free from writing the settings of
-options. You can focus on writing the help text of your CLI program.
+The features:
 
-It is a better choice than the heavy `optparse` or `argparse` for simple CLI
-tasks.
+1. *Zero* configuration. Free you from the configuration hell.
+2. Docstring just *is* config. When you finish the docstring, the config of the
+   aliases and metavars are also finished.
+3. Auto-generate the usage of each command from the functions.
 
-Let me show an example for you.
+It is a better choice than the heavy `optparse` or `argparse` for most of the
+CLI tasks.
 
-See the full documentaion on http://packages.python.org/clime .
-
-**Note**: The 0.1.4 is a rewrote version and it does **not** provide
-backward compatibility.
+Let me show you Clime with an example.
 
 CLI-ize ME!
 -----------
 
-Here we have a simple script with docstring here: ::
+Here we have a simple script with a docstring here: ::
 
-    # filename: repeat.py
-    
-    def repeat(string, time=2):
-        '''repeat string n times
+    def repeat(message, times=2, count=False):
+        '''It repeats the message.
 
         options:
-            -n N, --time N  repeat N times.
+            -m=<str>, --message=<str>  The description of this option.
+            -t=<int>, --times=<int>
+            -c, --count
         '''
-        
-        print string * time
 
-After add this line, ::
+        s = message * times
+        return len(s) if count else s
+
+By adding this line, ::
 
     import clime.now
 
-... you now have a CLI program! ::
+... your CLI program is ready! ::
     
     $ python repeat.py twice
     twicetwice
@@ -47,32 +47,33 @@ After add this line, ::
     $ python repeat.py -n3 thrice
     thricethricethrice
 
-And it gerneate the usage from your function: ::
+And it generates the usage manual: ::
 
     $ python repeat.py --help
-    usage: [--time N | -n N] STRING
-       or: repeat [--time N | -n N] STRING
+    usage: [-t<int> | --times=<int>] [-c | --count] <message>
+       or: repeat [-t<int> | --times=<int>] [-c | --count] <message>
 
-If you wrote a docstring, it will also show up in help text. ::
+If you have a docstring in your function, it also show up in usage manual with
+``--help``. ::
 
     $ python repeat.py repeat --help
-    usage: [--time N | -n N] STRING
-       or: repeat [--time N | -n N] STRING
 
-    repeat string n times
+    usage: [-t<int> | --times=<int>] [-c | --count] <message>
+       or: repeat [-t<int> | --times=<int>] [-c | --count] <message>
+
+    It repeat the message.
 
     options:
-        -n N, --time N  repeat N times.
+        -m=<str>, --message=<str>  The message.
+        -t=<int>, --times=<int>
+        -c, --count
     
 You can find more examples in the `clime/examples`_.
 
-See `Command.scan`_ for more details about argument parsing.
+See the `Command.parse() <http://clime.mosky.tw/api.html#clime.core.Command.parse>`_ for more details about the argument parsing.
 
 .. _`clime/examples`:
     https://github.com/moskytw/clime/tree/master/examples
-    
-.. _`Command.scan`:
-    http://packages.python.org/clime/deeper.html#clime.Command.scan
 
 Installation
 ------------
@@ -108,7 +109,7 @@ Clime is hosted on two different platforms, PyPI_ and GitHub_.
 Usage
 -----
 
-Here is the basic usage of Clime.
+Below illustrates the basic usage of Clime.
 
 You have two different ways to use Clime.
 
@@ -118,25 +119,14 @@ You have two different ways to use Clime.
    
      import clime.now
    
-   It is recommend to put the codes into the ``if __name__ == '__main__':`` block.
+   It is recommended to put the line in the ``if __name__ == '__main__':``
+   block.
 
 2. **Use Clime as A Command**
    
-   `clime` is also an executable module. Use it to convert a module or a
-   Python file temporarily. ::
+   `clime` is also an executable module. You can use it to convert a module or a
+   stand-alone program temporarily. ::
    
      $ python -m clime TARGET
 
-See `clime.Program`_ for more usages.
-
-.. _`clime.Program`:
-    http://packages.python.org/clime/deeper.html#clime.Program
-
-More Details
-------------
-
-These are the basics of Clime usage. If you want to know more, details are
-here: `Take a Deeper Look at Clime`_.
-
-.. _`Take a Deeper Look at Clime`:
-    http://packages.python.org/clime/deeper.html
+See the `Program <http://clime.mosky.tw/api.html#clime.core.Program>`_ class for more usages.
