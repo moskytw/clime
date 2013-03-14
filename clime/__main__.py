@@ -11,10 +11,10 @@ Here are the examples:
 
     $ python -m clime math
     usage: acos [-x] <x>
-    or: acosh [-x] <x>
-    or: asin [-x] <x>
-    or: asinh [-x] <x>
-    or: atan [-x] <x>
+       or: acosh [-x] <x>
+       or: asin [-x] <x>
+       or: asinh [-x] <x>
+       or: atan [-x] <x>
     ...
 
     $ python -m clime math hypot --help

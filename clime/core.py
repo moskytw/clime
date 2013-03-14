@@ -202,8 +202,8 @@ class Command(object):
         >>> repeat_cmd.execute('Hi! -tttt')
         'Hi!Hi!Hi!Hi!'
 
-        It uses `keyword-first` resolving which is different from Python's
-        behavior. Here is an example:
+        It uses `keyword-first` resolving which is different from the default
+        behavior in Python. Here is an example:
 
         >>> repeat_cmd.execute('4 --message=Hi!')
         'Hi!Hi!Hi!Hi!'
