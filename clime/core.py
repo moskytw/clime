@@ -280,9 +280,9 @@ class Command(object):
                 # take the last value
                 val = next(val for val in reversed(collected_vals) if val is not Empty)
                 # cast this key arg
-                if arg_name in self.arg_meta_map:
+                if not self.keyarg_name or arg_name in self.arg_meta_map:
                     kargs[arg_name] = self.cast(arg_name, val)
-                if self.keyarg_name:
+                else:
                     kargs[arg_name] = self.cast(self.keyarg_name, val)
 
         # keyword-first resolving
