@@ -45,25 +45,23 @@ class Command(object):
         doc = getdoc(func)
         if not doc: return
 
-        self.arg_alias_map = {}
         self.arg_meta_map = {}
+        self.arg_alias_map = {}
 
         for line in doc.splitlines():
             if self.arg_desc_re.match(line):
 
-                meta_map = {}
                 aliases_set = set()
                 for m in self.arg_re.finditer(line):
                     key, meta = m.group('key', 'meta')
+                    self.arg_meta_map[key] = meta
                     aliases_set.add(key)
-                    meta_map[key] = meta
 
                 arg_name_set = self.arg_name_set & aliases_set
                 aliases_set -= arg_name_set
 
                 if arg_name_set:
                     arg_name = arg_name_set.pop()
-                    self.arg_meta_map[arg_name] = meta_map[arg_name]
                     for alias in aliases_set:
                         self.arg_alias_map[alias] = arg_name
 
@@ -138,41 +136,46 @@ class Command(object):
 
             files [--mode VAL] [PATHS]...
 
-        If `isdefault` is True, it will render usage without function name.
+        If `is_default` is True, it will render usage without function name.
         '''
 
-        rbindings = {}
-        for opt, target in self.bindings.iteritems():
-            shortcuts = rbindings.setdefault(target, [])
-            shortcuts.append(opt)
+        # build the reverse alias map
+        arg_alias_rmap = {}
+        for alias, arg_name in self.arg_alias_map.items():
+            aliases = arg_alias_rmap.setdefault(arg_name, [])
+            aliases.append(alias)
 
         usage = []
 
-        for optarg in optargs:
-            opts = [optarg]
-            opts.extend( rbindings.get(optarg, []) )
-            for i, opt in enumerate(opts):
-                opts[i] ='%s%s' % ('-' * (1+(len(opt)>1)), opt.replace('_', '-'))
-                meta = self.metavars.get(opt, None)
+        # build the arguments which have default value
+        for arg_name in self.arg_names[-len(self.arg_defaults):]:
+
+            pieces = []
+            for name in arg_alias_rmap.get(arg_name)+[arg_name]:
+                pieces.append('%s%s' % ('-' * (1+(len(name)>1)), name))
+                meta = self.arg_meta_map[name]
                 if meta:
-                    opts[i] += ' '+meta
-            usage.append('[%s]' % ' | '.join(opts))
+                    pieces[-1] += ' '+meta
 
-        posargs = self.args[:-len(optargs) or None]
-        usage.extend( map(str.upper, posargs) )
+            usage.append('[%s]' % ' | '.join(pieces))
 
-        if self.vararg:
-            usage.append('[%s]... ' % self.vararg.upper())
+        if self.keyarg_name:
+            usage.append('[--<key>=<value>...]')
+
+        # build the arguments which don't have default value
+        usage.extend('<%s>' % name for name in self.arg_names[:-len(self.arg_defaults) or None])
+
+        if self.vararg_name:
+            usage.append('[<%s>...]' % self.vararg_name)
 
         if is_default:
             return '%s' % ' '.join(usage)
         else:
-            name = self.func.__name__
-            return '%s %s' % (name, ' '.join(usage))
+            return '%s %s' % (self.func.__name__, ' '.join(usage))
 
 if __name__ == '__main__':
 
-    def f(number, message='default messagea', switcher=False):
+    def f(number, message='default messagea', switcher=False, *args, **kargs):
         '''It is just a test function.
 
         -n=<n>, --number=<n>       The number.
@@ -189,3 +192,4 @@ if __name__ == '__main__':
     print cmd.arg_default_map
     print cmd.arg_meta_map
     print cmd.arg_alias_map
+    print cmd.get_usage()
