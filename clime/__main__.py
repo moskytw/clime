@@ -23,5 +23,5 @@ def clime(target, *args, **kargs):
     prog.main(sys.argv[2:])
 
 if __name__ == '__main__':
-    from . import now
+    Program(ignore_help=True).main()
 

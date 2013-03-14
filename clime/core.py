@@ -246,7 +246,7 @@ class Program(object):
     :type name: bool
 
     .. versionadded:: 0.1.5
-        Added `white_list`, `black_list`, `doc` and `debug`.
+        Added `white_list`, `black_list`, `ignore_help`, `doc` and `debug`.
 
     .. versionchanged:: 0.1.5
         Renamed `defcmd` and `progname`.
@@ -255,7 +255,7 @@ class Program(object):
        It is almost rewritten.
     '''
 
-    def __init__(self, obj=None, default=None, white_list=None, black_list=None, name=None, doc=None, debug=False):
+    def __init__(self, obj=None, default=None, white_list=None, black_list=None, ignore_help=False, name=None, doc=None, debug=False):
 
         obj = obj or sys.modules['__main__']
         self.obj = obj
@@ -282,6 +282,7 @@ class Program(object):
         if len(self.command_funcs) == 1:
             self.default = self.command_funcs.keys()[0]
 
+        self.ignore_help = ignore_help
         self.name = name or sys.argv[0]
         self.doc = doc
         self.debug = debug
@@ -308,7 +309,7 @@ class Program(object):
 
         if len(raw_args) == 0:
             pass
-        elif raw_args[0] == '--help':
+        elif not self.ignore_help and raw_args[0] == '--help':
             self.print_usage()
             return
         else:
@@ -325,7 +326,7 @@ class Program(object):
                 self.print_usage()
                 return
 
-        if '--help' in raw_args:
+        if not self.ignore_help and '--help' in raw_args:
             # the user requires help of this command.
             self.print_usage(cmd_name)
             return
