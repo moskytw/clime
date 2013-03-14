@@ -38,7 +38,11 @@ class Command(object):
         self.arg_default_map = dict((k, v) for k, v in zip(
             *map(reversed, (self.arg_names, self.arg_defaults))
         ))
-        self.mode_flags = set(arg_name for arg_name in self.arg_names if self.is_flag(arg_name))
+
+        self.mode_flag_set = set()
+        for arg_name in self.arg_names:
+            if isinstance(self.arg_default_map.get(arg_name), bool):
+                self.mode_flag_set.add(arg_name)
 
         # try to find the metas and aliases out
 
@@ -65,14 +69,8 @@ class Command(object):
                     for alias in aliases_set:
                         self.alias_arg_map[alias] = arg_name
 
-        self.mode_flags.union(alias for alias in self.alias_arg_map if self.is_flag(self.dealias(alias)))
-
     def dealias(self, key):
         return self.alias_arg_map.get(key, key)
-
-    def is_flag(self, arg_name):
-        arg_default = self.arg_default_map.get(arg_name)
-        return isinstance(arg_default, bool)
 
     def cast(self, arg_name, val):
         meta = self.arg_meta_map.get(arg_name)
@@ -155,7 +153,7 @@ class Command(object):
                 else:
                     for i, c in enumerate(key[1:]):
                         arg_name = self.dealias(c)
-                        if self.is_flag(arg_name):
+                        if arg_name in self.mode_flag_set:
                             if arg_name in kargs:
                                 kargs[arg_name] += 1
                             else:
@@ -272,6 +270,6 @@ if __name__ == '__main__':
     print cmd.arg_default_map
     print cmd.arg_meta_map
     print cmd.alias_arg_map
-    print cmd.mode_flags
+    print cmd.mode_flag_set
     print cmd.get_usage()
     print cmd.scan(['--number', '123', '-n', '1', '-bbn', '1'])
