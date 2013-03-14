@@ -2,3 +2,4 @@ include README*
 graft examples
 graft docs
 prune docs/_build
+graft tests
