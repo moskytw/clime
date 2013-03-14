@@ -15,8 +15,7 @@ class Command(object):
 
     metatypes = {'N': int, 'NUM': int}
 
-    @staticmethod
-    def defautotype(x):
+    def cast(self, x):
         '''The default type auto-detection function. It use `autotype` by
         default.'''
         return autotype(x)
@@ -113,7 +112,7 @@ class Command(object):
 
         def gettype(opt):
             meta = self.metavars.get(opt, None)
-            t = self.metatypes.get(meta, self.defautotype)
+            t = self.metatypes.get(meta, self.cast)
             return mktypewrapper(t)
 
         def nextarg():
@@ -168,7 +167,7 @@ class Command(object):
                     continue
 
             # if doesnt start with '-' or length of piece is not enough
-            pargs.append(self.defautotype(piece))
+            pargs.append(self.cast(piece))
 
         # reduce the collected values
         for key, vals in kargs.iteritems():
