@@ -244,3 +244,10 @@ if __name__ == '__main__':
     print cmd.alias_arg_map
     print cmd.get_usage()
     print cmd.parse(['-dhello,world', '-f', '-lll'])
+    print cmd.parse(['--default', 'hello,world', '--flag', '--level=3'])
+    print cmd.parse(['--default', 'hello,world', '--level=3', '-flllll'])
+    print cmd.parse(['--default', 'hello,world', '-flll'])
+    print cmd.parse(['-fllldhello,world'])
+    print cmd.parse(['-fllld', 'hello,world'])
+    print cmd.parse(['-fllld=hello,world'])
+    print cmd.parse(['-fllld=1234'])
