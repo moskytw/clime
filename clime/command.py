@@ -16,7 +16,13 @@ class Command(object):
 
     arg_desc_re = compile(r'^-')
     arg_re = compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
-    arg_meta_map = {'N': int, 'NUM': int, '<n>': int, '<number>': int, None: autotype}
+    arg_meta_map = {
+        'N': int, 'NUM': int, 'NUMBER': int,
+        'S': str, 'STR': str, 'STRING': str,
+        '<n>': int, '<num>': int, '<number>': int,
+        '<s>': str, '<str>': str, '<string>': str,
+        None: autotype
+    }
 
     def __init__(self, func):
 
