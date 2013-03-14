@@ -190,7 +190,7 @@ class Command(object):
         pargs, kargs = self.parse(raw_args)
         return self.func(*pargs, **kargs)
 
-    def get_usage(self, is_default=False):
+    def get_usage(self, without_name=False):
         '''Return the usage of this command.
 
         Example: ::
@@ -233,7 +233,7 @@ class Command(object):
         if self.vararg_name:
             usage.append('[<%s>...]' % self.vararg_name)
 
-        if is_default:
+        if without_name:
             return '%s' % ' '.join(usage)
         else:
             return '%s %s' % (self.func.__name__, ' '.join(usage))
@@ -367,10 +367,10 @@ class Program(object):
     def print_usage(self, cmd_name=None):
         '''Print the usages of all commands or a command.'''
 
-        def append_usage(cmd_name, is_default=False):
+        def append_usage(cmd_name, without_name=False):
             # nonlocal usages
             cmd_func = self.command_funcs[cmd_name]
-            usages.append(Command(cmd_func).get_usage(is_default))
+            usages.append(Command(cmd_func).get_usage(without_name))
 
         usages = []
         cmd_func = None
@@ -384,7 +384,7 @@ class Program(object):
         else:
             # prepare the usage of a command.
             if self.default == cmd_name:
-                append_usage(cmd_name, is_default=True)
+                append_usage(cmd_name, without_name=True)
             append_usage(cmd_name)
 
         # print the usages.
