@@ -57,7 +57,6 @@ If you have a docstring in your function, it also show up in usage manual with
 ``--help``. ::
 
     $ python repeat.py repeat --help
-
     usage: [-t<int> | --times=<int>] [-c | --count] <message>
        or: repeat [-t<int> | --times=<int>] [-c | --count] <message>
 
