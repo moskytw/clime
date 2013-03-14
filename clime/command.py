@@ -17,10 +17,8 @@ class Command(object):
     arg_desc_re = compile(r'^-')
     arg_re = compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
     arg_meta_map = {
-        'N': int, 'NUM': int, 'NUMBER': int,
-        'S': str, 'STR': str, 'STRING': str,
-        '<n>': int, '<num>': int, '<number>': int,
-        '<s>': str, '<str>': str, '<string>': str,
+        'n': int, 'num': int, 'number': int,
+        's': str, 'str': str, 'string': str,
         None: autotype
     }
 
@@ -69,8 +67,11 @@ class Command(object):
                     for alias in aliases_set:
                         self.arg_alias_map[alias] = arg_name
 
+    def get_type(self, meta):
+        return self.arg_meta_map.get(meta.strip('<>').lower())
+
     def cast(self, key, val, meta=None):
-        return self.arg_meta_map.get(meta)(val)
+        return self.get_type(meta)(val)
 
     def merge(self, key, val, new_val):
         return smartlyadd(val, new_val)
