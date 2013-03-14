@@ -38,6 +38,7 @@ class Command(object):
         'n': int, 'num': int, 'number': int,
         'i': int, 'int': int, 'integer': int,
         's': str, 'str': str, 'string': str,
+        'json': json,
         None: autotype
     }
 
@@ -520,5 +521,15 @@ class Program(object):
             print doc
 
 if __name__ == '__main__':
+
     import doctest
     doctest.testmod()
+
+    def read_json(json=None):
+        '''--json=<json>'''
+        return json
+
+    read_json_cmd = Command(read_json)
+    print read_json_cmd.execute('[1,2,3]')
+    print read_json_cmd.execute(['--json', '{"x": 1}'])
+    print read_json_cmd.execute()

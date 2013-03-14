@@ -5,6 +5,10 @@
 
 import inspect
 
+def json(s):
+    import json
+    return json.loads(s)
+
 def autotype(s):
     '''Automative detect the type (int, float or string) of `s` and convert `s`
     into it.'''
