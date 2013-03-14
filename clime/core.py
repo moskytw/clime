@@ -166,8 +166,9 @@ class Command(object):
                 kargs[arg_name] = next(val for val in reversed(collected_vals) if val is not Empty)
 
         # keyword-first resolving
+        isbuiltin = inspect.isbuiltin(self.func)
         for pos, name in enumerate(self.arg_names):
-            if name in kargs and pos < len(pargs):
+            if name in kargs and (pos < len(pargs) or isbuiltin):
                 pargs.insert(pos, kargs.pop(name))
 
         return (pargs, kargs)
