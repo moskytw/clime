@@ -20,7 +20,9 @@ class Command(object):
        It is almost rewritten.'''
 
     arg_desc_re = compile(r'^\s*-')
+
     arg_re = compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
+
     arg_type_map = {
         'n': int, 'num': int, 'number': int,
         's': str, 'str': str, 'string': str,
@@ -81,12 +83,13 @@ class Command(object):
         return type(val)
 
     def parse(self, raw_args=None):
+
         if raw_args is None:
             raw_args = sys.argv[1:]
         elif isinstance(raw_args, str):
             raw_args = raw_args.split()
 
-        # parse the raw arguments
+        # collect the arguments from the raw arguments
 
         pargs = []
         kargs = defaultdict(list)
@@ -99,10 +102,14 @@ class Command(object):
 
             if raw_args[0].startswith('-'):
 
+                # '-m=hello' or '--msg=hello'
                 key, _, val = raw_args.pop(0).partition('=')
+
                 if key.startswith('--'):
                     key = key[2:]
                 else:
+                    # '-nnn'       -> sep=4
+                    # '-nnnmhello' -> sep=5
                     sep = 1
                     for c in key[1:]:
                         if c in self.arg_name_set or c in self.alias_arg_map:
@@ -110,38 +117,47 @@ class Command(object):
                         else:
                             break
 
+                    # '-nnn'       -> 'nn'
+                    # '-nnnmhello' -> 'nnn'
                     for c in key[1:sep-1]:
                         arg_name = self.dealias(c)
                         kargs[arg_name].append(Empty)
 
                     if not val:
+                        # '-mhello'
                         val = key[sep:] or Empty
                     key = key[sep-1]
-
-                arg_name = self.dealias(key)
+                    # '-nnn'       -> key='n', val=Empty
+                    # '-nnnmhello' -> key='m', val='hello'
 
                 if not val:
+                    # ['-m', 'hello'] or ['--msg', 'hello']
                     if raw_args and not raw_args[0].startswith('-'):
                         val = raw_args.pop(0)
             else:
                 val = raw_args.pop(0)
 
-            val = self.cast(key, val)
+            casted_val = self.cast(key, val)
 
             if key:
-                kargs[arg_name].append(val)
+                arg_name = self.dealias(key)
+                kargs[arg_name].append(casted_val)
             else:
-                pargs.append(val)
+                pargs.append(casted_val)
 
+        # rearrange the collected kargs
         kargs = dict(kargs)
         for arg_name, collected_vals in kargs.items():
             default = self.arg_default_map.get(arg_name)
             if isinstance(default, bool):
+                # swith the boolean value if default is a bool
                 kargs[arg_name] = not default
             elif all(val is Empty for val in collected_vals):
+                # count the Empty if the all vals are Empty
                 kargs[arg_name] = len(collected_vals)
             else:
-                kargs[arg_name] = next(val for val in collected_vals if val is not Empty)
+                # take the last value
+                kargs[arg_name] = next(val for val in reversed(collected_vals) if val is not Empty)
 
         # keyword-first resolving
         for pos, name in enumerate(self.arg_names):
