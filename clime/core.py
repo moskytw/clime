@@ -27,6 +27,7 @@ class Command(object):
 
     arg_type_map = {
         'n': int, 'num': int, 'number': int,
+        'i': int, 'int': int, 'integer': int,
         's': str, 'str': str, 'string': str,
         None: autotype
     }
