@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from clime.helpers import *
+from clime.util import *
 
-class TestClimeHelper(unittest.TestCase):
+class TestClimeUtil(unittest.TestCase):
 
     def test_autotype(self):
         cases   = ('string', '100', '100.0', None)
@@ -47,21 +47,7 @@ class TestClimeHelper(unittest.TestCase):
 
         for doc, answer in zip(docs, answers):
             f.__doc__ = doc
-            self.assertEqual(trans(getargspec( f )), answer)
-
-    def test_getoptmetas(self):
-
-        doc = """
-        -d, --debug                enable debug mode
-        -q, -s, --quiet, --slient  enable slient mode
-        -n N, --times N            how many times do you want
-        """
-
-        answer = [ [('d', None), ('debug', None)],
-                   [('q', None), ('s', None), ('quiet', None), ('slient', None)],
-                   [('n', 'N'), ('times', 'N')] ]
-
-        self.assertEqual(list(getoptmetas(doc)), answer)
+            self.assertEqual(trans(getargspec(f)), answer)
 
 if __name__ == '__main__':
     unittest.main()
