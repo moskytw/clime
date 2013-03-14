@@ -531,6 +531,7 @@ class Program(object):
         if doc:
             print
             print doc
+            print
 
 if __name__ == '__main__':
 
