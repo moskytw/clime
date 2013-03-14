@@ -177,6 +177,17 @@ class Command(object):
         >>> repeat_cmd.execute('Hi! -tttt')
         'Hi!Hi!Hi!Hi!'
 
+        It uses `keyword-first` resolving which is different from Python's
+        behavior. Here is an example:
+
+        >>> repeat_cmd.execute('4 --message=Hi!')
+        'Hi!Hi!Hi!Hi!'
+
+        >>> repeat(4, message='Hi!')
+        Traceback (most recent call last):
+            ...
+        TypeError: repeat() got multiple values for keyword argument 'message'
+
         It counts the amount of options, if you don't specify a value.
 
         >>> repeat_cmd.execute('-m Hi! -tttt --count')
