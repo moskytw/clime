@@ -32,12 +32,12 @@ class Command(object):
         self.arg_names = arg_names
         self.vararg_name = vararg_name
         self.keyarg_name = keyarg_name
-        self.arg_defaults = arg_defaults
+        self.arg_defaults = arg_defaults or []
 
         # additional information
         self.arg_name_set = set(arg_names)
         self.arg_default_map = dict((k, v) for k, v in zip(
-            *map(reversed, (arg_names or [], arg_defaults or []))
+            *map(reversed, (self.arg_names, self.arg_defaults))
         ))
 
         # try to find the metas and aliases out
