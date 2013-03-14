@@ -393,7 +393,7 @@ class Program(object):
         else:
             obj_items = inspect.getmembers(obj)
 
-        if hasattr(obj, '__all__'):
+        if not white_list and hasattr(obj, '__all__'):
             white_list = obj.__all__
 
         tests = (inspect.isbuiltin, inspect.isfunction, inspect.ismethod)
