@@ -120,8 +120,7 @@ class Command(object):
            It is rewritten from `Command.parse` (0.1.3).
 
         '''
-
-        pass
+        return (tuple(), {})
 
     def execute(self, raw_args):
         '''Execute this command with `raw_args`.'''
