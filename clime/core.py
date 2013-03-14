@@ -527,10 +527,22 @@ if __name__ == '__main__':
     doctest.testmod()
 
     def read_json(json=None):
-        '''--json=<json>'''
+        '''
+        options:
+            --json=<json>
+        '''
         return json
 
     read_json_cmd = Command(read_json)
+
+    print '---'
+    print read_json_cmd.get_usage()
     print read_json_cmd.execute('[1,2,3]')
     print read_json_cmd.execute(['--json', '{"x": 1}'])
-    print read_json_cmd.execute()
+    print '---'
+
+    prog = Program(white_list=['read_json'], debug=True)
+    prog.main()
+    # python -m clime.core read-json --help
+    # python -m clime.core read-json '{"x": 1}'
+    # python -m clime.core read-json --json='{"x":1}'
