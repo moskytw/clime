@@ -74,6 +74,7 @@ class Command(object):
                 aliases_set = set()
                 for m in self.arg_re.finditer(line):
                     key, meta = m.group('key', 'meta')
+                    key = key.replace('-', '_')
                     self.arg_meta_map[key] = meta
                     aliases_set.add(key)
 
@@ -228,7 +229,7 @@ class Command(object):
                 key, _, val = raw_args.pop(0).partition('=')
 
                 if key.startswith('--'):
-                    key = key[2:]
+                    key = key[2:].replace('-', '_')
                 else:
                     # '-nnn'       -> sep=4
                     # '-nnnmhello' -> sep=5
@@ -330,7 +331,7 @@ class Command(object):
             pieces = []
             for name in alias_arg_rmap.get(arg_name, [])+[arg_name]:
                 is_long_opt = len(name) > 1
-                pieces.append('%s%s' % ('-' * (1+is_long_opt), name))
+                pieces.append('%s%s' % ('-' * (1+is_long_opt), name.replace('_', '-')))
                 meta = self.arg_meta_map.get(name)
                 if meta:
                     if is_long_opt:
@@ -344,15 +345,15 @@ class Command(object):
             usage.append('[--<key>=<value>...]')
 
         # build the arguments which don't have default value
-        usage.extend('<%s>' % name for name in self.arg_names[:-len(self.arg_defaults) or None])
+        usage.extend('<%s>' % name.replace('_', '-') for name in self.arg_names[:-len(self.arg_defaults) or None])
 
         if self.vararg_name:
-            usage.append('[<%s>...]' % self.vararg_name)
+            usage.append('[<%s>...]' % self.vararg_name.replace('_', '-'))
 
         if without_name:
             return '%s' % ' '.join(usage)
         else:
-            return '%s %s' % (self.func.__name__, ' '.join(usage))
+            return '%s %s' % (self.func.__name__.replace('_', '-'), ' '.join(usage))
 
 class Program(object):
     '''Convert a module or dict into a multi-command CLI program.
@@ -440,9 +441,9 @@ class Program(object):
             self.print_usage()
             return
         else:
-            cmd_func = self.command_funcs.get(raw_args[0])
+            cmd_func = self.command_funcs.get(raw_args[0].replace('-', '_'))
             if cmd_func is not None:
-                cmd_name = raw_args.pop(0)
+                cmd_name = raw_args.pop(0).replace('-', '_')
 
         if cmd_func is None:
             # we can't find the command name in normal procedure
