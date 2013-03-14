@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 from re import compile
 from inspect  import getdoc, isbuiltin
 from .helpers import getargspec, getoptmetas, autotype, smartlyadd
@@ -14,9 +15,9 @@ class Command(object):
     .. versionchanged:: 0.1.4
        It is almost rewritten.'''
 
-    arg_desc_re = compile(r'^-')
+    arg_desc_re = compile(r'^\s*-')
     arg_re = compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
-    arg_meta_map = {
+    arg_type_map = {
         'n': int, 'num': int, 'number': int,
         's': str, 'str': str, 'string': str,
         None: autotype
@@ -65,16 +66,24 @@ class Command(object):
                     for alias in aliases_set:
                         self.arg_alias_map[alias] = arg_name
 
-    def get_type(self, meta):
-        return self.arg_meta_map.get(meta.strip('<>').lower())
+    def dealias(self, key):
+        return self.arg_alias_map.get(key, key)
 
-    def cast(self, key, val, meta=None):
-        return self.get_type(meta)(val)
+    def is_flag(self, arg_name):
+        arg_default = self.arg_default_map.get(arg_name)
+        return isinstance(arg_default, bool)
 
-    def merge(self, key, val, new_val):
+    def cast(self, arg_name, val):
+        meta = self.arg_meta_map.get(arg_name)
+        if meta is not None:
+            meta = meta.strip('<>').lower()
+        type = self.arg_type_map[None]
+        return type(val)
+
+    def merge(self, arg_name, val, new_val):
         return smartlyadd(val, new_val)
 
-    def scan(self, raw_args):
+    def scan(self, raw_args=None):
         '''Scan the `raw_args`, and return a tuple (`pargs`, `kargs`).
 
         `raw_args` can be `string` or `list`.
@@ -120,9 +129,63 @@ class Command(object):
            It is rewritten from `Command.parse` (0.1.3).
 
         '''
-        return (tuple(), {})
 
-    def execute(self, raw_args):
+        if raw_args is None:
+            raw_args = sys.argv[1:]
+        elif isinstance(raw_args, str):
+            raw_args = raw_args.split()
+
+        # parse the raw arguments
+
+        pargs = []
+        kargs = {}
+
+        while raw_args:
+
+            key = None
+            val = None
+            arg_name = None
+
+            if raw_args[0].startswith('-'):
+
+                key, _, val = raw_args.pop(0).partition('=')
+                if key.startswith('--'):
+                    key = key[2:]
+                else:
+                    if not val:
+                        val = key[2:]
+                    key = key[1]
+
+                arg_name = self.dealias(key)
+
+                if self.is_flag(arg_name):
+                    val = not self.arg_default_map.get(arg_name)
+                elif not val:
+                    if raw_args and not raw_args[0].startswith('-'):
+                        val = raw_args.pop(0)
+                    else:
+                        val = True
+            else:
+                val = raw_args.pop(0)
+
+            val = self.cast(key, val)
+
+            if key:
+                if arg_name in kargs:
+                    kargs[arg_name] = self.merge(arg_name, kargs[arg_name], val)
+                else:
+                    kargs[arg_name] = val
+            else:
+                pargs.append(val)
+
+        # keyword-first resolving
+        for pos, name in enumerate(self.arg_names):
+            if name in kargs and pos < len(pargs):
+                pargs.insert(pos, kargs.pop(name))
+
+        return (pargs, kargs)
+
+    def execute(self, raw_args=None):
         '''Execute this command with `raw_args`.'''
 
         pargs, kargs = self.scan(raw_args)
@@ -150,11 +213,15 @@ class Command(object):
         for arg_name in self.arg_names[-len(self.arg_defaults):]:
 
             pieces = []
-            for name in arg_alias_rmap.get(arg_name)+[arg_name]:
-                pieces.append('%s%s' % ('-' * (1+(len(name)>1)), name))
-                meta = self.arg_meta_map[name]
+            for name in arg_alias_rmap.get(arg_name, [])+[arg_name]:
+                is_long_opt = len(name) > 1
+                pieces.append('%s%s' % ('-' * (1+is_long_opt), name))
+                meta = self.arg_meta_map.get(name)
                 if meta:
-                    pieces[-1] += ' '+meta
+                    if is_long_opt:
+                        pieces[-1] += '='+meta
+                    else:
+                        pieces[-1] += meta
 
             usage.append('[%s]' % ' | '.join(pieces))
 
@@ -174,7 +241,7 @@ class Command(object):
 
 if __name__ == '__main__':
 
-    def f(number, message='default messagea', switcher=False, *args, **kargs):
+    def f(number=1, message='default msg', switcher=False, *args, **kargs):
         '''It is just a test function.
 
         -n=<n>, --number=<n>       The number.
@@ -192,3 +259,4 @@ if __name__ == '__main__':
     print cmd.arg_meta_map
     print cmd.arg_alias_map
     print cmd.get_usage()
+    print cmd.scan(['--number', '-n', '1'])
