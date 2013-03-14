@@ -3,6 +3,8 @@
 
 import inspect
 
+
+
 def autotype(s):
     '''Automative detect the type (int, float or string) of `s` and convert `s`
     into it.'''

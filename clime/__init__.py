@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from .command import Command
-from .program import Program
+from .core import *
 
 __version__ = '0.1.4'
