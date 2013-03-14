@@ -144,13 +144,11 @@ class Command(object):
             else:
                 val = raw_args.pop(0)
 
-            casted_val = self.cast(key, val)
-
             if key:
                 arg_name = self._dealias(key)
-                kargs[arg_name].append(casted_val)
+                kargs[arg_name].append(val)
             else:
-                pargs.append(casted_val)
+                pargs.append(val)
 
         # rearrange the collected kargs
         kargs = dict(kargs)
@@ -164,13 +162,25 @@ class Command(object):
                 kargs[arg_name] = len(collected_vals)
             else:
                 # take the last value
-                kargs[arg_name] = next(val for val in reversed(collected_vals) if val is not Empty)
+                val = next(val for val in reversed(collected_vals) if val is not Empty)
+                # cast this key arg
+                if arg_name in self.arg_meta_map:
+                    kargs[arg_name] = self.cast(arg_name, val)
+                if self.keyarg_name:
+                    kargs[arg_name] = self.cast(self.keyarg_name, val)
 
         # keyword-first resolving
         isbuiltin = inspect.isbuiltin(self.func)
         for pos, name in enumerate(self.arg_names):
             if name in kargs and (pos < len(pargs) or isbuiltin):
                 pargs.insert(pos, kargs.pop(name))
+
+        # cast the pos args
+        for i, parg in enumerate(pargs):
+            if i < len(self.arg_names):
+                pargs[i] = self.cast(self.arg_names[i], parg)
+            elif self.vararg_name:
+                pargs[i] = self.cast(self.vararg_name, parg)
 
         return (pargs, kargs)
 
