@@ -3,8 +3,14 @@
 
 import sys
 from re import compile
+from collections import defaultdict
 from inspect  import getdoc, isbuiltin
 from .helpers import getargspec, getoptmetas, autotype, smartlyadd
+
+Empty = type('Empty', (object, ), {
+    '__nonzero__': lambda self: False,
+    '__repr__'   : lambda self: 'Empty',
+})()
 
 class Command(object):
     '''Make a function, a built-in function or a bound method accept
@@ -38,11 +44,6 @@ class Command(object):
         self.arg_default_map = dict((k, v) for k, v in zip(
             *map(reversed, (self.arg_names, self.arg_defaults))
         ))
-
-        self.mode_flag_set = set()
-        for arg_name in self.arg_names:
-            if isinstance(self.arg_default_map.get(arg_name), bool):
-                self.mode_flag_set.add(arg_name)
 
         # try to find the metas and aliases out
 
@@ -78,9 +79,6 @@ class Command(object):
             meta = meta.strip('<>').lower()
         type = self.arg_type_map[None]
         return type(val)
-
-    def merge(self, arg_name, val, new_val):
-        return smartlyadd(val, new_val)
 
     def scan(self, raw_args=None):
         '''Scan the `raw_args`, and return a tuple (`pargs`, `kargs`).
@@ -137,12 +135,12 @@ class Command(object):
         # parse the raw arguments
 
         pargs = []
-        kargs = {}
+        kargs = defaultdict(list)
 
         while raw_args:
 
             key = None
-            val = None
+            val = Empty
             arg_name = None
 
             if raw_args[0].startswith('-'):
@@ -151,41 +149,45 @@ class Command(object):
                 if key.startswith('--'):
                     key = key[2:]
                 else:
-                    for i, c in enumerate(key[1:]):
-                        arg_name = self.dealias(c)
-                        if arg_name in self.mode_flag_set:
-                            if arg_name in kargs:
-                                kargs[arg_name] += 1
-                            else:
-                                kargs[arg_name] = not self.arg_default_map.get(arg_name)
+                    i = 1
+                    for c in key[1:]:
+                        if c in self.arg_name_set or c in self.alias_arg_map:
+                            i += 1
                         else:
                             break
-                    else:
-                        continue
+
+                    for c in key[1:i-1]:
+                        arg_name = self.dealias(c)
+                        kargs[arg_name].append(Empty)
 
                     if not val:
-                        val = key[i+2:]
-                    key = key[i+1]
+                        val = key[i:] or Empty
+                    key = key[i-1]
 
                 arg_name = self.dealias(key)
 
                 if not val:
                     if raw_args and not raw_args[0].startswith('-'):
                         val = raw_args.pop(0)
-                    else:
-                        val = True
             else:
                 val = raw_args.pop(0)
 
             val = self.cast(key, val)
 
             if key:
-                if arg_name in kargs:
-                    kargs[arg_name] = self.merge(arg_name, kargs[arg_name], val)
-                else:
-                    kargs[arg_name] = val
+                kargs[arg_name].append(val)
             else:
                 pargs.append(val)
+
+        kargs = dict(kargs)
+        for arg_name, collected_vals in kargs.items():
+            default = self.arg_default_map.get(arg_name)
+            if isinstance(default, bool):
+                kargs[arg_name] = not default
+            elif all(val is Empty for val in collected_vals):
+                kargs[arg_name] = len(collected_vals)
+            else:
+                kargs[arg_name] = next(val for val in collected_vals if val is not Empty)
 
         # keyword-first resolving
         for pos, name in enumerate(self.arg_names):
@@ -250,19 +252,19 @@ class Command(object):
 
 if __name__ == '__main__':
 
-    import doctest
-    doctest.testmod()
+    #import doctest
+    #doctest.testmod()
 
-    def f(number=1, b=False, message='default msg', switcher=False, *args, **kargs):
+    def func(msg, default='default value', flag=False, level=0):
         '''It is just a test function.
 
-        -n=<n>, --number=<n>       The number.
-        -m=<str>, --message=<str>  The default.
-        -s, --switcher             The switcher.
+        -d <str>, --default <str>
+        -f, --flag
+        -l, --level
         '''
         return number, message
 
-    cmd = Command(f)
+    cmd = Command(func)
     print cmd.arg_names
     print cmd.arg_name_set
     print cmd.vararg_name
@@ -270,6 +272,5 @@ if __name__ == '__main__':
     print cmd.arg_default_map
     print cmd.arg_meta_map
     print cmd.alias_arg_map
-    print cmd.mode_flag_set
     print cmd.get_usage()
-    print cmd.scan(['--number', '123', '-n', '1', '-bbn', '1'])
+    print cmd.scan(['-dhello,world', '-f', '-lll'])
