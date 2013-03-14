@@ -116,8 +116,8 @@ class Program(object):
             return_val = cmd.execute(raw_args)
         except Exception, e:
             if self.debug:
-                from traceback import print_last
-                print_last()
+                from traceback import print_exception
+                print_exception(*sys.exc_info())
                 return
             else:
                 self.complain(e)
