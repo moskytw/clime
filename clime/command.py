@@ -79,7 +79,7 @@ class Command(object):
         meta = self.arg_meta_map.get(arg_name)
         if meta is not None:
             meta = meta.strip('<>').lower()
-        type = self.arg_type_map[None]
+        type = self.arg_type_map[meta]
         return type(val)
 
     def parse(self, raw_args=None):
