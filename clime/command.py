@@ -5,7 +5,7 @@ import sys
 from re import compile
 from collections import defaultdict
 from inspect  import getdoc, isbuiltin
-from .helpers import getargspec, getoptmetas, autotype, smartlyadd
+from .helpers import getargspec, getoptmetas, autotype
 
 Empty = type('Empty', (object, ), {
     '__nonzero__': lambda self: False,
@@ -80,53 +80,7 @@ class Command(object):
         type = self.arg_type_map[None]
         return type(val)
 
-    def scan(self, raw_args=None):
-        '''Scan the `raw_args`, and return a tuple (`pargs`, `kargs`).
-
-        `raw_args` can be `string` or `list`.
-
-        Uses *keyword-first resolving* -- If keyword and positional arguments
-        are at same place, the keyword argument takes this place and pushes
-        the positional argument to next one.
-
-        Example:
-
-        >>> def files(mode='r', *paths):
-        ...     print mode, paths
-        ...
-        >>> files_cmd = Command(files)
-        >>> files_cmd.scan('--mode w f1.txt f2.txt')
-        (['w', 'f1.txt', 'f2.txt'], {})
-        >>> files_cmd.execute('--mode w f1.txt f2.txt')
-        w ('f1.txt', 'f2.txt')
-
-        If an no-value options is given a function in which a default value is boolean type, it will put the opposite boolean into `optargs`.
-
-        If no option is given to a function in which a default value is boolean type, it will put the opposite boolean value into `optargs`.
-
-        >>> def test(b=False, x=None):
-        ...     print b, x
-        ...
-        >>> test_cmd = Command(test)
-        >>> test_cmd.execute('-b')
-        True None
-
-        On the other hand, if more than one options are given to a function and
-
-        1. the default of function is boolean: it will count this options;
-        2. otherwise: it will put the value into a list.
-
-        >>> test_cmd.execute('-bbb -x first -x second -x third')
-        3 ['first', 'second', 'third']
-
-        .. versionchanged:: 0.1.4
-           Use custom parser instead of `getopt`.
-
-        .. versionchanged:: 0.1.4
-           It is rewritten from `Command.parse` (0.1.3).
-
-        '''
-
+    def parse(self, raw_args=None):
         if raw_args is None:
             raw_args = sys.argv[1:]
         elif isinstance(raw_args, str):
@@ -149,20 +103,20 @@ class Command(object):
                 if key.startswith('--'):
                     key = key[2:]
                 else:
-                    i = 1
+                    sep = 1
                     for c in key[1:]:
                         if c in self.arg_name_set or c in self.alias_arg_map:
-                            i += 1
+                            sep += 1
                         else:
                             break
 
-                    for c in key[1:i-1]:
+                    for c in key[1:sep-1]:
                         arg_name = self.dealias(c)
                         kargs[arg_name].append(Empty)
 
                     if not val:
-                        val = key[i:] or Empty
-                    key = key[i-1]
+                        val = key[sep:] or Empty
+                    key = key[sep-1]
 
                 arg_name = self.dealias(key)
 
@@ -199,7 +153,7 @@ class Command(object):
     def execute(self, raw_args=None):
         '''Execute this command with `raw_args`.'''
 
-        pargs, kargs = self.scan(raw_args)
+        pargs, kargs = self.parse(raw_args)
         return self.func(*pargs, **kargs)
 
     def get_usage(self, is_default=False):
@@ -252,8 +206,8 @@ class Command(object):
 
 if __name__ == '__main__':
 
-    #import doctest
-    #doctest.testmod()
+    import doctest
+    doctest.testmod()
 
     def func(msg, default='default value', flag=False, level=0):
         '''It is just a test function.
@@ -273,4 +227,4 @@ if __name__ == '__main__':
     print cmd.arg_meta_map
     print cmd.alias_arg_map
     print cmd.get_usage()
-    print cmd.scan(['-dhello,world', '-f', '-lll'])
+    print cmd.parse(['-dhello,world', '-f', '-lll'])
