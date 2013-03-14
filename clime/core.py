@@ -118,7 +118,7 @@ class Command(object):
         :type key: str
         :rtype: str
         '''
-        return self.alias_arg_map.get(key, key)
+        return self.alias_arg_map.get(alias, alias)
 
     def cast(self, arg_name, val):
         '''Convert the `val` from a str to a comportable type.

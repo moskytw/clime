@@ -29,10 +29,10 @@ class TestClimeUtil(unittest.TestCase):
         ]
 
         answers = [
-            (None, 0),
-            (None, 0),
-            (None, 0),
-            (None, 0),
+            ([], 0),
+            ([], 0),
+            ([], 0),
+            ([], 0),
             (['x'], 0),
             (['x', 'y'], 0),
             (['x', 'a'], 1),
