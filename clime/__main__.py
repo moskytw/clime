@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''Clime is also an executable module.
+'''Clime is also an *executable* module.
 
 Use ``python -m clime`` to execute any module or Python file as a CLI program.
 
-The examples:
+Here are the examples:
 
 ::
 

@@ -1,14 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''It let you convert you moudle in one line.
+'''It is simple to use it to convert your module into a CLI program. Just import
+it.
+
+Actually, this module is equal to execute:
 
 ::
-    if __name__ == '__main__':
-        import clime.now
 
-If your file run as a top-level moudle, it triggers Clime to convert your
-moudle.
+    from clime import Program
+    prog = Program()
+    prog.main()
+
+The :py:class:`~clime.core.Program` class provides many options to customize your
+program. It may be a good idea to take a look.
+
 '''
 
 from .core import Program

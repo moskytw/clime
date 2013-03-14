@@ -6,6 +6,7 @@
 import inspect
 
 def json(s):
+    '''Convert str `s` into a Python's type.'''
     import json
     return json.loads(s)
 
@@ -27,7 +28,9 @@ def autotype(s):
 def getargspec(func):
     '''Get the argument specification of the `func`.
 
-    `func` can be a Python function, built-in function or bound method.
+    :param func: The target.
+    :type func: a python function, built-in function or bound method
+    :rtype: (args, varargs, keywords, defaults)
 
     It get the argument specification by parsing documentation of the
     function if `func` is a built-in function.
@@ -58,4 +61,4 @@ def getargspec(func):
     defaultpart = strbetween(argspecdoc, '[', ']')
     defaultcount = len([d for d in defaultpart.split(',') if d.strip('[]')])
 
-    return (args or None, None, None, (None,) * defaultcount or None)
+    return (args, None, None, (None,) * defaultcount or None)

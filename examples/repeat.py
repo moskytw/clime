@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 def repeat(message, times=2, count=False):
-    '''It repeat the message.
+    '''It repeats the message.
 
     options:
-        -m=<str>, --message=<str>  The message.
-        -t=<int>, --times=<int>
-        -c, --count
+        -m=<str>, --message=<str>  The message you want to repeat.
+        -t=<int>, --times=<int>    How many times?
+        -c, --count                Count it?
     '''
 
     s = message * times

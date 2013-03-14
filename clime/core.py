@@ -15,14 +15,14 @@ Empty = type('Empty', (object, ), {
 })()
 
 class Command(object):
-    '''Make a function, a built-in function or a bound method accept
-    arguments from command line.
+    '''Make a Python function or a built-in function accepts the arguments from
+    command line.
 
-    :param func: A function you want to convert to command.
+    :param func: A function you want to convert to a `command`.
     :type func: a Python function or built-in function
 
     .. versionchanged:: 0.1.5
-        It had been rewritten. The API is same as the previous verison, but some
+        It had been rewritten. The API is same as the previous version, but some
         behaviors may be different. Please read :py:meth:`Command.parse` for
         more details.
 
@@ -31,8 +31,24 @@ class Command(object):
     '''
 
     arg_desc_re = re.compile(r'^\s*-')
+    '''This regex selects the lines which will be parsed in a docstring.
+
+    It is ``r'^\s*-'`` by default. It means any line starts with some spaces and
+    at least one dash (-).'''
 
     arg_re = re.compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
+    '''This regex finds the aliases and metavars settings from docstring.
+
+    It is ``r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?'`` by default. The
+    following lines will be match:
+
+    - ``--message=str``
+    - ``--message=<str>``
+    - ``--message=STR``
+    - ``-m=<str>``
+    - ``--flag``
+    - ``-f``
+    '''
 
     arg_type_map = {
         'n': int, 'num': int, 'number': int,
@@ -41,6 +57,14 @@ class Command(object):
         'json': json,
         None: autotype
     }
+    '''If you set a metavar, :py:class:`Command` will use it to find the type function.
+
+    The metavar will be normalize. The following metavars are same.
+
+    - ``<json>``
+    - ``JOSN``
+    - ``json``
+    '''
 
     def __init__(self, func):
 
@@ -86,16 +110,18 @@ class Command(object):
                     for alias in aliases_set:
                         self.alias_arg_map[alias] = arg_name
 
-    def dealias(self, key):
-        '''Return the argument name if the `key` is an alias.
+    def dealias(self, alias):
+        '''It maps an argument name by the `alias`. If this `alias` map noting, it
+        result the `alias` itself.
 
-        :param key: An argument name or an alias.
+        :param key: An alias.
         :type key: str
+        :rtype: str
         '''
         return self.alias_arg_map.get(key, key)
 
     def cast(self, arg_name, val):
-        '''Convert the val from a str to a comportable type.
+        '''Convert the `val` from a str to a comportable type.
 
         It get the type function from :py:attr:`Command.arg_type_map`.
 
@@ -103,6 +129,7 @@ class Command(object):
         :type arg_name: str
         :param val: The value which got from CLI.
         :type val: any
+        :rtype: any
         '''
         meta = self.arg_meta_map.get(arg_name)
         if meta is not None:
@@ -121,15 +148,16 @@ class Command(object):
 
         :param raw_args: The raw arguments from CLI.
         :type raw_args: a list or a str
+        :rtype: (pargs, kargs)
 
         .. versionadded:: 0.1.5
 
         Here is an example:
 
         >>> def repeat(message, times=2, count=False):
-        ...     '''It repeat the message.
+        ...     '''It repeats the message.
         ...
-        ...     -m=<str>, --message=<str>  The message.
+        ...     -m=<str>, --message=<str>  The description of this option.
         ...     -t=<int>, --times=<int>
         ...     -c, --count
         ...     '''
@@ -313,6 +341,7 @@ class Command(object):
 
         :param raw_args: The raw arguments from CLI.
         :type raw_args: a list or a str
+        :rtype: any
         '''
 
         pargs, kargs = self.parse(raw_args)
@@ -321,8 +350,9 @@ class Command(object):
     def get_usage(self, without_name=False):
         '''Return the usage of this command.
 
-        :param without_name: Return an usage without function name.
+        :param without_name: Make it return an usage without the function name.
         :type without_name: bool
+        :rtype: str
         '''
 
         # build the reverse alias map
@@ -374,11 +404,11 @@ class Program(object):
     :type white_list: list
     :param black_list: The black list of the commands.
     :type black_list: list
-    :param name: The name of this program. It is used to show the error messages.
+    :param name: The name of this program. It is used to show the error messages. By default, it takes the first arguments from CLI.
     :type name: str
     :param doc: The documentation on module level.
     :type doc: str
-    :param debug: It prints the full traceback if True.
+    :param debug: It prints the full traceback if it is True.
     :type name: bool
 
     .. versionadded:: 0.1.5
@@ -428,7 +458,8 @@ class Program(object):
         print >> sys.stderr, '%s: %s' % (self.name, msg)
 
     def main(self, raw_args=None):
-        '''Start to parse the arguments from CLI and send them to a command.
+        '''Start to parse the arguments from CLI and send them to a
+        :py:class:`~clime.core.Command` instance..
 
         :param raw_args: The arguments from command line. By default, it takes from ``sys.argv``.
         :type raw_args: list
