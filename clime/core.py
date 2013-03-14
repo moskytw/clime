@@ -134,10 +134,7 @@ class Command(object):
         ...     -c, --count
         ...     '''
         ...     s = message * times
-        ...     if count:
-        ...         return len(s)
-        ...     else:
-        ...         return s
+        ...     return len(s) if count else s
         ...
 
         >>> repeat('string', 3)
