@@ -6,7 +6,7 @@ from clime import __version__
 
 setup(
     name    = 'clime',
-    description = 'A Python module let you quickly convert the functions into a multi-command CLI program',
+    description = 'Let you convert any module into a multi-command CLI program without any configuration.',
     long_description = long_description,
     version = __version__,
     author  = 'Mosky',
