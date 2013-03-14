@@ -162,8 +162,9 @@ class Command(object):
                     else:
                         continue
 
+                    if not val:
+                        val = key[i+2:]
                     key = key[i+1]
-                    val = key[i+2:]
 
                 arg_name = self.dealias(key)
 
