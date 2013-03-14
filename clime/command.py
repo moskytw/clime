@@ -61,7 +61,7 @@ class Command(object):
                 arg_name_set = self.arg_name_set & aliases_set
                 aliases_set -= arg_name_set
 
-                if arg_names:
+                if arg_name_set:
                     arg_name = arg_name_set.pop()
                     self.arg_meta_map[arg_name] = meta_map[arg_name]
                     for alias in aliases_set:
