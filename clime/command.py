@@ -43,7 +43,7 @@ class Command(object):
         # try to find the metas and aliases out
 
         self.arg_meta_map = {}
-        self.arg_alias_map = {}
+        self.alias_arg_map = {}
 
         doc = getdoc(func)
         if not doc: return
@@ -63,12 +63,12 @@ class Command(object):
                 if arg_name_set:
                     arg_name = arg_name_set.pop()
                     for alias in aliases_set:
-                        self.arg_alias_map[alias] = arg_name
+                        self.alias_arg_map[alias] = arg_name
 
-        self.mode_flags.union(alias for alias in self.arg_alias_map if self.is_flag(self.dealias(alias)))
+        self.mode_flags.union(alias for alias in self.alias_arg_map if self.is_flag(self.dealias(alias)))
 
     def dealias(self, key):
-        return self.arg_alias_map.get(key, key)
+        return self.alias_arg_map.get(key, key)
 
     def is_flag(self, arg_name):
         arg_default = self.arg_default_map.get(arg_name)
@@ -213,9 +213,9 @@ class Command(object):
         '''
 
         # build the reverse alias map
-        arg_alias_rmap = {}
-        for alias, arg_name in self.arg_alias_map.items():
-            aliases = arg_alias_rmap.setdefault(arg_name, [])
+        alias_arg_rmap = {}
+        for alias, arg_name in self.alias_arg_map.items():
+            aliases = alias_arg_rmap.setdefault(arg_name, [])
             aliases.append(alias)
 
         usage = []
@@ -224,7 +224,7 @@ class Command(object):
         for arg_name in self.arg_names[-len(self.arg_defaults):]:
 
             pieces = []
-            for name in arg_alias_rmap.get(arg_name, [])+[arg_name]:
+            for name in alias_arg_rmap.get(arg_name, [])+[arg_name]:
                 is_long_opt = len(name) > 1
                 pieces.append('%s%s' % ('-' * (1+is_long_opt), name))
                 meta = self.arg_meta_map.get(name)
@@ -271,7 +271,7 @@ if __name__ == '__main__':
     print cmd.keyarg_name
     print cmd.arg_default_map
     print cmd.arg_meta_map
-    print cmd.arg_alias_map
+    print cmd.alias_arg_map
     print cmd.mode_flags
     print cmd.get_usage()
     print cmd.scan(['--number', '123', '-n', '1', '-bbn', '1'])
