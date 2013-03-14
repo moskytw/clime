@@ -82,6 +82,10 @@ class Command(object):
         type = self.arg_type_map[meta]
         return type(val)
 
+    def scan(self, raw_args=None):
+        '''For backward compatibility.'''
+        return self.parse(raw_args)
+
     def parse(self, raw_args=None):
 
         if raw_args is None:
