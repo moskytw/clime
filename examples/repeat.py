@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def repeat(string, time=2):
-    '''repeat string n times
+def repeat(message, times=2, count=False):
+    '''It repeat the message.
 
     options:
-        -n N, --time N  repeat N times.
+        -m=<str>, --message=<str>  The message.
+        -t=<int>, --times=<int>
+        -c, --count
     '''
 
-    print string * time
+    s = message * times
+    return len(s) if count else s
 
 if __name__ == '__main__':
     import clime.now
