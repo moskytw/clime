@@ -262,7 +262,7 @@ class Program(object):
         if hasattr(obj, 'items'):
             obj_items = obj.items()
         else:
-            obj_items = getmembers(obj)
+            obj_items = inspect.getmembers(obj)
 
         if hasattr(obj, '__all__'):
             white_list = obj.__all__
