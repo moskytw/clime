@@ -24,6 +24,7 @@ class Command(object):
 
         arg_names, vararg_name, keyarg_name, arg_defaults = getargspec(func)
 
+        # copy the argument spec info to instance
         self.arg_names = arg_names
         self.vararg_name = vararg_name
         self.keyarg_name = keyarg_name
@@ -34,23 +35,32 @@ class Command(object):
             *map(reversed, (arg_names or [], arg_defaults or []))
         ))
 
+        # try to find the metas and aliases out
+
+        doc = getdoc(func)
+        if not doc: return
+
         self.arg_aliases_map = {}
         self.arg_metas_map = {}
-        for line in getdoc(func).split('\n'):
+
+        for line in doc.splitlines():
             if self.arg_desc_re.match(line):
-                aliases = set()
+
+                metas_map = {}
+                aliases_set = set()
                 for m in self.arg_re.finditer(line):
                     key, meta = m.group('key', 'meta')
-                    self.arg_metas_map[key] = meta
-                    aliases.add(key)
-                alias_for = self.arg_names_set & aliases
-                #assert len(alias_for) == 0
-                #assert len(alias_for) == 1
-                if alias_for:
-                    aliases -= alias_for
-                    alias_for = alias_for.pop()
-                    for alias in aliases:
-                        self.arg_aliases_map[alias] = alias_for
+                    aliases_set.add(key)
+                    metas_map[key] = meta
+
+                arg_names_set = self.arg_names_set & aliases_set
+                aliases_set -= arg_names_set
+
+                if arg_names:
+                    arg_name = arg_names_set.pop()
+                    self.arg_metas_map[arg_name] = metas_map[arg_name]
+                    for alias in aliases_set:
+                        self.arg_aliases_map[alias] = arg_name
 
     def cast(self, key, val, meta=None):
         return self.arg_meta_map.get(meta)(val)
