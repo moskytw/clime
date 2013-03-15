@@ -75,7 +75,8 @@ If you have a docstring in your function, it also show up in usage manual with
 You can find more examples in the `clime/examples`_.
 
 .. seealso::
-   The :py:meth:`.Command.parse` for more details about the argument parsing.
+    This page, :py:meth:`.Command.parse`, describes how Clime parses the
+    arguments.
 
 .. _`clime/examples`:
     https://github.com/moskytw/clime/tree/master/examples
@@ -135,7 +136,8 @@ You have two different ways to use Clime.
      $ python -m clime TARGET
 
 .. seealso::
-    The :py:class:`.Program` class for more usages.
+    If you want to know how to customize the program, read :py:class:`.Program`
+    for more infomation.
 
 More Details
 ------------
