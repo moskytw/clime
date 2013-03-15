@@ -11,7 +11,7 @@ configuration.
 
 The features:
 
-1. *Zero* configuration. Free you from the configuration hell.
+1. It works well with *zero* configuration. Free you from the configuration hell.
 2. Docstring just *is* config. When you finish the docstring, the config of the
    aliases and metavars are also finished.
 3. Auto-generate the usage of each command from the functions.
@@ -25,6 +25,8 @@ CLI-ize ME!
 -----------
 
 Here we have a simple script with a docstring here: ::
+
+    # file: repeat.py
 
     def repeat(message, times=2, count=False):
         '''It repeats the message.
@@ -47,7 +49,7 @@ By adding this line, ::
     $ python repeat.py twice
     twicetwice
 
-    $ python repeat.py -n3 thrice
+    $ python repeat.py --times=3 thrice
     thricethricethrice
 
 And it generates the usage manual: ::
