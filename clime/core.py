@@ -364,20 +364,21 @@ class Command(object):
         usage = []
 
         # build the arguments which have default value
-        for arg_name in self.arg_names[-len(self.arg_defaults):]:
+        if self.arg_defaults:
+            for arg_name in self.arg_names[-len(self.arg_defaults):]:
 
-            pieces = []
-            for name in alias_arg_rmap.get(arg_name, [])+[arg_name]:
-                is_long_opt = len(name) > 1
-                pieces.append('%s%s' % ('-' * (1+is_long_opt), name.replace('_', '-')))
-                meta = self.arg_meta_map.get(name)
-                if meta:
-                    if is_long_opt:
-                        pieces[-1] += '='+meta
-                    else:
-                        pieces[-1] += meta
+                pieces = []
+                for name in alias_arg_rmap.get(arg_name, [])+[arg_name]:
+                    is_long_opt = len(name) > 1
+                    pieces.append('%s%s' % ('-' * (1+is_long_opt), name.replace('_', '-')))
+                    meta = self.arg_meta_map.get(name)
+                    if meta:
+                        if is_long_opt:
+                            pieces[-1] += '='+meta
+                        else:
+                            pieces[-1] += meta
 
-            usage.append('[%s]' % ' | '.join(pieces))
+                usage.append('[%s]' % ' | '.join(pieces))
 
         if self.keyarg_name:
             usage.append('[--<key>=<value>...]')
