@@ -36,10 +36,10 @@ class Command(object):
     It is ``r'^\s*-'`` by default. It means any line starts with some spaces and
     at least one dash (-).'''
 
-    arg_re = re.compile(r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?')
+    arg_re = re.compile(r'-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?')
     '''This regex finds the aliases and metavars settings from docstring.
 
-    It is ``r'--?(?P<key>[^ =,]+)[ =]?(?P<meta>[^ ,]+)?'`` by default. The
+    It is ``-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?`` by default. The
     following lines will be match:
 
     - ``--message=str``
