@@ -3,10 +3,10 @@ The full version of this documentaion is at `clime.mosky.tw <http://clime.mosky.
 Clime
 =====
 
-Let you convert *any* module into a multi-command CLI program *without* any
-configuration.
+Clime lets you convert *any* module into a multi-command CLI program *without*
+any configuration.
 
-The features:
+The main features:
 
 1. It works well with *zero* configuration. Free you from the configuration hell.
 2. Docstring just *is* config. When you finish the docstring, the config of the
@@ -71,7 +71,13 @@ If you have a docstring in your function, it also show up in usage manual with
     
 You can find more examples in the `clime/examples`_.
 
-This page, :py:meth:`.Command.parse`, describes how Clime parses the arguments.
+This page, `Command.parse
+<http://clime.mosky.tw/api.html#clime.core.Command.parse>`_, describes how Clime
+parses the arguments.
+
+If you are interesting in the aliases or the metavariables which Clime provides,
+read :`Command <http://clime.mosky.tw/api.html#clime.core.Command>`_ for more
+infomation.
 
 .. _`clime/examples`:
     https://github.com/moskytw/clime/tree/master/examples
