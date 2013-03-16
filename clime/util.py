@@ -11,8 +11,8 @@ def json(s):
     return json.loads(s)
 
 def autotype(s):
-    '''Automative detect the type (int, float or string) of `s` and convert `s`
-    into it.'''
+    '''Automatively detect the type (int, float or string) of `s` and convert
+    `s` into it.'''
 
     if not isinstance(s, str):
         return s

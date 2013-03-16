@@ -31,16 +31,19 @@ class Command(object):
     '''
 
     arg_desc_re = re.compile(r'^\s*-')
-    '''This regex selects the lines which will be parsed in a docstring.
+    '''It is used to filter the argument descriptions in a docstring.
 
-    It is ``r'^\s*-'`` by default. It means any line starts with some spaces and
-    at least one dash (-).'''
+    It is ``r'^\s*-'`` by default. It means any line starts with a dash (-), and
+    the whitespace characters before this dash are ignored.
+    '''
 
     arg_re = re.compile(r'-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?')
-    '''This regex finds the aliases and metavars settings from docstring.
+    '''After it gets the descriptions by :py:attr:`Command.arg_desc_re` from a
+    docstring, it extracts the argument name (or alias) and the metavar from
+    each description by this regex.
 
-    It is ``-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?`` by default. The
-    following lines will be matched:
+    It is ``-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?`` by
+    default. The following formats will be parsed correctly:
 
     - ``--key meta``
     - ``--key=meta``
@@ -56,13 +59,18 @@ class Command(object):
         'json': json,
         None: autotype
     }
-    '''If you set a metavar, :py:class:`Command` will use it to find the type function.
+    '''A metavar implies a type.
 
-    The metavar will be normalized. The following metavars are same.
+    The ``n``, ``num``, ``number``, ``i``, ``int`` and ``integer`` all mean a
+    `int`. The ``s``, ``str``, ``string`` all mean a `str`.
 
-    - ``<json>``
-    - ``JSON``
-    - ``json``
+    It also supports to use ``json``. It converts the json from user to a Python type.
+
+    If you don't set a metavar, it will try to guess the correct type.
+
+    The metavars here are normalized. The metavars user defined are also
+    normalized before send to here. The ``JSON`` or ``<json>`` are all equal to
+    ``json``.
     '''
 
     def __init__(self, func):
@@ -110,7 +118,7 @@ class Command(object):
                         self.alias_arg_map[alias] = arg_name
 
     def dealias(self, alias):
-        '''It maps an argument name by the `alias`. If this `alias` map noting, it
+        '''It maps the `alias` to an argument name. If this `alias` maps noting, it
         return the `alias` itself.
 
         :param key: An alias.
@@ -122,7 +130,8 @@ class Command(object):
     def cast(self, arg_name, val):
         '''Convert the `val` from a str to a comportable type.
 
-        It get the type function from :py:attr:`Command.arg_type_map`.
+        It gets the type function by `arg_name`. It maps the `arg_name` to a
+        metavar and normalize the metavar to get the type function.
 
         :param arg_name: The argument name.
         :type arg_name: str
@@ -459,7 +468,7 @@ class Program(object):
 
     def main(self, raw_args=None):
         '''Start to parse the arguments from CLI and send them to a
-        :py:class:`~clime.core.Command` instance..
+        :py:class:`~clime.core.Command` instance.
 
         :param raw_args: The arguments from command line. By default, it takes from ``sys.argv``.
         :type raw_args: list
