@@ -40,7 +40,7 @@ class Command(object):
     '''This regex finds the aliases and metavars settings from docstring.
 
     It is ``-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?`` by default. The
-    following lines will be match:
+    following lines will be matched:
 
     - ``--key meta``
     - ``--key=meta``
