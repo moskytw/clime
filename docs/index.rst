@@ -6,12 +6,14 @@
 Introduction
 ============
 
+Clime lets you convert *any* module into a multi-command CLI program *without*
+any configuration.
+
+Here is a slide which introduces you to Clime:
+
 .. raw:: html
 
     <iframe src="http://www.slideshare.net/slideshow/embed_code/17237148" width="597" height="486" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/moskytw/clime" title="Introduction to Clime" target="_blank">Introduction to Clime</a> </strong> from <strong><a href="http://www.slideshare.net/moskytw" target="_blank">Mosky Liu</a></strong> </div>
-
-Let you convert *any* module into a multi-command CLI program *without* any
-configuration.
 
 The features:
 
