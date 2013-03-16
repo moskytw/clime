@@ -111,7 +111,7 @@ class Command(object):
 
     def dealias(self, alias):
         '''It maps an argument name by the `alias`. If this `alias` map noting, it
-        result the `alias` itself.
+        return the `alias` itself.
 
         :param key: An alias.
         :type key: str
