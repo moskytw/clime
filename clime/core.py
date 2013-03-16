@@ -58,7 +58,7 @@ class Command(object):
     }
     '''If you set a metavar, :py:class:`Command` will use it to find the type function.
 
-    The metavar will be normalize. The following metavars are same.
+    The metavar will be normalized. The following metavars are same.
 
     - ``<json>``
     - ``JSON``
