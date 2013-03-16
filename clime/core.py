@@ -62,7 +62,7 @@ class Command(object):
     The metavar will be normalize. The following metavars are same.
 
     - ``<json>``
-    - ``JOSN``
+    - ``JSON``
     - ``json``
     '''
 
