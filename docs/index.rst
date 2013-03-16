@@ -15,7 +15,7 @@ Here is a slide which introduces you to Clime:
 
     <iframe src="http://www.slideshare.net/slideshow/embed_code/17237148" width="597" height="486" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/moskytw/clime" title="Introduction to Clime" target="_blank">Introduction to Clime</a> </strong> from <strong><a href="http://www.slideshare.net/moskytw" target="_blank">Mosky Liu</a></strong> </div>
 
-The features:
+The main features:
 
 1. It works well with *zero* configuration. Free you from the configuration hell.
 2. Docstring just *is* config. When you finish the docstring, the config of the
