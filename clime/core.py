@@ -193,8 +193,8 @@ class Command(object):
         >>> repeat_cmd.execute('-m Hi!')
         'Hi!Hi!'
 
-        Both short or long options are supported to use '=' or ' ' as the
-        separator.
+        It is supported to use '=' or ' ' as the separator for both short or
+        long options.
 
         >>> repeat_cmd.execute('Hi! --times=4')
         'Hi!Hi!Hi!Hi!'
@@ -223,8 +223,8 @@ class Command(object):
         >>> repeat_cmd.execute('-ttccttmHi!')
         12
 
-        However, it just switchs the boolean value and only does it one time, if
-        a default value is a boolen.
+        However, if a default value is a boolen, it just switchs the boolean
+        value and only does it one time.
 
         It is also supported to collect arbitrary arguments:
 
