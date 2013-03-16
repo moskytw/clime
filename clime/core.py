@@ -42,12 +42,11 @@ class Command(object):
     It is ``-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?`` by default. The
     following lines will be match:
 
-    - ``--message=str``
-    - ``--message=<str>``
-    - ``--message=STR``
-    - ``-m=<str>``
-    - ``--flag``
-    - ``-f``
+    - ``--key meta``
+    - ``--key=meta``
+    - ``-k meta``
+    - ``-k=meta``
+    - ``-kmeta``
     '''
 
     arg_type_map = {
