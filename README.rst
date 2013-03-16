@@ -76,7 +76,7 @@ This page, `Command.parse
 parses the arguments.
 
 If you are interesting in the aliases or the metavariables which Clime provides,
-read :`Command <http://clime.mosky.tw/api.html#clime.core.Command>`_ for more
+read `Command <http://clime.mosky.tw/api.html#clime.core.Command>`_ for more
 infomation.
 
 .. _`clime/examples`:
