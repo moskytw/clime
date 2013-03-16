@@ -84,6 +84,10 @@ You can find more examples in the `clime/examples`_.
     This page, :py:meth:`.Command.parse`, describes how Clime parses the
     arguments.
 
+.. seealso::
+    If you are interesting in the aliases or the metavariables which Clime
+    provides, read :py:class:`~clime.core.Command` for more infomation.
+
 .. _`clime/examples`:
     https://github.com/moskytw/clime/tree/master/examples
 
