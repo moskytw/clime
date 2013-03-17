@@ -61,15 +61,16 @@ class Command(object):
     }
     '''A metavar implies a type.
 
-    The ``n``, ``num``, ``number``, ``i``, ``int`` and ``integer`` all mean a
-    `int`. The ``s``, ``str``, ``string`` all mean a `str`.
+    The ``n``, ``num``, ``number``, ``i``, ``int`` and ``integer`` mean a `int`.
+    The ``s``, ``str`` and ``string`` mean a `str`.
 
-    It also supports to use ``json``. It converts the json from user to a Python type.
+    It also supports to use ``json``. It converts the json from user to a Python
+    type.
 
     If you don't set a metavar, it will try to guess the correct type.
 
     The metavars here are normalized. The metavars user defined are also
-    normalized before send to here. The ``JSON`` or ``<json>`` are all equal to
+    normalized before send to here. The ``JSON`` or ``<json>`` are equal to
     ``json``.
     '''
 
