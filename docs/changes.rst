@@ -6,7 +6,7 @@ v0.1.5
 ------
 
 1. uses `<meta>` instead of `META`.
-2. supports more metavars, include `<json>`.
+2. supports more metavars, include `<json>` for the string in json format.
 3. supports more options of creating a program, include `white_list`,
    `black_list`, `ignore_help`, `debug`, ...
 4. repects `__all__` now.
