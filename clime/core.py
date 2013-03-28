@@ -188,8 +188,7 @@ class Command(object):
         >>> repeat_cmd.execute('Hi! 4')
         'Hi!Hi!Hi!Hi!'
 
-        It just maps the CLI arguments to Python function call, so they also
-        work well.
+        It just maps the CLI arguments to a function call of Python, so they also work well.
 
         >>> repeat_cmd.execute('--message=Hi!')
         'Hi!Hi!'
@@ -406,7 +405,7 @@ class Command(object):
 class Program(object):
     '''Convert a module or dict into a multi-command CLI program.
 
-    There is a shortcut for using :py:class:`Program` --- :py:func:`customize`.
+    There is a shortcut of using :py:class:`Program` --- :py:func:`customize`.
 
     :param obj: The `object` you want to convert.
     :type obj: a module or a mapping
@@ -592,13 +591,15 @@ class Program(object):
 def customize(*args, **kargs):
     '''It is same as the ``Program(*args, **kargs).main()``.
 
+    .. versionadded:: 0.1.6
+
     .. seealso::
         The documentation of the class, :py:class:`Program`, describes the detail of the arguments.
-
-    .. versionadded:: 0.1.6
     '''
+
     prog = Program(*args, **kargs)
     prog.main()
+
     return prog
 
 if __name__ == '__main__':

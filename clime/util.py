@@ -6,7 +6,7 @@
 import inspect
 
 def json(s):
-    '''Convert str `s` into a Python's type.'''
+    '''Convert a JSON string `s` into a Python's type.'''
     import json
     return json.loads(s)
 

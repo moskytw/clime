@@ -13,5 +13,5 @@ if __name__ == '__main__':
     import clime
     clime.customize(ignore_return=True)
 
-    # It also works, because ``reverse`` returns noting.
+    # It also works, because the ``reverse`` returns noting.
     #import clime.now
