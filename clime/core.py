@@ -408,20 +408,28 @@ class Program(object):
 
     :param obj: The `object` you want to convert.
     :type obj: a module or a mapping
+
     :param default: The default command name.
     :type default: str
+
     :param white_list: The white list of the commands. By default, it uses the attribute, ``__all__``, of a module.
     :type white_list: list
+
     :param black_list: The black list of the commands.
     :type black_list: list
+
     :param ignore_help: Let it treat ``--help`` as a normal argument.
     :type ignore_help: bool
+
     :param ignore_return: Make it prevent printing the return value.
     :type ignore_return: bool
+
     :param name: The name of this program. It is used to show the error messages. By default, it takes the first arguments from CLI.
     :type name: str
+
     :param doc: The documentation on module level.
     :type doc: str
+
     :param debug: It prints the full traceback if it is True.
     :type name: bool
 
