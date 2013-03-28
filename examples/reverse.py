@@ -8,4 +8,10 @@ def reverse(string):
     print string.decode('UTF-8')[::-1]
 
 if __name__ == '__main__':
-    import clime.now
+
+    # v0.1.6
+    import clime
+    clime.customize(ignore_return=True)
+
+    # It also works, because ``reverse`` returns noting.
+    #import clime.now

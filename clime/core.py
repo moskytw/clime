@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__all__ = ['Command', 'Program']
+__all__ = ['customize', 'Command', 'Program']
 
 import sys
 import inspect
@@ -406,6 +406,8 @@ class Command(object):
 class Program(object):
     '''Convert a module or dict into a multi-command CLI program.
 
+    There is a shortcut for using :py:class:`Program` --- :py:func:`customize`.
+
     :param obj: The `object` you want to convert.
     :type obj: a module or a mapping
 
@@ -586,6 +588,18 @@ class Program(object):
             print
             print doc
             print
+
+def customize(*args, **kargs):
+    '''It is same as the ``Program(*args, **kargs).main()``.
+
+    .. seealso::
+        The documentation of the class, :py:class:`Program`, describes the detail of the arguments.
+
+    .. versionadded:: 0.1.6
+    '''
+    prog = Program(*args, **kargs)
+    prog.main()
+    return prog
 
 if __name__ == '__main__':
 
