@@ -414,12 +414,17 @@ class Program(object):
     :type white_list: list
     :param black_list: The black list of the commands.
     :type black_list: list
+    :param ignore_return: Make it prevent printing the return value.
+    :type ignore_return: bool
     :param name: The name of this program. It is used to show the error messages. By default, it takes the first arguments from CLI.
     :type name: str
     :param doc: The documentation on module level.
     :type doc: str
     :param debug: It prints the full traceback if it is True.
     :type name: bool
+
+    .. versionadded:: 0.1.6
+        Added `ignore_return`.
 
     .. versionadded:: 0.1.5
         Added `white_list`, `black_list`, `ignore_help`, `doc` and `debug`.
@@ -431,7 +436,7 @@ class Program(object):
        It is almost rewritten.
     '''
 
-    def __init__(self, obj=None, default=None, white_list=None, black_list=None, ignore_help=False, name=None, doc=None, debug=False):
+    def __init__(self, obj=None, default=None, white_list=None, black_list=None, ignore_help=False, ignore_return=False, name=None, doc=None, debug=False):
 
         obj = obj or sys.modules['__main__']
         self.obj = obj
@@ -459,6 +464,7 @@ class Program(object):
             self.default = self.command_funcs.keys()[0]
 
         self.ignore_help = ignore_help
+        self.ignore_return = ignore_return
         self.name = name or sys.argv[0]
         self.doc = doc
         self.debug = debug
@@ -523,7 +529,7 @@ class Program(object):
                 self.complain(e)
                 return
 
-        if return_val is not None:
+        if not self.ignore_return and return_val is not None:
             if inspect.isgenerator(return_val):
                 for return_val in return_val:
                     print result
