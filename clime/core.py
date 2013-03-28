@@ -414,6 +414,8 @@ class Program(object):
     :type white_list: list
     :param black_list: The black list of the commands.
     :type black_list: list
+    :param ignore_help: Let it treat ``--help`` as a normal argument.
+    :type ignore_help: bool
     :param ignore_return: Make it prevent printing the return value.
     :type ignore_return: bool
     :param name: The name of this program. It is used to show the error messages. By default, it takes the first arguments from CLI.
