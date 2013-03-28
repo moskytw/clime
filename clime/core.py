@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__all__ = ['customize', 'Command', 'Program']
+__all__ = ['customize', 'Program', 'Command']
 
 import sys
 import inspect
