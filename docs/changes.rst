@@ -6,7 +6,7 @@ v0.1.6
 ------
 
 1. supports the `ignore_return` in :py:class:`~clime.core.Program` class.
-2. added the :py:func:`~clime.core.customize` of using Porgram class.
+2. added the a shortcut, :py:func:`~clime.core.customize`, of using Porgram class.
 3. fixed the support of the ``-kmeta`` format in docstring.
 
 v0.1.5
