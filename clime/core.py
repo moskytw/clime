@@ -542,8 +542,8 @@ class Program(object):
 
         if not self.ignore_return and return_val is not None:
             if inspect.isgenerator(return_val):
-                for return_val in return_val:
-                    print result
+                for i in return_val:
+                    print i
             else:
                 print return_val
 
