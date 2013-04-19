@@ -535,10 +535,9 @@ class Program(object):
             if self.debug:
                 from traceback import print_exception
                 print_exception(*sys.exc_info())
-                return
             else:
                 self.complain(e)
-                return
+            sys.exit(1)
 
         if not self.ignore_return and return_val is not None:
             if inspect.isgenerator(return_val):
