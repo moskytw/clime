@@ -11,4 +11,5 @@ setup(
     author_email = 'mosky.tw@gmail.com',
     url = 'http://clime.mosky.tw/',
     packages = ['clime'],
+    license = 'MIT',
 )
