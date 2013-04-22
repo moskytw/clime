@@ -2,6 +2,11 @@
 The Changes
 ===========
 
+v0.1.8
+------
+
+1. exits with 1 if there has error -- issue `#14 <https://github.com/moskytw/clime/issues/14>`_.
+
 v0.1.7
 ------
 
