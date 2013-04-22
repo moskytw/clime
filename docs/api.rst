@@ -1,11 +1,11 @@
 The API of Clime
 ================
 
-The ``clime.now`` Class
------------------------
-
-.. automodule:: clime.now
-    :members:
+.. The ``clime.now`` Class
+.. -----------------------
+.. 
+.. .. automodule:: clime.now
+..     :members:
 
 The ``clime.__main__`` Moudle
 -----------------------------
