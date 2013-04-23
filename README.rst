@@ -1,4 +1,5 @@
-The full version of this documentaion is at `clime.mosky.tw <http://clime.mosky.tw>`_.
+The full version of this documentaion is at `clime.mosky.tw
+<http://clime.mosky.tw>`_.
 
 Clime
 =====
@@ -8,18 +9,19 @@ any configuration.
 
 The main features:
 
-1. It works well with *zero* configuration. Free you from the configuration hell.
-2. Docstring just *is* config. When you finish the docstring, the config of the
+1. It works well with *zero* configuration. Free you from the configuration
+   hell.
+2. Docstring *is* just config. When you finish the docstring, the config of the
    aliases and metavars are also finished.
-3. Auto-generate the usage of each command from the functions.
+3. It generates the usage of each command from the functions automatically.
 
 It is a better choice than the heavy `optparse` or `argparse` for most of the
 CLI tasks.
 
-Let me show you Clime with an example.
-
 CLI-ize ME!
 -----------
+
+Let me show you Clime with an example.
 
 Here we have a simple script with a docstring here: ::
 
@@ -37,7 +39,7 @@ Here we have a simple script with a docstring here: ::
         s = message * times
         return len(s) if count else s
 
-By adding this line, ::
+After adding this line, ::
 
     import clime.now
 
@@ -101,11 +103,11 @@ Clime is hosted on two different platforms, PyPI_ and GitHub_.
 
 2. **Get Clime from GitHub**
    
-   If you want to follow the lastest version of Clime, use ::
+   If you want to follow the latest version of Clime, use ::
    
      $ git clone git://github.com/moskytw/clime.git
      
-   to clone a Clime repository. Or download manually from GitHub_.
+   to clone a Clime repository, or download manually from GitHub_.
 
 .. _GitHub:
     http://github.com/moskytw/clime
@@ -116,13 +118,11 @@ Clime is hosted on two different platforms, PyPI_ and GitHub_.
 Usage
 -----
 
-Below illustrates the basic usage of Clime.
-
 You have two different ways to use Clime.
 
-1. **Insert A Line into Your Source**
+1. **Insert A Line into Your Source Code**
    
-   Just add this line into your source ::
+   Just add this line into your source code::
    
      import clime.now
    
