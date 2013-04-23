@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''It is simple to use it to convert your module into a CLI program. Just import
-it.
+'''It is the simplest way to convert your module into a CLI program:
+
+::
+
+    import clime.now
 
 Actually, this module is equal to execute:
 
@@ -12,8 +15,8 @@ Actually, this module is equal to execute:
     prog = Program()
     prog.main()
 
-The :py:class:`~clime.core.Program` class provides many options to customize your
-program. It may be a good idea to take a look.
+The :py:class:`~clime.core.Program` class provides many options to customize
+your program. It may be a good idea to take a look.
 
 '''
 
