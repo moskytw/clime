@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__all__ = ['customize', 'Program', 'Command']
+__all__ = ['customize', 'CMD_SUFFIX', 'Program', 'Command']
 
 import sys
 import inspect
@@ -20,6 +20,8 @@ class Command(object):
 
     :param func: A function you want to convert to a `command`.
     :type func: a Python function or built-in function
+    :param name: the name of this function
+    :type name: str
 
     .. versionchanged:: 0.1.5
         It had been rewritten. The API is same as the previous version, but some
@@ -74,8 +76,9 @@ class Command(object):
     ``json``.
     '''
 
-    def __init__(self, func):
+    def __init__(self, func, name=None):
 
+        self.name = name
         self.func = func
 
         arg_names, vararg_name, keyarg_name, arg_defaults = getargspec(func)
@@ -400,7 +403,17 @@ class Command(object):
         if without_name:
             return '%s' % ' '.join(usage)
         else:
-            return '%s %s' % (self.func.__name__.replace('_', '-'), ' '.join(usage))
+            return '%s %s' % ((self.name or self.func.__name__).replace('_', '-'), ' '.join(usage))
+
+CMD_SUFFIX = re.compile('^(?P<name>.*?)_cmd$')
+'''
+It matchs the function whose name ends with ``_cmd``.
+
+>>> from clime import Program, CMD_SUFFIX
+>>> p = Program(white_pattern=CMD_SUFFIX)
+
+The regex is ``^(?P<name>.*?)_cmd$``.
+'''
 
 class Program(object):
     '''Convert a module or dict into a multi-command CLI program.
@@ -415,6 +428,9 @@ class Program(object):
 
     :param white_list: The white list of the commands. By default, it uses the attribute, ``__all__``, of a module.
     :type white_list: list
+
+    :param white_pattern: The white pattern of commands. The regex should have a group named ``name``.
+    :type white_pattern: RegexObject
 
     :param black_list: The black list of the commands.
     :type black_list: list
@@ -434,6 +450,9 @@ class Program(object):
     :param debug: It prints the full traceback if it is True.
     :type name: bool
 
+    .. versionadded:: 0.1.9
+        Added `white_pattern`.
+
     .. versionadded:: 0.1.6
         Added `ignore_return`.
 
@@ -447,7 +466,7 @@ class Program(object):
        It is almost rewritten.
     '''
 
-    def __init__(self, obj=None, default=None, white_list=None, black_list=None, ignore_help=False, ignore_return=False, name=None, doc=None, debug=False):
+    def __init__(self, obj=None, default=None, white_list=None, white_pattern=None, black_list=None, ignore_help=False, ignore_return=False, name=None, doc=None, debug=False):
 
         obj = obj or sys.modules['__main__']
         self.obj = obj
@@ -468,6 +487,12 @@ class Program(object):
             if not any(test(obj) for test in tests): continue
             if white_list is not None and name not in white_list: continue
             if black_list is not None and name in black_list: continue
+
+            if white_pattern:
+                match = white_pattern.match(name)
+                if not match: continue
+                name = match.group('name')
+
             self.command_funcs[name] = obj
 
         self.default = default
@@ -526,7 +551,7 @@ class Program(object):
             return
 
         # convert the function to Command object.
-        cmd = Command(cmd_func)
+        cmd = Command(cmd_func, cmd_name)
 
         try:
             # execute the command with the raw arguments.
@@ -552,7 +577,7 @@ class Program(object):
         def append_usage(cmd_name, without_name=False):
             # nonlocal usages
             cmd_func = self.command_funcs[cmd_name]
-            usages.append(Command(cmd_func).get_usage(without_name))
+            usages.append(Command(cmd_func, cmd_name).get_usage(without_name))
 
         usages = []
         cmd_func = None
