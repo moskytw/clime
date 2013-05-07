@@ -2,6 +2,11 @@
 The Changes
 ===========
 
+v0.1.9
+------
+
+1. added :attr:`clime.core.CMD_SUFFIX` and an argument, `white_pattern`, for :class:`clime.core.Program`.
+
 v0.1.8
 ------
 
