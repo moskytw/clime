@@ -556,7 +556,7 @@ class Program(object):
         try:
             # execute the command with the raw arguments.
             return_val = cmd.execute(raw_args)
-        except Exception, e:
+        except BaseException, e:
             if self.debug:
                 from traceback import print_exception
                 print_exception(*sys.exc_info())
