@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__all__ = ['customize', 'CMD_SUFFIX', 'Program', 'Command']
+__all__ = ['start', 'customize', 'CMD_SUFFIX', 'Program', 'Command']
 
 import sys
 import inspect
@@ -612,8 +612,11 @@ class Program(object):
             print doc
             print
 
-def customize(*args, **kargs):
+def start(*args, **kargs):
     '''It is same as the ``Program(*args, **kargs).main()``.
+
+    .. versionchanged:: 1.0
+        renamed from `customize` to `start`
 
     .. versionadded:: 0.1.6
 
@@ -625,6 +628,9 @@ def customize(*args, **kargs):
     prog.main()
 
     return prog
+
+# for backward compatibility
+customize = start
 
 if __name__ == '__main__':
 

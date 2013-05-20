@@ -15,4 +15,4 @@ def hello_cmd(name=None):
 
 if __name__ == '__main__':
     import clime
-    clime.customize(white_pattern=clime.CMD_SUFFIX)
+    clime.start(white_pattern=clime.CMD_SUFFIX)

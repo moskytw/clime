@@ -9,9 +9,13 @@ def reverse(string):
 
 if __name__ == '__main__':
 
-    # v0.1.6
+    # > v0.2
     import clime
-    clime.customize(ignore_return=True)
+    clime.start(ignore_return=True)
+
+    # >= v0.1.6
+    #import clime
+    #clime.customize(ignore_return=True)
 
     # It also works, because the ``reverse`` returns noting.
     #import clime.now
