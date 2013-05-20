@@ -2,6 +2,12 @@
 The Changes
 ===========
 
+v0.2
+----
+
+1. catch more exceptions (include KeyboardInterrupt)
+2. added :func:`clime.core.start` which works equally as :func:`clime.core.customize`
+
 v0.1.9
 ------
 
