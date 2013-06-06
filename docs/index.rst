@@ -26,6 +26,40 @@ The main features:
 It is a better choice than the heavy `optparse` or `argparse` for most of the
 CLI tasks.
 
+.. raw:: html
+
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+
+    <style>
+    #social-btns div {
+        float: left;
+    }
+    #social-btns:after {
+        content: ".";
+        display: block;
+        font-size: 0;
+        clear: both;
+    }
+    </style>
+
+    <div id='social-btns'>
+        <div>
+            <iframe src="http://ghbtns.com/github-btn.html?user=moskytw&repo=clime&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="85" height="20"></iframe>
+        </div>
+
+        <div>
+            <div class="fb-like" data-href="http://clime.mosky.tw" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true"></div>
+        </div>
+    </div>
+
 CLI-ize ME!
 -----------
 
