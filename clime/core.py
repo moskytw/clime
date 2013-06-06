@@ -482,18 +482,18 @@ class Program(object):
         tests = (inspect.isbuiltin, inspect.isfunction, inspect.ismethod)
 
         self.command_funcs = {}
-        for name, obj in obj_items:
-            if name.startswith('_'): continue
+        for obj_name, obj in obj_items:
+            if obj_name.startswith('_'): continue
             if not any(test(obj) for test in tests): continue
-            if white_list is not None and name not in white_list: continue
-            if black_list is not None and name in black_list: continue
+            if white_list is not None and obj_name not in white_list: continue
+            if black_list is not None and obj_name in black_list: continue
 
             if white_pattern:
-                match = white_pattern.match(name)
+                match = white_pattern.match(obj_name)
                 if not match: continue
-                name = match.group('name')
+                obj_name = match.group('name')
 
-            self.command_funcs[name] = obj
+            self.command_funcs[obj_name] = obj
 
         self.default = default
         if len(self.command_funcs) == 1:
