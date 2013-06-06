@@ -2,6 +2,11 @@
 The Changes
 ===========
 
+v0.2.1
+------
+
+1. fixed the bug of program name
+
 v0.2
 ----
 
