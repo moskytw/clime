@@ -6,7 +6,7 @@ v0.2.3
 ------
 
 1. show the doc of program only if the object is a module
-2. use setuptools to install a command, ``clime``.
+2. Clime is also a command now. You can use ``clime`` from shell.
 
 v0.2.2
 ------
