@@ -2,6 +2,12 @@
 The Changes
 ===========
 
+v0.2.3
+------
+
+1. show the doc of program only if the object is a module
+2. use setuptools to install a commmand, ``clime``.
+
 v0.2.2
 ------
 
