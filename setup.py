@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 from clime import __version__
 
@@ -21,5 +21,10 @@ setup(
         'Programming Language :: Python',
         'Topic :: Utilities',
         'Topic :: Software Development :: Libraries :: Python Modules',
-    ]
+    ],
+    entry_points = {
+         'console_scripts': [
+             'clime = clime.__main__:main',
+        ]
+    }
 )
