@@ -6,6 +6,7 @@ __all__ = ['start', 'customize', 'CMD_SUFFIX', 'Program', 'Command']
 import sys
 import inspect
 import re
+from os.path import basename
 from collections import defaultdict
 from .util import *
 
@@ -501,7 +502,7 @@ class Program(object):
 
         self.ignore_help = ignore_help
         self.ignore_return = ignore_return
-        self.name = name or sys.argv[0]
+        self.name = name or basename(sys.argv[0])
         self.doc = doc
         self.debug = debug
 
