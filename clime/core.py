@@ -604,7 +604,10 @@ class Program(object):
         # find the doc.
         if cmd_name is None:
             doc = self.doc if self.doc else inspect.getdoc(self.obj)
-        else:
+            if not doc:
+                cmd_name = self.default
+
+        if cmd_name:
             doc = inspect.getdoc(self.command_funcs[cmd_name])
 
         # print the doc.
