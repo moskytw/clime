@@ -6,7 +6,7 @@ v0.2.3
 ------
 
 1. show the doc of program only if the object is a module
-2. use setuptools to install a commmand, ``clime``.
+2. use setuptools to install a command, ``clime``.
 
 v0.2.2
 ------
