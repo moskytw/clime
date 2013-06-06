@@ -2,6 +2,11 @@
 The Changes
 ===========
 
+v0.2.2
+------
+
+1. print the doc of default command if doc of program is not available
+
 v0.2.1
 ------
 
