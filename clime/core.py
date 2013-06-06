@@ -603,8 +603,12 @@ class Program(object):
 
         # find the doc.
         if cmd_name is None:
-            doc = self.doc if self.doc else inspect.getdoc(self.obj)
-            if not doc:
+            doc = None
+            if self.doc:
+                doc = self.doc
+            elif inspect.ismodule(self.obj):
+                doc = inspect.getdoc(self.obj)
+            else:
                 cmd_name = self.default
 
         if cmd_name:
