@@ -601,14 +601,19 @@ class Program(object):
         for usage in iusages:
             print '   or:', usage
 
-        # find the doc.
+        # find the doc
+
+        # find the module-level doc
         if cmd_name is None:
-            doc = None
             if self.doc:
                 doc = self.doc
             elif inspect.ismodule(self.obj):
                 doc = inspect.getdoc(self.obj)
             else:
+                doc = None
+
+            # fallback to default command if still not found
+            if not doc:
                 cmd_name = self.default
 
         if cmd_name:
