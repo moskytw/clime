@@ -410,8 +410,10 @@ CMD_SUFFIX = re.compile('^(?P<name>.*?)_cmd$')
 '''
 It matchs the function whose name ends with ``_cmd``.
 
->>> from clime import Program, CMD_SUFFIX
->>> p = Program(white_pattern=CMD_SUFFIX)
+Use it with :py:func:`start`:
+
+>>> import clime
+>>> clime.start(white_pattern=clime.CMD_SUFFIX)
 
 The regex is ``^(?P<name>.*?)_cmd$``.
 '''
@@ -419,7 +421,7 @@ The regex is ``^(?P<name>.*?)_cmd$``.
 class Program(object):
     '''Convert a module or dict into a multi-command CLI program.
 
-    There is a shortcut of using :py:class:`Program` --- :py:func:`customize`.
+    There is a shortcut of using :py:class:`Program` --- :py:func:`start`.
 
     :param obj: The `object` you want to convert.
     :type obj: a module or a mapping
@@ -644,6 +646,9 @@ def start(*args, **kargs):
 
 # for backward compatibility
 customize = start
+'''.. deprecated:: 0.1.6
+    Use :py:func:`start` instead.
+'''
 
 if __name__ == '__main__':
 
