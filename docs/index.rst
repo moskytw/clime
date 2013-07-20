@@ -106,7 +106,7 @@ If you have a docstring in your function, it also show up in usage manual with
     usage: [-t<int> | --times=<int>] [-c | --count] <message>
        or: repeat [-t<int> | --times=<int>] [-c | --count] <message>
 
-    It repeat the message.
+    It repeats the message.
 
     options:
         -m=<str>, --message=<str>  The message.
