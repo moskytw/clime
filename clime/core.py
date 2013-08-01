@@ -59,6 +59,7 @@ class Command(object):
         'n': int, 'num': int, 'number': int,
         'i': int, 'int': int, 'integer': int,
         's': str, 'str': str, 'string': str,
+        'f': float, 'float': float,
         'json': json,
         None: autotype
     }
@@ -66,6 +67,7 @@ class Command(object):
 
     The ``n``, ``num``, ``number``, ``i``, ``int`` and ``integer`` mean a `int`.
     The ``s``, ``str`` and ``string`` mean a `str`.
+    The ``f`` and ``float`` mean a `float`.
 
     It also supports to use ``json``. It converts the json from user to a Python
     type.
