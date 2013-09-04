@@ -2,6 +2,13 @@
 The Changes
 ===========
 
+v0.2.4
+------
+
+1. fixed a bug of finding docstring of command.
+2. added support of use ``f`` and ``float`` in docstring. Thanks for the
+   contirbution from `mail6543210 <https://github.com/moskytw/clime/pull/18>`_.
+
 v0.2.3
 ------
 
