@@ -94,7 +94,7 @@ class Command(object):
 
         # additional information
         self.arg_name_set = set(arg_names)
-        self.arg_default_map = dict((k, v) for k, v in zip(
+        self.arg_default_map = dict(zip(
             *map(reversed, (self.arg_names, self.arg_defaults))
         ))
 
