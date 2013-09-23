@@ -107,6 +107,7 @@ class Command(object):
         if not doc: return
 
         for line in doc.splitlines():
+
             if self.arg_desc_re.match(line):
 
                 aliases_set = set()
@@ -493,6 +494,7 @@ class Program(object):
 
         self.command_funcs = {}
         for obj_name, obj in obj_items:
+
             if obj_name.startswith('_'): continue
             if not any(test(obj) for test in tests): continue
             if white_list is not None and obj_name not in white_list: continue
