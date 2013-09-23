@@ -185,7 +185,7 @@ class Command(object):
 
         >>> repeat_cmd = Command(repeat)
 
-        >>> repeat_cmd.get_usage()
+        >>> repeat_cmd.build_usage()
         'repeat [-t<int> | --times=<int>] [-c | --count] <message>'
 
         >>> repeat_cmd.execute('Hi!')
@@ -247,7 +247,7 @@ class Command(object):
         ...     return args, kargs
 
         >>> everything_cmd = Command(everything)
-        >>> everything_cmd.get_usage()
+        >>> everything_cmd.build_usage()
         'everything [--<key>=<value>...] [<args>...]'
 
         >>> everything_cmd.execute('1 2 3')
@@ -361,8 +361,8 @@ class Command(object):
         pargs, kargs = self.parse(raw_args)
         return self.func(*pargs, **kargs)
 
-    def get_usage(self, without_name=False):
-        '''Return the usage of this command.
+    def build_usage(self, without_name=False):
+        '''Build the usage of this command.
 
         :param without_name: Make it return an usage without the function name.
         :type without_name: bool
@@ -407,6 +407,12 @@ class Command(object):
             return '%s' % ' '.join(usage)
         else:
             return '%s %s' % ((self.name or self.func.__name__).replace('_', '-'), ' '.join(usage))
+
+    get_usage = build_usage
+    '''.. deprecated:: 0.2.5
+        Use :py:meth:`Command.build_usage` instead.
+    '''
+
 
 CMD_SUFFIX = re.compile('^(?P<name>.*?)_cmd$')
 '''
@@ -582,7 +588,7 @@ class Program(object):
         def append_usage(cmd_name, without_name=False):
             # nonlocal usages
             cmd_func = self.command_funcs[cmd_name]
-            usages.append(Command(cmd_func, cmd_name).get_usage(without_name))
+            usages.append(Command(cmd_func, cmd_name).build_usage(without_name))
 
         usages = []
         cmd_func = None
@@ -667,7 +673,7 @@ if __name__ == '__main__':
     read_json_cmd = Command(read_json)
 
     print '---'
-    print read_json_cmd.get_usage()
+    print read_json_cmd.build_usage()
     print read_json_cmd.execute('[1,2,3]')
     print read_json_cmd.execute(['--json', '{"x": 1}'])
     print '---'
