@@ -316,7 +316,7 @@ class Command(object):
             else:
                 pargs.append(val)
 
-        # rearrange the collected kargs
+        # compact the collected kargs
         kargs = dict(kargs)
         for arg_name, collected_vals in kargs.items():
             default = self.arg_default_map.get(arg_name)
