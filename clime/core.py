@@ -152,12 +152,6 @@ class Command(object):
         type = self.arg_type_map[meta]
         return type(val)
 
-    def scan(self, raw_args=None):
-        '''.. deprecated:: 0.1.5
-            Use :py:meth:`Command.parse` instead.
-        '''
-        return self.parse(raw_args)
-
     def parse(self, raw_args=None):
         """Parse the raw arguments from CLI.
 
@@ -349,6 +343,11 @@ class Command(object):
                 pargs[i] = self.cast(self.vararg_name, parg)
 
         return (pargs, kargs)
+
+    scan = parse
+    '''.. deprecated:: 0.1.5
+        Use :py:meth:`Command.parse` instead.
+    '''
 
     def execute(self, raw_args=None):
         '''Execute this command with `raw_args`.
