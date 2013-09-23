@@ -8,7 +8,7 @@ import inspect
 import re
 from os.path import basename
 from collections import defaultdict
-from .util import *
+from .util import json, autotype, getargspec
 
 Empty = type('Empty', (object, ), {
     '__nonzero__': lambda self: False,
