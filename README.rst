@@ -89,7 +89,7 @@ Clime is hosted on two different platforms, PyPI_ and GitHub_.
 Install from PyPI
 ~~~~~~~~~~~~~~~~~
 
-Install Clime from PyPI_ for a stable version ::
+Install Clime from PyPI_ for a stable version: ::
 
     $ sudo pip install clime
 
