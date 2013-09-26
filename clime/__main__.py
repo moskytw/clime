@@ -1,37 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''Clime is also an *executable* module.
-
-Use ``python -m clime`` to execute any module or Python file as a CLI program.
-
-Here are the examples:
-
-.. code-block:: bash
-
-    $ python -m clime math
-    usage: acos [-x] <x>
-       or: acosh [-x] <x>
-       or: asin [-x] <x>
-       or: asinh [-x] <x>
-       or: atan [-x] <x>
-    ...
-
-.. code-block:: bash
-
-    $ python -m clime math hypot --help
-    usage: hypot [-x] [-y] <x> <y>
-
-    hypot(x, y)
-
-    Return the Euclidean distance, sqrt(x*x + y*y).
-
-.. code-block:: bash
-
-    $ python -m clime math hypot 3 4
-    5.0
-'''
-
 import sys
 import imp
 from .core import Program, start
