@@ -1,6 +1,13 @@
 The Changes
 ===========
 
+v0.2.6
+------
+
+1. Make the setup.py better.
+2. Refactored the :mod:`clime.__main__`.
+3. Refactored the :mod:`clime.now`.
+
 v0.2.5
 ------
 
