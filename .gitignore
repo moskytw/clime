@@ -1,6 +1,7 @@
+#
 *.pyc
-/clime.egg-info/
-/build
-/dist
-/MANIFEST
 /docs/_build
+
+#
+/Clime.egg-info
+/dist
