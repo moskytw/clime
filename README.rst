@@ -4,14 +4,13 @@ The full version of this documentaion is at `clime.mosky.tw
 Clime
 =====
 
-Clime lets you convert *any* module into a multi-command CLI program *without*
-any configuration.
+Clime lets you convert any module into a multi-command CLI program without any
+configuration.
 
 The main features:
 
-1. It works well with *zero* configuration. Free you from the configuration
-   hell.
-2. Docstring *is* just config. When you finish the docstring, the config of the
+1. It works well with zero configuration. Free you from the configuration hell.
+2. Docstring is just config. When you finish the docstring, the config of the
    aliases and metavars are also finished.
 3. It generates the usage of each command from the functions automatically.
 
@@ -43,6 +42,9 @@ After adding this line, ::
 
     import clime.now
 
+`clime.now <http://clime.mosky.tw/api.html#module-clime.now>` describes more
+about how to customize your program.
+
 ... your CLI program is ready! ::
 
     $ python repeat.py twice
@@ -73,13 +75,8 @@ If you have a docstring in your function, it also show up in usage manual with
 
 You can find more examples in the `clime/examples`_.
 
-This page, `Command.parse
-<http://clime.mosky.tw/api.html#clime.core.Command.parse>`_, describes how Clime
-parses the arguments.
-
-If you are interesting in the aliases or the metavariables which Clime provides,
-read `Command <http://clime.mosky.tw/api.html#clime.core.Command>`_ for more
-infomation.
+`.Command <http://clime.mosky.tw/api.html#clime.core.Command>` describes more
+about how it works.
 
 .. _`clime/examples`:
     https://github.com/moskytw/clime/tree/master/examples
@@ -116,28 +113,3 @@ to clone a Clime repository, or download manually from GitHub_.
 
 .. _PyPI:
     http://pypi.python.org/pypi/clime
-
-Usage
------
-
-You have two different ways to use Clime.
-
-Insert A Line into Your Source Code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Just add this line into your source code::
-
-    import clime.now
-
-It is recommended to put the line in the ``if __name__ == '__main__':`` block.
-
-Use Clime as A Command
-~~~~~~~~~~~~~~~~~~~~~~
-
-`clime` is also an executable module. You can use it to convert a module or a
-stand-alone program temporarily. ::
-
-    $ python -m clime TARGET
-
-If you want to know how to customize the program, read `Program
-<http://clime.mosky.tw/api.html#clime.core.Program>`_ for more infomation.

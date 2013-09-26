@@ -1,8 +1,7 @@
-The API of Clime
-================
+The Shortcuts of Clime
+======================
 
-The ``clime.now`` Class
------------------------
+.. py:module:: clime.now
 
 It is the simplest way to convert your module into a CLI program:
 
@@ -10,7 +9,17 @@ It is the simplest way to convert your module into a CLI program:
 
     import clime.now
 
-Actually, this module is equal to execute:
+This module is a shortcut to execute:
+
+::
+
+    import clime
+    clime.start()
+
+The :func:`~clime.core.start` is still a shortcut, but it allows you to give arguments
+to customize.
+
+The most formal way is:
 
 ::
 
@@ -18,30 +27,24 @@ Actually, this module is equal to execute:
     prog = Program()
     prog.main()
 
-.. seealso::
-    The :py:class:`~clime.core.Program` class provides many options to customize
-    your program. It may be a good idea to take a look.
+You won't want to use this way, except to modify the argument from system. The
+:meth:`~clime.core.Program.main` accepts the command line arguments. If nothing
+passes in, it simply finds the arguments in ``sys.argv``.
 
-The ``clime.__main__`` Moudle
------------------------------
-
-.. automodule:: clime.__main__
-    :members:
-
-The ``clime.core`` Module
--------------------------
+The Core Module --- ``clime.core``
+==================================
 
 .. automodule:: clime.core
     :members:
 
-The ``clime.util`` Module
--------------------------
+The Utility Module --- ``clime.util``
+=====================================
 
 .. automodule:: clime.util
     :members:
 
-The ``clime.__main__`` Moudle
-=============================
+Run Clime as a Command
+======================
 
 .. py:module:: clime.__main__
 

@@ -429,7 +429,7 @@ The regex is ``^(?P<name>.*?)_cmd$``.
 '''
 
 class Program(object):
-    '''Convert a module or dict into a multi-command CLI program.
+    '''Convert a module or mapping into a multi-command CLI program.
 
     .. seealso::
         There is a shortcut of using :py:class:`Program` --- :py:func:`start`.
