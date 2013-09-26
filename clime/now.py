@@ -20,6 +20,6 @@ your program. It may be a good idea to take a look.
 
 '''
 
-from .core import Program
+from .core import start as _start
 
-Program().main()
+_start()
