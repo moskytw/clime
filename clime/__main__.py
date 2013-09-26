@@ -34,11 +34,9 @@ Here are the examples:
 
 import sys
 import imp
-from .core import Program
+from .core import Program, start
 
-sys.argv[0] = 'clime'
-
-def clime(target, *args, **kargs):
+def convert(target, *args, **kargs):
 
     module = None
 
@@ -50,8 +48,11 @@ def clime(target, *args, **kargs):
     prog = Program(module)
     prog.main(sys.argv[2:])
 
-def main():
-    Program({'clime': clime}, ignore_help=True).main()
+# This function is used by the command script installed in system.
+def run():
+    sys.argv[0] = 'clime'
+    start({'convert': convert})
 
 if __name__ == '__main__':
-    main()
+    # ``python -m clime`` will go here.
+    run()
