@@ -50,7 +50,8 @@ def clime(target, *args, **kargs):
     prog = Program(module)
     prog.main(sys.argv[2:])
 
-if __name__ == '__main__':
-    from .core import start as _start
-    _start(ignore_help=True)
+def main():
+    Program({'clime': clime}, ignore_help=True).main()
 
+if __name__ == '__main__':
+    main()
