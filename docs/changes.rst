@@ -1,6 +1,12 @@
-
 The Changes
 ===========
+
+v0.2.5
+------
+
+1. Rename the :meth:`~clime.core.Command.get_usage` to
+   :meth:`~clime.core.Command.build_usage`.
+2. Refactored the code and the doc.
 
 v0.2.4
 ------
