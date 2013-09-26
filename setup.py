@@ -1,17 +1,22 @@
-from setuptools import setup
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from clime import __version__
+from setuptools import setup, find_packages
+
+import clime
 
 setup(
-    name    = 'clime',
-    description = 'Let you convert any module into a multi-command CLI program without any configuration.',
+
+    name = 'Clime',
+    version = clime.__version__,
+    description = 'Convert functions into multi-command program breezily.',
     long_description = open('README.rst').read(),
-    version = __version__,
-    author  = 'Mosky',
-    author_email = 'mosky.tw@gmail.com',
+
+    author = 'Mosky',
     url = 'http://clime.mosky.tw/',
-    packages = ['clime'],
+    author_email = 'mosky.tw@gmail.com',
     license = 'MIT',
+    platforms = 'any',
     classifiers = [
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
@@ -22,9 +27,13 @@ setup(
         'Topic :: Utilities',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+
+    packages = find_packages(),
+
     entry_points = {
-         'console_scripts': [
-             'clime = clime.__main__:main',
+        'console_scripts': [
+            'clime = clime.__main__:run'
         ]
     }
+
 )
