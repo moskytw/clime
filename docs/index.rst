@@ -22,8 +22,8 @@ The main features:
    aliases and metavars are also finished.
 3. It generates the usage of each command from the functions automatically.
 
-It is a better choice than the heavy `optparse` or `argparse` for most of the
-CLI tasks.
+It is a better choice than the heavy optparse or argparse for most of the CLI
+tasks.
 
 .. raw:: html
 
@@ -143,13 +143,13 @@ Install Clime from PyPI_ for a stable version:
 
     $ sudo pip install clime
 
-If you don't have `pip`, execute
+If you don't have pip, execute
 
 .. code-block:: bash
 
      $ sudo apt-get install python-pip
 
-to install `pip` on Debian-base Linux distribution.
+to install pip on Debian-base Linux distribution.
 
 Get Clime from GitHub
 ~~~~~~~~~~~~~~~~~~~~~
