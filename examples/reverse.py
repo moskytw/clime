@@ -1,21 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def reverse(string):
-    '''reverse string
+from sys import getfilesystemencoding as _getfilesystemencoding
+
+ENCODING = _getfilesystemencoding()
+
+def reverse(x):
+    '''We assume it is a helper function for something else.
+
+    It returns True to let other stuff work.
     '''
 
-    print string.decode('UTF-8')[::-1]
+    if not isinstance(x, basestring):
+        x = unicode(x)
+
+    if isinstance(x, str):
+        x = unicode(x, ENCODING)
+
+    print x[::-1].decode(ENCODING)
+
+    return x
 
 if __name__ == '__main__':
-
-    # > v0.2
     import clime
     clime.start(ignore_return=True)
-
-    # >= v0.1.6
-    #import clime
-    #clime.customize(ignore_return=True)
-
-    # It also works, because the ``reverse`` returns noting.
-    #import clime.now
