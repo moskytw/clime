@@ -7,7 +7,7 @@ import clime
 
 setup(
 
-    name = 'Clime',
+    name = 'clime',
     version = clime.__version__,
     description = 'Convert functions into multi-command program breezily.',
     long_description = open('README.rst').read(),
