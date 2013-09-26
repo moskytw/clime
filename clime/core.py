@@ -158,7 +158,7 @@ class Command(object):
 
         :param raw_args: The raw arguments from CLI.
         :type raw_args: a list or a str
-        :rtype: (pargs, kargs)
+        :rtype: double-tuple: (pargs, kargs)
 
         .. versionadded:: 0.1.5
 
@@ -346,7 +346,8 @@ class Command(object):
         return (pargs, kargs)
 
     scan = parse
-    '''.. deprecated:: 0.1.5
+    '''
+    .. deprecated:: 0.1.5
         Use :py:meth:`Command.parse` instead.
     '''
 
@@ -409,7 +410,8 @@ class Command(object):
             return '%s %s' % ((self.name or self.func.__name__).replace('_', '-'), ' '.join(usage))
 
     get_usage = build_usage
-    '''.. deprecated:: 0.2.5
+    '''
+    .. deprecated:: 0.2.5
         Use :py:meth:`Command.build_usage` instead.
     '''
 
@@ -429,7 +431,8 @@ The regex is ``^(?P<name>.*?)_cmd$``.
 class Program(object):
     '''Convert a module or dict into a multi-command CLI program.
 
-    There is a shortcut of using :py:class:`Program` --- :py:func:`start`.
+    .. seealso::
+        There is a shortcut of using :py:class:`Program` --- :py:func:`start`.
 
     :param obj: The `object` you want to convert.
     :type obj: a module or a mapping
@@ -655,7 +658,8 @@ def start(*args, **kargs):
 
 # for backward compatibility
 customize = start
-'''.. deprecated:: 0.1.6
+'''
+.. deprecated:: 0.1.6
     Use :py:func:`start` instead.
 '''
 

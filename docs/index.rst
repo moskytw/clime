@@ -56,7 +56,7 @@ CLI tasks.
         </div>
 
         <div>
-            <div class="fb-like" data-href="http://clime.mosky.tw" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true"></div>
+            <div class="fb-like" data-href="http://clime.mosky.tw" data-send="true" data-layout="button_count" data-width="400" data-show-faces="true"></div>
         </div>
     </div>
 
@@ -85,22 +85,28 @@ After adding this line, ::
 
     import clime.now
 
-... your CLI program is ready! ::
-    
+... your CLI program is ready!
+
+.. code-block:: bash
+
     $ python repeat.py twice
     twicetwice
 
     $ python repeat.py --times=3 thrice
     thricethricethrice
 
-And it generates the usage manual: ::
+And it generates the usage manual:
+
+.. code-block:: bash
 
     $ python repeat.py --help
     usage: [-t<int> | --times=<int>] [-c | --count] <message>
        or: repeat [-t<int> | --times=<int>] [-c | --count] <message>
 
 If you have a docstring in your function, it also show up in usage manual with
-``--help``. ::
+``--help``.
+
+.. code-block:: bash
 
     $ python repeat.py repeat --help
     usage: [-t<int> | --times=<int>] [-c | --count] <message>
@@ -112,7 +118,7 @@ If you have a docstring in your function, it also show up in usage manual with
         -m=<str>, --message=<str>  The message.
         -t=<int>, --times=<int>
         -c, --count
-    
+
 You can find more examples in the `clime/examples`_.
 
 .. seealso::
@@ -131,25 +137,33 @@ Installation
 
 Clime is hosted on two different platforms, PyPI_ and GitHub_.
 
-1. **Install from PyPI**
-   
-   Install Clime from PyPI_ for a stable version ::
-   
-     $ sudo pip install clime
-     
-   If you don't have `pip`, execute ::
-   
-     $ sudo apt-get install python-pip
-     
-   to install `pip` on Debian-base Linux distribution.
+Install from PyPI
+~~~~~~~~~~~~~~~~~
 
-2. **Get Clime from GitHub**
-   
-   If you want to follow the latest version of Clime, use ::
-   
-     $ git clone git://github.com/moskytw/clime.git
-     
-   to clone a Clime repository, or download manually from GitHub_.
+Install Clime from PyPI_ for a stable version
+
+.. code-block:: bash
+
+    $ sudo pip install clime
+
+If you don't have `pip`, execute
+
+.. code-block:: bash
+
+     $ sudo apt-get install python-pip
+
+to install `pip` on Debian-base Linux distribution.
+
+Get Clime from GitHub
+~~~~~~~~~~~~~~~~~~~~~
+
+If you want to follow the latest version of Clime, use
+
+.. code-block:: bash
+
+    $ git clone git://github.com/moskytw/clime.git
+
+to clone a Clime repository, or download manually from GitHub_.
 
 .. _GitHub:
     http://github.com/moskytw/clime
@@ -162,20 +176,25 @@ Usage
 
 You have two different ways to use Clime.
 
-1. **Insert A Line into Your Source Code**
-   
-   Just add this line into your source code::
-   
-     import clime.now
-   
-   It is recommended to put the line in the ``if __name__ == '__main__':``
-   block.
+Insert A Line into Your Source Code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2. **Use Clime as A Command**
-   
-   `clime` is also an executable module. You can use it to convert a module or a
-   stand-alone program temporarily. ::
-   
+Just add this line into your source code
+
+.. code-block:: bash
+
+     import clime.now
+
+It is recommended to put the line in the ``if __name__ == '__main__':`` block.
+
+Use Clime as A Command
+~~~~~~~~~~~~~~~~~~~~~~
+
+Clime is also an executable module. You can use it to convert a module or a
+stand-alone program temporarily.
+
+.. code-block:: bash
+
      $ python -m clime TARGET
 
 .. seealso::
@@ -195,7 +214,7 @@ listed here:
 
 The Changes
 -----------
-   
+
 .. toctree::
     :maxdepth: 2
 
@@ -207,4 +226,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
