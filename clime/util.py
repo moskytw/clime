@@ -14,6 +14,9 @@ def autotype(s):
     '''Automatively detect the type (int, float or string) of `s` and convert
     `s` into it.'''
 
+    if isinstance(s, list):
+        return map(autotype, s)
+
     if not isinstance(s, str):
         return s
 
@@ -62,3 +65,22 @@ def getargspec(func):
     defaultcount = len([d for d in defaultpart.split(',') if d.strip('[]')])
 
     return (args, None, None, (None,) * defaultcount or None)
+
+def find_args_count(line):
+    flag = ''
+    buffer = []
+    ret = []
+    for i in line:
+        if i == '-':
+            flag = '-'
+        elif i == ' ':
+            if len(buffer) > 0:
+                ret.append(''.join(buffer))
+                buffer = []
+            if flag == '':
+                break
+            flag = ''
+        if i != ' ' and flag != '-':
+            flag = 'w'
+            buffer.append(i)
+    return ret
