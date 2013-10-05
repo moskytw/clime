@@ -8,12 +8,13 @@ import inspect
 import re
 from os.path import basename
 from collections import defaultdict
-from .util import json, autotype, getargspec
+from .util import json, autotype, getargspec, find_args_count
 
 Empty = type('Empty', (object, ), {
     '__nonzero__': lambda self: False,
     '__repr__'   : lambda self: 'Empty',
 })()
+
 
 class Command(object):
     '''Make a Python function or a built-in function accepts the arguments from
@@ -40,7 +41,7 @@ class Command(object):
     the whitespace characters before this dash are ignored.
     '''
 
-    arg_re = re.compile(r'-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?')
+    arg_re = re.compile(r'-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>([^ ,\-]+[ ]?)*)')
     '''After it gets the descriptions by :py:attr:`Command.arg_desc_re` from a
     docstring, it extracts the argument name (or alias) and the metavar from
     each description by this regex.
@@ -102,6 +103,7 @@ class Command(object):
 
         self.arg_meta_map = {}
         self.alias_arg_map = {}
+        self.arg_count_meta = {}
 
         doc = inspect.getdoc(func)
         if not doc: return
@@ -115,6 +117,13 @@ class Command(object):
                     key, meta = m.group('key', 'meta')
                     key = key.replace('-', '_')
                     self.arg_meta_map[key] = meta
+                    self.arg_count_meta[key] = {'min': len(find_args_count(meta)),
+                                           'notlimit': '...' in meta,
+                                            }
+                    if self.arg_count_meta[key]['min'] > 1:
+                        self.arg_count_meta[key]['multi'] = True
+                    else:
+                        self.arg_count_meta[key]['multi'] = self.arg_count_meta[key]['notlimit']
                     aliases_set.add(key)
 
                 arg_name_set = self.arg_name_set & aliases_set
@@ -150,7 +159,8 @@ class Command(object):
         meta = self.arg_meta_map.get(arg_name)
         if meta is not None:
             meta = meta.strip('<>').lower()
-        type = self.arg_type_map[meta]
+            meta = meta.replace('...', '')
+        type = self.arg_type_map.get(meta, autotype)
         return type(val)
 
     def parse(self, raw_args=None):
@@ -261,10 +271,24 @@ class Command(object):
 
         pargs = []
         kargs = defaultdict(list)
+        key = None
+        arg_attr = None
 
         while raw_args:
 
-            key = None
+            # The args support multi value?
+            # If not, set the key to None
+            if not key is None:
+                arg_attr = self.arg_count_meta.get(key, None)
+                if arg_attr:
+                    if arg_attr.get('notlimit') or arg_attr.get('min') > 0:
+                        pass
+                    else:
+                        key = None
+                else:
+                    key = None
+            else:
+                key = None
             val = Empty
             arg_name = None
 
@@ -308,10 +332,19 @@ class Command(object):
             if key:
                 arg_name = self.dealias(key)
                 kargs[arg_name].append(val)
+                arg_attr = self.arg_count_meta.get(arg_name, None)
+                if arg_attr:
+                    arg_attr['min'] -= 1
             else:
                 pargs.append(val)
 
-        # compact the collected kargs
+        # check multi value args num.
+        for i in kargs:
+            arg_attr = self.arg_count_meta.get(i, None)
+            if arg_attr:
+                if arg_attr['multi'] and arg_attr['min'] != 0 and not arg_attr['notlimit']:
+                    raise Exception("Too less args for %s." % i)
+
         kargs = dict(kargs)
         for arg_name, collected_vals in kargs.items():
             default = self.arg_default_map.get(arg_name)
@@ -321,14 +354,22 @@ class Command(object):
             elif all(val is Empty for val in collected_vals):
                 # count the Empty if the all vals are Empty
                 kargs[arg_name] = len(collected_vals)
+
             else:
-                # take the last value
-                val = next(val for val in reversed(collected_vals) if val is not Empty)
                 # cast this key arg
+                arg_attr = self.arg_count_meta.get(arg_name)
+                if arg_attr:
+                    if arg_attr.get('multi'):
+                        val = collected_vals
+                    else:
+                        val = collected_vals[-1]
+                else:
+                    val = collected_vals[-1]
                 if not self.keyarg_name or arg_name in self.arg_meta_map:
                     kargs[arg_name] = self.cast(arg_name, val)
                 else:
                     kargs[arg_name] = self.cast(self.keyarg_name, val)
+
 
         # keyword-first resolving
         isbuiltin = inspect.isbuiltin(self.func)
