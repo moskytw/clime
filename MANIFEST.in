@@ -1,6 +1,6 @@
 global-include README* LICENSE*
-global-exclude *.pyc
 graft examples
 graft tests
 graft docs
 prune docs/_build
+global-exclude *.pyc
