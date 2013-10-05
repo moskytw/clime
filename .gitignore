@@ -3,5 +3,5 @@
 /docs/_build
 
 #
-/Clime.egg-info
+/clime.egg-info
 /dist
