@@ -319,8 +319,10 @@ class Command(object):
                 # swith the boolean value if default is a bool
                 kargs[arg_name] = not default
             elif all(val is Empty for val in collected_vals):
-                # count the Empty if the all vals are Empty
-                kargs[arg_name] = len(collected_vals)
+                if isinstance(default, int):
+                    kargs[arg_name] = len(collected_vals)
+                else:
+                    kargs[arg_name] = None
             else:
                 # take the last value
                 val = next(val for val in reversed(collected_vals) if val is not Empty)
