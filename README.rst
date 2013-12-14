@@ -1,3 +1,12 @@
+.. image:: https://travis-ci.org/moskytw/clime.png
+   :target: https://travis-ci.org/moskytw/clime
+
+.. image:: https://pypip.in/v/clime/badge.png
+   :target: https://pypi.python.org/pypi/clime
+
+.. image:: https://pypip.in/d/clime/badge.png
+   :target: https://crate.io/packages/clime/
+
 The full version of this documentaion is at `clime.mosky.tw
 <http://clime.mosky.tw>`_.
 
