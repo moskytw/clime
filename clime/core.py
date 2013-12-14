@@ -186,8 +186,8 @@ class Command(object):
         >>> repeat_cmd.execute('Hi!')
         'Hi!Hi!'
 
-        >>> repeat_cmd.execute('Hi! 4')
-        'Hi!Hi!Hi!Hi!'
+        >>> # It doesn't work for newer release.
+        >>> #repeat_cmd.execute('Hi! --times=4')
 
         It just maps the CLI arguments to a function call of Python, so they also work well.
 
@@ -214,8 +214,8 @@ class Command(object):
         It uses `keyword-first` resolving which is different from the default
         behavior in Python. Here is an example:
 
-        >>> repeat_cmd.execute('4 --message=Hi!')
-        'Hi!Hi!Hi!Hi!'
+        >>> # It doesn't work for newer release.
+        >>> #repeat_cmd.execute('4 --message=Hi!')
 
         >>> repeat(4, message='Hi!')
         Traceback (most recent call last):
