@@ -424,8 +424,10 @@ It matchs the function whose name ends with ``_cmd``.
 
 Use it with :py:func:`start`:
 
->>> import clime
->>> clime.start(white_pattern=clime.CMD_SUFFIX)
+::
+
+    import clime
+    clime.start(white_pattern=clime.CMD_SUFFIX)
 
 The regex is ``^(?P<name>.*?)_cmd$``.
 '''

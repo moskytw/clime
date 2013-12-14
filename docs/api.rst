@@ -34,6 +34,10 @@ passes in, it simply finds the arguments in ``sys.argv``.
 The Core Module --- ``clime.core``
 ==================================
 
+.. testsetup::
+
+    from clime.core import Command
+
 .. automodule:: clime.core
     :members:
 
