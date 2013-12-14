@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+language: python
+
+python:
+  - "2.7"
+
+install: pip install sphinx --use-mirrors
+
+script: make -C docs/ doctest
