@@ -16,16 +16,16 @@ Empty = type('Empty', (object, ), {
 })()
 
 class Command(object):
-    '''Make a Python function or a built-in function accepts the arguments from
+    '''Make a Python function or a built-in function accepts arguments from
     command line.
 
-    :param func: A function you want to convert to a `command`.
-    :type func: a Python function or built-in function
-    :param name: the name of this function
+    :param func: a function you want to convert
+    :type func: Python function or built-in function
+    :param name: the name of this command
     :type name: str
 
     .. versionchanged:: 0.1.5
-        It had been rewritten. The API is same as the previous version, but some
+        It is rewritten again. The API is same as the previous version, but some
         behaviors may be different. Please read :py:meth:`Command.parse` for
         more details.
 
@@ -34,19 +34,20 @@ class Command(object):
     '''
 
     arg_desc_re = re.compile(r'^\s*-')
-    '''It is used to filter the argument descriptions in a docstring.
+    '''It is used to filter argument descriptions in a docstring.
 
-    It is ``r'^\s*-'`` by default. It means any line starts with a dash (-), and
-    the whitespace characters before this dash are ignored.
+    The regex is ``r'^\s*-'`` by default. It means any line starts with a dash
+    (-), and whitespace characters before this dash are ignored.
     '''
 
     arg_re = re.compile(r'-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?')
-    '''After it gets the descriptions by :py:attr:`Command.arg_desc_re` from a
-    docstring, it extracts the argument name (or alias) and the metavar from
-    each description by this regex.
+    '''After it gets descriptions by :py:attr:`Command.arg_desc_re` from a
+    docstring, it extracts an argument name (or alias) and a metavar from each
+    description by this regex.
 
-    It is ``-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?`` by
-    default. The following formats will be parsed correctly:
+    The regex is
+    ``-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?``
+    by default. The following formats will be parsed correctly:
 
     - ``--key meta``
     - ``--key=meta``
@@ -69,14 +70,13 @@ class Command(object):
     The ``s``, ``str`` and ``string`` mean a `str`.
     The ``f`` and ``float`` mean a `float`.
 
-    It also supports to use ``json``. It converts the json from user to a Python
+    It also supports to use ``json``. It converts a json from user to a Python
     type.
 
-    If you don't set a metavar, it will try to guess the correct type.
+    If you don't set a metavar, it will try to guess a correct type.
 
-    The metavars here are normalized. The metavars user defined are also
-    normalized before send to here. The ``JSON`` or ``<json>`` are equal to
-    ``json``.
+    The metavars here are normalized. Metavars from docstrings will be
+    normalized, too. For example, ``JSON`` and ``<json>`` are equal to ``json``.
     '''
 
     def __init__(self, func, name=None):
@@ -99,7 +99,7 @@ class Command(object):
             *map(reversed, (self.arg_names, self.arg_defaults))
         ))
 
-        # try to find the metas and aliases out
+        # try to find metas and aliases out
 
         self.arg_meta_map = {}
         self.alias_arg_map = {}
@@ -127,24 +127,21 @@ class Command(object):
                         self.alias_arg_map[alias] = arg_name
 
     def dealias(self, alias):
-        '''It maps the `alias` to an argument name. If this `alias` maps noting, it
-        return the `alias` itself.
+        '''It maps `alias` to an argument name. If this `alias` maps noting, it
+        return `alias` itself.
 
-        :param key: An alias.
+        :param key: an alias
         :type key: str
         :rtype: str
         '''
         return self.alias_arg_map.get(alias, alias)
 
     def cast(self, arg_name, val):
-        '''Convert the `val` from a str to a comportable type.
+        '''Cast `val` by `arg_name`.
 
-        It gets the type function by `arg_name`. It maps the `arg_name` to a
-        metavar and normalize the metavar to get the type function.
-
-        :param arg_name: The argument name.
+        :param arg_name: an argument name
         :type arg_name: str
-        :param val: The value which got from CLI.
+        :param val: a value
         :type val: any
         :rtype: any
         '''
@@ -155,15 +152,15 @@ class Command(object):
         return type(val)
 
     def parse(self, raw_args=None):
-        """Parse the raw arguments from CLI.
+        """Parse the raw arguments.
 
-        :param raw_args: The raw arguments from CLI.
+        :param raw_args: raw arguments
         :type raw_args: a list or a str
         :rtype: double-tuple: (pargs, kargs)
 
         .. versionadded:: 0.1.5
 
-        Here is an example:
+        Here are examples:
 
         >>> def repeat(message, times=2, count=False):
         ...     '''It repeats the message.
@@ -175,27 +172,26 @@ class Command(object):
         ...     s = message * times
         ...     return len(s) if count else s
         ...
-
         >>> repeat('string', 3)
         'stringstringstring'
 
-        >>> repeat_cmd = Command(repeat)
+        Make a :class:`~clime.core.Command` instance:
 
+        >>> repeat_cmd = Command(repeat)
         >>> repeat_cmd.build_usage()
         'repeat [-t<int> | --times=<int>] [-c | --count] <message>'
-
         >>> repeat_cmd.execute('Hi!')
         'Hi!Hi!'
 
-        >>> # It doesn't work for newer release.
-        >>> #repeat_cmd.execute('Hi! --times=4')
-
-        It just maps the CLI arguments to a function call of Python, so they also work well.
+        You can also use options (keyword arguments) to assign arguments
+        (positional arguments):
 
         >>> repeat_cmd.execute('--message=Hi!')
         'Hi!Hi!'
         >>> repeat_cmd.execute('--message Hi!')
         'Hi!Hi!'
+
+        The short version defined in docstring:
 
         >>> repeat_cmd.execute('-mHi!')
         'Hi!Hi!'
@@ -204,26 +200,17 @@ class Command(object):
         >>> repeat_cmd.execute('-m Hi!')
         'Hi!Hi!'
 
-        It is supported to use '=' or ' ' as the separator for both short or
-        long options.
+        It counts how many times options appear, if you don't specify a value:
 
         >>> repeat_cmd.execute('Hi! --times=4')
         'Hi!Hi!Hi!Hi!'
         >>> repeat_cmd.execute('Hi! -tttt')
         'Hi!Hi!Hi!Hi!'
 
-        It uses `keyword-first` resolving which is different from the default
-        behavior in Python. Here is an example:
+        However, if a default value is a boolean, it just switches the boolean
+        value and does it only one time.
 
-        >>> # It doesn't work for newer release.
-        >>> #repeat_cmd.execute('4 --message=Hi!')
-
-        >>> repeat(4, message='Hi!')
-        Traceback (most recent call last):
-            ...
-        TypeError: repeat() got multiple values for keyword argument 'message'
-
-        It counts the amount of options, if you don't specify a value.
+        Mix them all:
 
         >>> repeat_cmd.execute('-m Hi! -tttt --count')
         12
@@ -233,9 +220,6 @@ class Command(object):
         12
         >>> repeat_cmd.execute('-ttccttmHi!')
         12
-
-        However, if a default value is a boolen, it just switchs the boolean
-        value and only does it one time.
 
         It is also supported to collect arbitrary arguments:
 
@@ -258,7 +242,7 @@ class Command(object):
         elif isinstance(raw_args, str):
             raw_args = raw_args.split()
 
-        # collect the arguments from the raw arguments
+        # collect arguments from the raw arguments
 
         pargs = []
         kargs = defaultdict(list)
@@ -317,7 +301,7 @@ class Command(object):
         for arg_name, collected_vals in kargs.items():
             default = self.arg_default_map.get(arg_name)
             if isinstance(default, bool):
-                # swith the boolean value if default is a bool
+                # switch the boolean value if default is a bool
                 kargs[arg_name] = not default
             elif all(val is Empty for val in collected_vals):
                 if isinstance(default, int):
@@ -362,7 +346,7 @@ class Command(object):
     def execute(self, raw_args=None):
         '''Execute this command with `raw_args`.
 
-        :param raw_args: The raw arguments from CLI.
+        :param raw_args: raw arguments
         :type raw_args: a list or a str
         :rtype: any
         '''
@@ -378,7 +362,7 @@ class Command(object):
         :rtype: str
         '''
 
-        # build the reverse alias map
+        # build reverse alias map
         alias_arg_rmap = {}
         for alias, arg_name in self.alias_arg_map.items():
             aliases = alias_arg_rmap.setdefault(arg_name, [])
@@ -426,16 +410,16 @@ class Command(object):
 
 CMD_SUFFIX = re.compile('^(?P<name>.*?)_cmd$')
 '''
-It matchs the function whose name ends with ``_cmd``.
+It matches the function whose name ends with ``_cmd``.
 
-Use it with :py:func:`start`:
+The regex is ``^(?P<name>.*?)_cmd$``.
+
+Usually, it is used with :py:func:`start`:
 
 ::
 
     import clime
     clime.start(white_pattern=clime.CMD_SUFFIX)
-
-The regex is ``^(?P<name>.*?)_cmd$``.
 '''
 
 class Program(object):
@@ -444,19 +428,19 @@ class Program(object):
     .. seealso::
         There is a shortcut of using :py:class:`Program` --- :py:func:`start`.
 
-    :param obj: The `object` you want to convert.
+    :param obj: an `object` you want to convert
     :type obj: a module or a mapping
 
-    :param default: The default command name.
+    :param default: the default command name
     :type default: str
 
-    :param white_list: The white list of the commands. By default, it uses the attribute, ``__all__``, of a module.
+    :param white_list: the white list of commands; By default, it uses the attribute, ``__all__``, of a module.
     :type white_list: list
 
-    :param white_pattern: The white pattern of commands. The regex should have a group named ``name``.
+    :param white_pattern: the white pattern of commands; The regex should have a group named ``name``.
     :type white_pattern: RegexObject
 
-    :param black_list: The black list of the commands.
+    :param black_list: the black list of commands
     :type black_list: list
 
     :param ignore_help: Let it treat ``--help`` as a normal argument.
@@ -465,13 +449,13 @@ class Program(object):
     :param ignore_return: Make it prevent printing the return value.
     :type ignore_return: bool
 
-    :param name: The name of this program. It is used to show the error messages. By default, it takes the first arguments from CLI.
+    :param name: the name of this program; It is used to show error messages. By default, it takes the first arguments from CLI.
     :type name: str
 
-    :param doc: The documentation on module level.
+    :param doc: the documentation for this program
     :type doc: str
 
-    :param debug: It prints the full traceback if it is True.
+    :param debug: It prints a full traceback if it is True.
     :type name: bool
 
     .. versionadded:: 0.1.9
@@ -531,11 +515,11 @@ class Program(object):
         self.debug = debug
 
     def complain(self, msg):
-        '''Print an error message `msg` with the name of this program to stderr.'''
+        '''Print `msg` with the name of this program to `stderr`.'''
         print >> sys.stderr, '%s: %s' % (self.name, msg)
 
     def main(self, raw_args=None):
-        '''Start to parse the arguments from CLI and send them to a
+        '''Start to parse the raw arguments and send them to a
         :py:class:`~clime.core.Command` instance.
 
         :param raw_args: The arguments from command line. By default, it takes from ``sys.argv``.
@@ -547,7 +531,7 @@ class Program(object):
         elif isinstance(raw_args, str):
             raw_args = raw_args.split()
 
-        # try to find the command name in the raw arguments.
+        # try to find a command name in the raw arguments.
         cmd_name = None
         cmd_func = None
 
@@ -562,7 +546,7 @@ class Program(object):
                 cmd_name = raw_args.pop(0).replace('-', '_')
 
         if cmd_func is None:
-            # we can't find the command name in normal procedure
+            # we can't find a command name in normal procedure
             if self.default:
                 cmd_name = cmd_name
                 cmd_func = self.command_funcs[self.default]
@@ -571,15 +555,15 @@ class Program(object):
                 return
 
         if not self.ignore_help and '--help' in raw_args:
-            # the user requires help of this command.
+            # the user requires help of this command
             self.print_usage(cmd_name)
             return
 
-        # convert the function to Command object.
+        # convert the function to a Command object
         cmd = Command(cmd_func, cmd_name)
 
         try:
-            # execute the command with the raw arguments.
+            # execute the command with the raw arguments
             return_val = cmd.execute(raw_args)
         except BaseException, e:
             if self.debug:
@@ -597,7 +581,7 @@ class Program(object):
                 print return_val
 
     def print_usage(self, cmd_name=None):
-        '''Print the usages of all commands or a command.'''
+        '''Print the usage(s) of all commands or a command.'''
 
         def append_usage(cmd_name, without_name=False):
             # nonlocal usages
@@ -608,18 +592,18 @@ class Program(object):
         cmd_func = None
 
         if cmd_name is None:
-            # prepare all usages.
+            # prepare all usages
             if self.default is not None:
                 append_usage(self.default, True)
             for name in sorted(self.command_funcs.keys()):
                 append_usage(name)
         else:
-            # prepare the usage of a command.
+            # prepare the usage of a command
             if self.default == cmd_name:
                 append_usage(cmd_name, without_name=True)
             append_usage(cmd_name)
 
-        # print the usages.
+        # print the usages
         iusages = iter(usages)
         print 'usage:', next(iusages)
         for usage in iusages:
@@ -643,14 +627,14 @@ class Program(object):
         if cmd_name:
             doc = inspect.getdoc(self.command_funcs[cmd_name])
 
-        # print the doc.
+        # print the doc
         if doc:
             print
             print doc
             print
 
 def start(*args, **kargs):
-    '''It is same as the ``Program(*args, **kargs).main()``.
+    '''It is same as ``Program(*args, **kargs).main()``.
 
     .. versionchanged:: 1.0
         renamed from `customize` to `start`
@@ -658,7 +642,7 @@ def start(*args, **kargs):
     .. versionadded:: 0.1.6
 
     .. seealso::
-        The documentation of the class, :py:class:`Program`, describes the detail of the arguments.
+        :py:class:`Program` has the detail of arguments.
     '''
 
     prog = Program(*args, **kargs)

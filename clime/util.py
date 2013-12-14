@@ -26,13 +26,13 @@ def autotype(s):
         return s
 
 def getargspec(func):
-    '''Get the argument specification of the `func`.
+    '''Get the argument specification of `func`.
 
     :param func: The target.
     :type func: a python function, built-in function or bound method
     :rtype: (args, varargs, keywords, defaults)
 
-    It get the argument specification by parsing documentation of the
+    It gets the argument specification by parsing documentation of the
     function if `func` is a built-in function.
 
     .. versionchanged:: 0.1.4

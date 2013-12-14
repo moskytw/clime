@@ -9,15 +9,14 @@ It is the simplest way to convert your module into a CLI program:
 
     import clime.now
 
-This module is a shortcut to execute:
+The above line is same as to execute:
 
 ::
 
     import clime
     clime.start()
 
-The :func:`~clime.core.start` is still a shortcut, but it allows you to give arguments
-to customize.
+In this form, you can pass arguments to :func:`~clime.core.start` to customize your CLI program.
 
 The most formal way is:
 
@@ -27,9 +26,8 @@ The most formal way is:
     prog = Program()
     prog.main()
 
-You won't want to use this way, except to modify the argument from system. The
-:meth:`~clime.core.Program.main` accepts the command line arguments. If nothing
-passes in, it simply finds the arguments in ``sys.argv``.
+The only case to use this form is you want to customize arguments for your CLI
+program. You can do it by passing arguments to :meth:`~clime.core.Program.main`.
 
 The Core Module --- ``clime.core``
 ==================================
@@ -52,8 +50,8 @@ Run Clime as a Command
 
 .. py:module:: clime.__main__
 
-This module lets you use ``python -m clime`` or ``clime`` to converts a Python
-program or Python module from shell.
+Clime lets you use ``python -m clime`` or ``clime`` in shell to converts a
+Python program or Python module temporarily.
 
 Here are some examples:
 
