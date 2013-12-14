@@ -332,6 +332,11 @@ class Command(object):
                 else:
                     kargs[arg_name] = self.cast(self.keyarg_name, val)
 
+        # add the defaults to kargs
+        for arg_name, default in self.arg_default_map.items():
+            if arg_name not in kargs:
+                kargs[arg_name] = default
+
         # keyword-first resolving
         isbuiltin = inspect.isbuiltin(self.func)
         for pos, name in enumerate(self.arg_names):
@@ -340,7 +345,7 @@ class Command(object):
 
         # cast the pos args
         for i, parg in enumerate(pargs):
-            if i < len(self.arg_names):
+            if i < len(self.arg_names)-len(self.arg_defaults):
                 pargs[i] = self.cast(self.arg_names[i], parg)
             elif self.vararg_name:
                 pargs[i] = self.cast(self.vararg_name, parg)
