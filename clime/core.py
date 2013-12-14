@@ -93,6 +93,7 @@ class Command(object):
         self.arg_defaults = arg_defaults or tuple()
 
         # additional information
+        self.no_defult_args_len = len(self.arg_names) - len(self.arg_defaults)
         self.arg_name_set = set(arg_names)
         self.arg_default_map = dict(zip(
             *map(reversed, (self.arg_names, self.arg_defaults))
@@ -345,7 +346,7 @@ class Command(object):
 
         # cast the pos args
         for i, parg in enumerate(pargs):
-            if i < len(self.arg_names)-len(self.arg_defaults):
+            if i < self.no_defult_args_len:
                 pargs[i] = self.cast(self.arg_names[i], parg)
             elif self.vararg_name:
                 pargs[i] = self.cast(self.vararg_name, parg)
