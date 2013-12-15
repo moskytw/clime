@@ -253,7 +253,7 @@ class Command(object):
             val = Empty
             arg_name = None
 
-            if raw_args[0].startswith('-'):
+            if raw_args[0].startswith('-') and len(raw_args[0]) >= 2:
 
                 # '-m=hello' or '--msg=hello'
                 key, _, val = raw_args.pop(0).partition('=')
