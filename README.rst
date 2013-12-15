@@ -51,7 +51,7 @@ After add this line: ::
 
     import clime.now
 
-`clime.now <http://clime.mosky.tw/api.html#module-clime.now>` describes more
+`clime.now <http://clime.mosky.tw/api.html#module-clime.now>`_ describes more
 about how to customize your program.
 
 ... your CLI program is ready! ::
