@@ -447,7 +447,7 @@ class Program(object):
     :param black_list: the black list of commands
     :type black_list: list
 
-    :param ignore_help: Let it treat ``--help`` as a normal argument.
+    :param ignore_help: Let it treat ``--help`` or ``-h`` as a normal argument.
     :type ignore_help: bool
 
     :param ignore_return: Make it prevent printing the return value.
@@ -461,6 +461,9 @@ class Program(object):
 
     :param debug: It prints a full traceback if it is True.
     :type name: bool
+
+    .. versionchanged:: 0.3
+        The ``-h`` option also trigger help text now.
 
     .. versionadded:: 0.1.9
         Added `white_pattern`.
@@ -541,7 +544,7 @@ class Program(object):
 
         if len(raw_args) == 0:
             pass
-        elif not self.ignore_help and raw_args[0] == '--help':
+        elif not self.ignore_help and raw_args[0] in ('--help', '-h'):
             self.print_usage()
             return
         else:
