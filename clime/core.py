@@ -36,8 +36,8 @@ class Command(object):
     arg_desc_re = re.compile(r'^\s*-')
     '''It is used to filter argument descriptions in a docstring.
 
-    The regex is ``r'^\s*-'`` by default. It means any line starts with a dash
-    (-), and whitespace characters before this dash are ignored.
+    The regex is ``r'^\s*-'`` by default. It means any line starts with a hyphen
+    (-), and whitespace characters before this hyphen are ignored.
     '''
 
     arg_re = re.compile(r'-(?P<long>-)?(?P<key>(?(long)[^ =,]+|.))[ =]?(?P<meta>[^ ,]+)?')
