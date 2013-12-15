@@ -19,9 +19,9 @@ configuration.
 The main features:
 
 1. It works well with zero configuration. Free you from the configuration hell.
-2. Docstring is just config. When you finish the docstring, the config of the
-   aliases and metavars are also finished.
-3. It generates the usage of each command from the functions automatically.
+2. Docstrings (i.e., help texts) is just configurations. When you finish a
+   docstring, a configuration of aliases and metavars are also finished.
+3. It generates usages for each command automatically.
 
 It is a better choice than the heavy optparse or argparse for most of the CLI
 tasks.
@@ -47,7 +47,7 @@ Here we have a simple script with a docstring here: ::
         s = message * times
         return len(s) if count else s
 
-After adding this line, ::
+After add this line: ::
 
     import clime.now
 
@@ -62,13 +62,13 @@ about how to customize your program.
     $ python repeat.py --times=3 thrice
     thricethricethrice
 
-And it generates the usage manual: ::
+It also generates a pretty usage for this script: ::
 
     $ python repeat.py --help
     usage: [-t<int> | --times=<int>] [-c | --count] <message>
        or: repeat [-t<int> | --times=<int>] [-c | --count] <message>
 
-If you have a docstring in your function, it also show up in usage manual with
+If you have a docstring in your function, it also shows up in usage manual with
 ``--help``. ::
 
     $ python repeat.py repeat --help
