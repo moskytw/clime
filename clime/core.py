@@ -261,8 +261,10 @@ class Command(object):
                 if key.startswith('--'):
                     key = key[2:].replace('-', '_')
                 else:
-                    # '-nnn'       -> sep=4
-                    # '-nnnmhello' -> sep=5
+
+                    # find the start index (sep) of value
+                    # '-nnn'       -> sep=4 (the length of this str)
+                    # '-nnnmhello' -> sep=5 (the char 'h')
                     sep = 1
                     for c in key[1:]:
                         if c in self.arg_name_set or c in self.alias_arg_map:
@@ -270,14 +272,16 @@ class Command(object):
                         else:
                             break
 
+                    # handle the bool option sequence
                     # '-nnn'       -> 'nn'
                     # '-nnnmhello' -> 'nnn'
                     for c in key[1:sep-1]:
                         arg_name = self.dealias(c)
                         kargs[arg_name].append(Empty)
 
+                    # handle the last option
+                    # '-m=hello' (val->'hello') or '-mhello' (val->'')
                     if not val:
-                        # '-mhello'
                         val = key[sep:] or Empty
                     key = key[sep-1]
                     # '-nnn'       -> key='n', val=Empty
