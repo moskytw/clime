@@ -13,8 +13,7 @@ Introduction
    :target: https://pypi.python.org/pypi/clime
 
 .. image:: https://pypip.in/d/clime/badge.png
-   :target: https://crate.io/packages/clime/
-
+   :target: https://pypi.python.org/pypi/clime
 
 Clime lets you convert any module into a multi-command CLI program without any
 configuration.

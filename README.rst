@@ -5,7 +5,7 @@
    :target: https://pypi.python.org/pypi/clime
 
 .. image:: https://pypip.in/d/clime/badge.png
-   :target: https://crate.io/packages/clime/
+   :target: https://pypi.python.org/pypi/clime
 
 The full version of this documentaion is at `clime.mosky.tw
 <http://clime.mosky.tw>`_.
