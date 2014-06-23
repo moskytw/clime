@@ -109,22 +109,23 @@ class Command(object):
 
         for line in doc.splitlines():
 
-            if self.arg_desc_re.match(line):
+            if not self.arg_desc_re.match(line): continue
 
-                aliases_set = set()
-                for m in self.arg_re.finditer(line):
-                    key, meta = m.group('key', 'meta')
-                    key = key.replace('-', '_')
-                    self.arg_meta_map[key] = meta
-                    aliases_set.add(key)
+            aliases_set = set()
+            for m in self.arg_re.finditer(line):
+                key, meta = m.group('key', 'meta')
+                key = key.replace('-', '_')
+                self.arg_meta_map[key] = meta
+                aliases_set.add(key)
 
-                arg_name_set = self.arg_name_set & aliases_set
-                aliases_set -= arg_name_set
 
-                if arg_name_set:
-                    arg_name = arg_name_set.pop()
-                    for alias in aliases_set:
-                        self.alias_arg_map[alias] = arg_name
+            arg_name_set = self.arg_name_set & aliases_set
+            if not arg_name_set: continue
+
+            aliases_set -= arg_name_set
+            arg_name = arg_name_set.pop()
+            for alias in aliases_set:
+                self.alias_arg_map[alias] = arg_name
 
     def dealias(self, alias):
         '''It maps `alias` to an argument name. If this `alias` maps noting, it
@@ -380,14 +381,17 @@ class Command(object):
 
                 pieces = []
                 for name in alias_arg_rmap.get(arg_name, [])+[arg_name]:
+
                     is_long_opt = len(name) > 1
                     pieces.append('%s%s' % ('-' * (1+is_long_opt), name.replace('_', '-')))
+
                     meta = self.arg_meta_map.get(name)
-                    if meta:
-                        if is_long_opt:
-                            pieces[-1] += '='+meta
-                        else:
-                            pieces[-1] += meta
+                    if not meta: continue
+
+                    if is_long_opt:
+                        pieces[-1] += '='+meta
+                    else:
+                        pieces[-1] += meta
 
                 usage.append('[%s]' % ' | '.join(pieces))
 
