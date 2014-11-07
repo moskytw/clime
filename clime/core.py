@@ -419,7 +419,7 @@ class Command(object):
                     if is_long_opt:
                         pieces[-1] += '='+meta
                     else:
-                        pieces[-1] += meta
+                        pieces[-1] += ' '+meta
 
                 usage.append('[%s]' % ' | '.join(pieces))
 
