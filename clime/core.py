@@ -111,8 +111,10 @@ class Command(object):
 
             if not self.arg_desc_re.match(line): continue
 
+            arg_part, _, desc_part = line.partition('  ')
+
             aliases_set = set()
-            for m in self.arg_re.finditer(line):
+            for m in self.arg_re.finditer(arg_part):
                 key, meta = m.group('key', 'meta')
                 key = key.replace('-', '_')
                 self.arg_meta_map[key] = meta
