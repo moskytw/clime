@@ -387,7 +387,12 @@ class Command(object):
                     pieces.append('%s%s' % ('-' * (1+is_long_opt), name.replace('_', '-')))
 
                     meta = self.arg_meta_map.get(name)
-                    if not meta: continue
+                    if meta is None:
+                        # autometa
+                        default = self.arg_default_map[self.dealias(name)]
+                        if isinstance(default, bool):
+                            continue
+                        meta = '<default:{!r}>'.format(default)
 
                     if is_long_opt:
                         pieces[-1] += '='+meta
