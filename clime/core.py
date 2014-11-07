@@ -120,7 +120,6 @@ class Command(object):
                 self.arg_meta_map[key] = meta
                 aliases_set.add(key)
 
-
             arg_name_set = self.arg_name_set & aliases_set
             if not arg_name_set: continue
 
