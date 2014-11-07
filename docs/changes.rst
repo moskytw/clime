@@ -1,6 +1,15 @@
 The Changes
 ===========
 
+v0.2.7
+------
+
+1. It now generates metavar for argument which has default value.
+2. Fixed argument whose default is bool took next command line argumnet as its
+   value. (``--bool shouldnttake``)
+3. Fixed it caught option-like string in option description.
+4. Refactored the :meth:`~clime.core.Command.parse`.
+
 v0.2.6
 ------
 
