@@ -392,7 +392,10 @@ class Command(object):
                         default = self.arg_default_map[self.dealias(name)]
                         if isinstance(default, bool):
                             continue
-                        meta = '<default:{!r}>'.format(default)
+                        elif default is None:
+                            meta = '<value>'
+                        else:
+                            meta = '<default:{!r}>'.format(default)
 
                     if is_long_opt:
                         pieces[-1] += '='+meta
