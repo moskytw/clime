@@ -181,7 +181,7 @@ class Command(object):
 
         >>> repeat_cmd = Command(repeat)
         >>> repeat_cmd.build_usage()
-        'repeat [-t<int> | --times=<int>] [-c | --count] <message>'
+        'repeat [-t <int> | --times=<int>] [-c | --count] <message>'
         >>> repeat_cmd.execute('Hi!')
         'Hi!Hi!'
 
@@ -204,9 +204,11 @@ class Command(object):
 
         It counts how many times options appear, if you don't specify a value:
 
-        >>> repeat_cmd.execute('Hi! --times=4')
+        >>> repeat_cmd.execute('--times=4 Hi!')
         'Hi!Hi!Hi!Hi!'
         >>> repeat_cmd.execute('Hi! -tttt')
+        'Hi!Hi!Hi!Hi!'
+        >>> repeat_cmd.execute('-ttttm Hi!')
         'Hi!Hi!Hi!Hi!'
 
         However, if a default value is a boolean, it just switches the boolean
@@ -214,13 +216,13 @@ class Command(object):
 
         Mix them all:
 
-        >>> repeat_cmd.execute('-m Hi! -tttt --count')
+        >>> repeat_cmd.execute('-tttt --count Hi!')
         12
-        >>> repeat_cmd.execute('-m Hi! -ttctt')
+        >>> repeat_cmd.execute('-ttttc Hi!')
         12
-        >>> repeat_cmd.execute('-ttcttmHi!')
+        >>> repeat_cmd.execute('-ttttcc Hi!')
         12
-        >>> repeat_cmd.execute('-ttccttmHi!')
+        >>> repeat_cmd.execute('-ttccttm Hi!')
         12
 
         It is also supported to collect arbitrary arguments:
