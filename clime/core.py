@@ -249,26 +249,36 @@ class Command(object):
         pargs = []
         kargs = defaultdict(list)
 
+        # consume raw_args
         while raw_args:
 
-            key = None
-            val = Empty
+            # try to find `arg_name` and `val`
             arg_name = None
+            val = Empty
 
+            # '-a...', '--arg...', but no '-'
             if raw_args[0].startswith('-') and len(raw_args[0]) >= 2:
 
-                # '-m=hello' or '--msg=hello'
-                key, _, val = raw_args.pop(0).partition('=')
+                # partition by eq sign
+                # -m=hello
+                # --message=hello -> val='hello'
+                # --message=      -> val=''
+                # --bool          -> val=Empty
+                before_eq_str, eq_str, val = raw_args.pop(0).partition('=')
+                if not eq_str:
+                    val = Empty
 
-                if key.startswith('--'):
-                    key = key[2:].replace('-', '_')
+                if before_eq_str.startswith('--'):
+                    arg_name = self.dealias(before_eq_str[2:].replace('-', '_'))
                 else:
 
-                    # find the start index (sep) of value
+                    # if it starts with only '-', it may be various
+
+                    # find the start index (sep) of val
                     # '-nnn'       -> sep=4 (the length of this str)
                     # '-nnnmhello' -> sep=5 (the char 'h')
                     sep = 1
-                    for c in key[1:]:
+                    for c in before_eq_str[1:]:
                         if c in self.arg_name_set or c in self.alias_arg_map:
                             sep += 1
                         else:
@@ -277,27 +287,36 @@ class Command(object):
                     # handle the bool option sequence
                     # '-nnn'       -> 'nn'
                     # '-nnnmhello' -> 'nnn'
-                    for c in key[1:sep-1]:
+                    for c in before_eq_str[1:sep-1]:
                         arg_name = self.dealias(c)
                         kargs[arg_name].append(Empty)
 
                     # handle the last option
-                    # '-m=hello' (val->'hello') or '-mhello' (val->'')
-                    if not val:
-                        val = key[sep:] or Empty
-                    key = key[sep-1]
-                    # '-nnn'       -> key='n', val=Empty
-                    # '-nnnmhello' -> key='m', val='hello'
+                    # '-nnn'       -> 'n' (the 3rd n)
+                    # '-nnnmhello' -> 'm'
+                    arg_name = self.dealias(before_eq_str[sep-1])
 
-                if not val:
-                    # ['-m', 'hello'] or ['--msg', 'hello']
-                    if raw_args and not raw_args[0].startswith('-'):
-                        val = raw_args.pop(0)
+                    if val is Empty:
+                        val = before_eq_str[sep:] or Empty
+
+                # handle if the val is next raw_args
+                # --message hello
+                # --bool hello (note the hello shall be a pargs)
+                # -nnnm hello
+                # -nnnb hello
+                if (
+                    # didn't get val
+                    val is Empty and
+                    # this arg_name need a explicit val
+                    not isinstance(self.arg_default_map.get(arg_name), bool) and
+                    # we have thing to take
+                    raw_args and not raw_args[0].startswith('-')
+                ):
+                    val = raw_args.pop(0)
             else:
                 val = raw_args.pop(0)
 
-            if key:
-                arg_name = self.dealias(key)
+            if arg_name:
                 kargs[arg_name].append(val)
             else:
                 pargs.append(val)
