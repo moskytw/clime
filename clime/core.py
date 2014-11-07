@@ -111,7 +111,7 @@ class Command(object):
 
             if not self.arg_desc_re.match(line): continue
 
-            arg_part, _, desc_part = line.partition('  ')
+            arg_part, _, desc_part = line.strip().partition('  ')
 
             aliases_set = set()
             for m in self.arg_re.finditer(arg_part):
