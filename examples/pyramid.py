@@ -3,11 +3,19 @@
 
 # file: pyramid.py
 
-def draw(story, squash=1):
+import sys
+
+def draw(story, squash=1, verbose=False):
     '''It draws a pyramid.
 
     -s <int>, --squash=<int>
+    -v, --verbose
     '''
+
+    if verbose:
+        print >> sys.stderr, 'Story : {}'.format(story)
+        print >> sys.stderr, 'Squash: {}'.format(squash)
+        print >> sys.stderr
 
     ground_len = 1 + (story-1) * squash * 2
 
