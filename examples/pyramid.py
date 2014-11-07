@@ -8,8 +8,8 @@ import sys
 def draw(story, squash=1, verbose=False):
     '''It draws a pyramid.
 
-    -s <int>, --squash=<int>
-    -v, --verbose
+    -s <int>, --squash=<int>  make fat pyramid
+    -v, --verbose             show the args from `squash` and `--squash`
     '''
 
     if verbose:
