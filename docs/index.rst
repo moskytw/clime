@@ -15,7 +15,7 @@ Introduction
 .. image:: https://pypip.in/d/clime/badge.png
    :target: https://pypi.python.org/pypi/clime
 
-Clime lets you convert any module into a multi-command CLI program without any
+Clime lets you convert any module into a multi-command CLI program with zero
 configuration.
 
 Here is a slide which introduces you to Clime:
@@ -27,9 +27,9 @@ Here is a slide which introduces you to Clime:
 The main features:
 
 1. It works well with zero configuration. Free you from the configuration hell.
-2. Docstrings (i.e., help texts) is just configurations. When you finish a
-   docstring, a configuration of aliases and metavars are also finished.
-3. It generates usages for each command automatically.
+2. Docstring (i.e., help text) is just configuration. When you finish your
+   docstring, the configuration of aliases and metavars is also finished.
+3. It generates usage for each command automatically.
 
 It is a better choice than the heavy `optparse` or `argparse` for most of CLI
 tasks.

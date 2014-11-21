@@ -13,15 +13,15 @@ The full version of this documentaion is at `clime.mosky.tw
 Clime
 =====
 
-Clime lets you convert any module into a multi-command CLI program without any
+Clime lets you convert any module into a multi-command CLI program with zero
 configuration.
 
 The main features:
 
 1. It works well with zero configuration. Free you from the configuration hell.
-2. Docstrings (i.e., help texts) is just configurations. When you finish a
-   docstring, a configuration of aliases and metavars are also finished.
-3. It generates usages for each command automatically.
+2. Docstring (i.e., help text) is just configuration. When you finish your
+   docstring, the configuration of aliases and metavars is also finished.
+3. It generates usage for each command automatically.
 
 It is a better choice than the heavy optparse or argparse for most of the CLI
 tasks.
