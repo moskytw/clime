@@ -84,7 +84,7 @@ If you have a docstring in your function, it also shows up in usage manual with
 
 You can find more examples in the `clime/examples`_.
 
-`.Command <http://clime.mosky.tw/api.html#clime.core.Command>`_ describes more
+`Command <http://clime.mosky.tw/api.html#clime.core.Command>`_ describes more
 about how it works.
 
 .. _`clime/examples`:
