@@ -497,7 +497,7 @@ class Program(object):
     :type name: bool
 
     .. versionchanged:: 0.3
-        The ``-h`` option also trigger help text now.
+        The ``-h`` option also triggers help text now.
 
     .. versionadded:: 0.1.9
         Added `white_pattern`.
