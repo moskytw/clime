@@ -472,7 +472,7 @@ class Program(object):
     :param default: the default command name
     :type default: str
 
-    :param white_list: the white list of commands; By default, it uses the attribute, ``__all__``, of a module.
+    :param white_list: the white list of commands; By default, it will use the attribute, ``__all__``, of a module, if it finds.
     :type white_list: list
 
     :param white_pattern: the white pattern of commands; The regex should have a group named ``name``.
@@ -484,7 +484,7 @@ class Program(object):
     :param ignore_help: Let it treat ``--help`` or ``-h`` as a normal argument.
     :type ignore_help: bool
 
-    :param ignore_return: Make it prevent printing the return value.
+    :param ignore_return: prevents it from printing the return value.
     :type ignore_return: bool
 
     :param name: the name of this program; It is used to show error messages. By default, it takes the first arguments from CLI.
@@ -493,7 +493,7 @@ class Program(object):
     :param doc: the documentation for this program
     :type doc: str
 
-    :param debug: It prints a full traceback if it is True.
+    :param debug: It will print a full traceback if it is True.
     :type name: bool
 
     .. versionchanged:: 0.3
