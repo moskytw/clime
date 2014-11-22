@@ -73,7 +73,7 @@ CLI-ize ME!
 
 Let me show you Clime with an example.
 
-Here we have a simple script with a docstring here: ::
+We have a simple script with a docstring here: ::
 
     # file: repeat.py
 
@@ -89,14 +89,14 @@ Here we have a simple script with a docstring here: ::
         s = message * times
         return len(s) if count else s
 
-After add this line: ::
+After we add this line: ::
 
     import clime.now
 
 .. seealso::
     :mod:`clime.now` describes more about how to customize your program.
 
-Your CLI program is ready!
+Our CLI program is ready!
 
 .. code-block:: bash
 
