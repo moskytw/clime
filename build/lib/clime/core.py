@@ -111,14 +111,13 @@ class Command(object):
 
             if not self.arg_desc_re.match(line): continue
 
-            arg_part, _, desc_part = line.strip().partition('  ')
-
             aliases_set = set()
-            for m in self.arg_re.finditer(arg_part):
+            for m in self.arg_re.finditer(line):
                 key, meta = m.group('key', 'meta')
                 key = key.replace('-', '_')
                 self.arg_meta_map[key] = meta
                 aliases_set.add(key)
+
 
             arg_name_set = self.arg_name_set & aliases_set
             if not arg_name_set: continue
@@ -181,7 +180,7 @@ class Command(object):
 
         >>> repeat_cmd = Command(repeat)
         >>> repeat_cmd.build_usage()
-        'repeat [-t <int> | --times=<int>] [-c | --count] <message>'
+        'repeat [-t<int> | --times=<int>] [-c | --count] <message>'
         >>> repeat_cmd.execute('Hi!')
         'Hi!Hi!'
 
@@ -204,11 +203,9 @@ class Command(object):
 
         It counts how many times options appear, if you don't specify a value:
 
-        >>> repeat_cmd.execute('--times=4 Hi!')
+        >>> repeat_cmd.execute('Hi! --times=4')
         'Hi!Hi!Hi!Hi!'
         >>> repeat_cmd.execute('Hi! -tttt')
-        'Hi!Hi!Hi!Hi!'
-        >>> repeat_cmd.execute('-ttttm Hi!')
         'Hi!Hi!Hi!Hi!'
 
         However, if a default value is a boolean, it just switches the boolean
@@ -216,13 +213,13 @@ class Command(object):
 
         Mix them all:
 
-        >>> repeat_cmd.execute('-tttt --count Hi!')
+        >>> repeat_cmd.execute('-m Hi! -tttt --count')
         12
-        >>> repeat_cmd.execute('-ttttc Hi!')
+        >>> repeat_cmd.execute('-m Hi! -ttctt')
         12
-        >>> repeat_cmd.execute('-ttttcc Hi!')
+        >>> repeat_cmd.execute('-ttcttmHi!')
         12
-        >>> repeat_cmd.execute('-ttccttm Hi!')
+        >>> repeat_cmd.execute('-ttccttmHi!')
         12
 
         It is also supported to collect arbitrary arguments:
@@ -251,36 +248,26 @@ class Command(object):
         pargs = []
         kargs = defaultdict(list)
 
-        # consume raw_args
         while raw_args:
 
-            # try to find `arg_name` and `val`
-            arg_name = None
+            key = None
             val = Empty
+            arg_name = None
 
-            # '-a...', '--arg...', but no '-'
             if raw_args[0].startswith('-') and len(raw_args[0]) >= 2:
 
-                # partition by eq sign
-                # -m=hello
-                # --message=hello -> val='hello'
-                # --message=      -> val=''
-                # --bool          -> val=Empty
-                before_eq_str, eq_str, val = raw_args.pop(0).partition('=')
-                if not eq_str:
-                    val = Empty
+                # '-m=hello' or '--msg=hello'
+                key, _, val = raw_args.pop(0).partition('=')
 
-                if before_eq_str.startswith('--'):
-                    arg_name = self.dealias(before_eq_str[2:].replace('-', '_'))
+                if key.startswith('--'):
+                    key = key[2:].replace('-', '_')
                 else:
 
-                    # if it starts with only '-', it may be various
-
-                    # find the start index (sep) of val
+                    # find the start index (sep) of value
                     # '-nnn'       -> sep=4 (the length of this str)
                     # '-nnnmhello' -> sep=5 (the char 'h')
                     sep = 1
-                    for c in before_eq_str[1:]:
+                    for c in key[1:]:
                         if c in self.arg_name_set or c in self.alias_arg_map:
                             sep += 1
                         else:
@@ -289,36 +276,27 @@ class Command(object):
                     # handle the bool option sequence
                     # '-nnn'       -> 'nn'
                     # '-nnnmhello' -> 'nnn'
-                    for c in before_eq_str[1:sep-1]:
+                    for c in key[1:sep-1]:
                         arg_name = self.dealias(c)
                         kargs[arg_name].append(Empty)
 
                     # handle the last option
-                    # '-nnn'       -> 'n' (the 3rd n)
-                    # '-nnnmhello' -> 'm'
-                    arg_name = self.dealias(before_eq_str[sep-1])
+                    # '-m=hello' (val->'hello') or '-mhello' (val->'')
+                    if not val:
+                        val = key[sep:] or Empty
+                    key = key[sep-1]
+                    # '-nnn'       -> key='n', val=Empty
+                    # '-nnnmhello' -> key='m', val='hello'
 
-                    if val is Empty:
-                        val = before_eq_str[sep:] or Empty
-
-                # handle if the val is next raw_args
-                # --message hello
-                # --bool hello (note the hello shall be a pargs)
-                # -nnnm hello
-                # -nnnb hello
-                if (
-                    # didn't get val
-                    val is Empty and
-                    # this arg_name need a explicit val
-                    not isinstance(self.arg_default_map.get(arg_name), bool) and
-                    # we have thing to take
-                    raw_args and not raw_args[0].startswith('-')
-                ):
-                    val = raw_args.pop(0)
+                if not val:
+                    # ['-m', 'hello'] or ['--msg', 'hello']
+                    if raw_args and not raw_args[0].startswith('-'):
+                        val = raw_args.pop(0)
             else:
                 val = raw_args.pop(0)
 
-            if arg_name:
+            if key:
+                arg_name = self.dealias(key)
                 kargs[arg_name].append(val)
             else:
                 pargs.append(val)
@@ -408,20 +386,12 @@ class Command(object):
                     pieces.append('%s%s' % ('-' * (1+is_long_opt), name.replace('_', '-')))
 
                     meta = self.arg_meta_map.get(name)
-                    if meta is None:
-                        # autometa
-                        default = self.arg_default_map[self.dealias(name)]
-                        if isinstance(default, bool):
-                            continue
-                        elif default is None:
-                            meta = '<value>'
-                        else:
-                            meta = '<default:{!r}>'.format(default)
+                    if not meta: continue
 
                     if is_long_opt:
                         pieces[-1] += '='+meta
                     else:
-                        pieces[-1] += ' '+meta
+                        pieces[-1] += meta
 
                 usage.append('[%s]' % ' | '.join(pieces))
 
@@ -472,7 +442,7 @@ class Program(object):
     :param default: the default command name
     :type default: str
 
-    :param white_list: the white list of commands; By default, it will use the attribute, ``__all__``, of a module, if it finds.
+    :param white_list: the white list of commands; By default, it uses the attribute, ``__all__``, of a module.
     :type white_list: list
 
     :param white_pattern: the white pattern of commands; The regex should have a group named ``name``.
@@ -484,7 +454,7 @@ class Program(object):
     :param ignore_help: Let it treat ``--help`` or ``-h`` as a normal argument.
     :type ignore_help: bool
 
-    :param ignore_return: prevents it from printing the return value.
+    :param ignore_return: Make it prevent printing the return value.
     :type ignore_return: bool
 
     :param name: the name of this program; It is used to show error messages. By default, it takes the first arguments from CLI.
@@ -493,11 +463,11 @@ class Program(object):
     :param doc: the documentation for this program
     :type doc: str
 
-    :param debug: It will print a full traceback if it is True.
+    :param debug: It prints a full traceback if it is True.
     :type name: bool
 
     .. versionchanged:: 0.3
-        The ``-h`` option also triggers help text now.
+        The ``-h`` option also trigger help text now.
 
     .. versionadded:: 0.1.9
         Added `white_pattern`.
