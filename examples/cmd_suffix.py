@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 def say(word, name=None):
     if name:
-        print '%s, %s!' % (word, name)
+        print('%s, %s!' % (word, name))
     else:
-        print '%s!' % word
+        print('%s!' % word)
 
 def hi_cmd(name=None):
     say('Hi', name)

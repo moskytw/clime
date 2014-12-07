@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from sys import getfilesystemencoding as _getfilesystemencoding
+from __future__ import print_function
 
-ENCODING = _getfilesystemencoding()
+try:
+    bytes
+except NameError:
+    bytes = str
+    str = unicode
 
 def reverse(x):
     '''We assume it is a helper function for something else.
@@ -11,16 +15,16 @@ def reverse(x):
     It returns True to let other stuff work.
     '''
 
-    if not isinstance(x, basestring):
-        x = unicode(x)
+    if not isinstance(x, (bytes, str)):
+        x = str(x)
 
-    if isinstance(x, str):
-        x = unicode(x, ENCODING)
+    if isinstance(x, bytes):
+        x = x.decode('utf-8')
 
-    print x[::-1].decode(ENCODING)
+    print(x[::-1])
 
     return x
 
 if __name__ == '__main__':
     import clime
-    clime.start(ignore_return=True)
+    clime.start(ignore_return=True, debug=True)

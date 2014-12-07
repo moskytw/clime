@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 __all__ = ['start', 'customize', 'CMD_SUFFIX', 'Program', 'Command']
 
 import sys
@@ -547,7 +549,7 @@ class Program(object):
 
         self.default = default
         if len(self.command_funcs) == 1:
-            self.default = self.command_funcs.keys()[0]
+            self.default = list(self.command_funcs.keys())[0]
 
         self.ignore_help = ignore_help
         self.ignore_return = ignore_return
@@ -557,7 +559,7 @@ class Program(object):
 
     def complain(self, msg):
         '''Print `msg` with the name of this program to `stderr`.'''
-        print >> sys.stderr, '%s: %s' % (self.name, msg)
+        print('%s: %s' % (self.name, msg), file=sys.stdout)
 
     def main(self, raw_args=None):
         '''Start to parse the raw arguments and send them to a
@@ -606,7 +608,7 @@ class Program(object):
         try:
             # execute the command with the raw arguments
             return_val = cmd.execute(raw_args)
-        except BaseException, e:
+        except BaseException as e:
             if self.debug:
                 from traceback import print_exception
                 print_exception(*sys.exc_info())
@@ -617,9 +619,9 @@ class Program(object):
         if not self.ignore_return and return_val is not None:
             if inspect.isgenerator(return_val):
                 for i in return_val:
-                    print i
+                    print(i)
             else:
-                print return_val
+                print(return_val)
 
     def print_usage(self, cmd_name=None):
         '''Print the usage(s) of all commands or a command.'''
@@ -646,9 +648,9 @@ class Program(object):
 
         # print the usages
         iusages = iter(usages)
-        print 'usage:', next(iusages)
+        print('usage:', next(iusages))
         for usage in iusages:
-            print '   or:', usage
+            print('   or:', usage)
 
         # find the doc
 
@@ -670,9 +672,9 @@ class Program(object):
 
         # print the doc
         if doc:
-            print
-            print doc
-            print
+            print()
+            print(doc)
+            print()
 
 def start(*args, **kargs):
     '''It is same as ``Program(*args, **kargs).main()``.
@@ -712,11 +714,11 @@ if __name__ == '__main__':
 
     read_json_cmd = Command(read_json)
 
-    print '---'
-    print read_json_cmd.build_usage()
-    print read_json_cmd.execute('[1,2,3]')
-    print read_json_cmd.execute(['--json', '{"x": 1}'])
-    print '---'
+    print('---')
+    print(read_json_cmd.build_usage())
+    print(read_json_cmd.execute('[1,2,3]'))
+    print(read_json_cmd.execute(['--json', '{"x": 1}']))
+    print('---')
 
     prog = Program(white_list=['read_json'], debug=True)
     prog.main()
