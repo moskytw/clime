@@ -632,7 +632,6 @@ class Program(object):
             usages.append(Command(cmd_func, cmd_name).build_usage(without_name))
 
         usages = []
-        cmd_func = None
 
         if cmd_name is None:
             # prepare all usages
