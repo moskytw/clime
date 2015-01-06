@@ -632,7 +632,6 @@ class Program(object):
             usages.append(Command(cmd_func, cmd_name).build_usage(without_name))
 
         usages = []
-        cmd_func = None
 
         if cmd_name is None:
             # prepare all usages
@@ -648,9 +647,13 @@ class Program(object):
 
         # print the usages
         iusages = iter(usages)
-        print('usage:', next(iusages))
-        for usage in iusages:
-            print('   or:', usage)
+        try:
+            print('usage:', next(iusages))
+        except StopIteration:   # Empty usages; print nothing.
+            pass
+        else:
+            for usage in iusages:
+                print('   or:', usage)
 
         # find the doc
 
