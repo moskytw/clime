@@ -1,6 +1,14 @@
 The Changes
 ===========
 
+v0.3
+------
+
+1. Support Python 3.
+2. Fixed an error when no usage. Thanks `uranusjr
+   <https://github.com/moskytw/clime/pull/25>`_.
+3. Let exception just raise when debug.
+
 v0.2.7
 ------
 
