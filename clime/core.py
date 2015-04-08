@@ -610,10 +610,8 @@ class Program(object):
             return_val = cmd.execute(raw_args)
         except BaseException as e:
             if self.debug:
-                from traceback import print_exception
-                print_exception(*sys.exc_info())
-            else:
-                self.complain(e)
+                raise e
+            self.complain(e)
             sys.exit(1)
 
         if not self.ignore_return and return_val is not None:
