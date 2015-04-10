@@ -610,7 +610,7 @@ class Program(object):
             return_val = cmd.execute(raw_args)
         except BaseException as e:
             if self.debug:
-                raise e
+                raise
             self.complain(e)
             sys.exit(1)
 
