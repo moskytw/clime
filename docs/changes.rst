@@ -1,6 +1,11 @@
 The Changes
 ===========
 
+v0.3.1
+------
+
+1. Let debug raise the original exception.
+
 v0.3
 ----
 
