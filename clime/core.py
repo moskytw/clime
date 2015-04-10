@@ -418,7 +418,7 @@ class Command(object):
                         elif default is None:
                             meta = '<value>'
                         else:
-                            meta = '<default:{!r}>'.format(default)
+                            meta = '{!r}'.format(default)
 
                     if is_long_opt:
                         pieces[-1] += '='+meta
