@@ -609,9 +609,14 @@ class Program(object):
             # execute the command with the raw arguments
             return_val = cmd.execute(raw_args)
         except BaseException as e:
+
             if self.debug:
                 raise
-            self.complain(e)
+
+            self.complain('exception: {}: {}'.format(
+                e.__class__.__name__,
+                e
+            ))
             sys.exit(1)
 
         if not self.ignore_return and return_val is not None:
