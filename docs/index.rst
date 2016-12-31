@@ -9,11 +9,11 @@ Introduction
 .. image:: https://travis-ci.org/moskytw/clime.png
    :target: https://travis-ci.org/moskytw/clime
 
-.. image:: https://pypip.in/v/clime/badge.png
-   :target: https://pypi.python.org/pypi/clime
-
-.. image:: https://pypip.in/d/clime/badge.png
-   :target: https://pypi.python.org/pypi/clime
+.. .. image:: https://pypip.in/v/clime/badge.png
+..    :target: https://pypi.python.org/pypi/clime
+..
+.. .. image:: https://pypip.in/d/clime/badge.png
+..    :target: https://pypi.python.org/pypi/clime
 
 Clime lets you convert any module into a multi-command CLI program with zero
 configuration.
