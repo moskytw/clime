@@ -1,5 +1,5 @@
- .. image:: https://travis-ci.org/moskytw/clime.png
-    :target: https://travis-ci.org/moskytw/clime
+.. image:: https://travis-ci.org/moskytw/clime.png
+   :target: https://travis-ci.org/moskytw/clime
 
 .. .. image:: https://pypip.in/v/clime/badge.png
 ..    :target: https://pypi.python.org/pypi/clime
