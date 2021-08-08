@@ -1,6 +1,3 @@
-The full version of this documentaion is at `clime.mosky.tw
-<http://clime.mosky.tw>`_.
-
 DEPRECATION
 ===========
 
