@@ -613,11 +613,12 @@ class Program(object):
             if self.debug:
                 raise
 
-            self.complain('exception: {}: {}'.format(
-                e.__class__.__name__,
-                e
-            ))
-            sys.exit(1)
+                self.complain('exception: {}: {}'.format(
+                    e.__class__.__name__,
+                    e
+                ))
+                sys.exit(1)
+            return
 
         if not self.ignore_return and return_val is not None:
             if inspect.isgenerator(return_val):
