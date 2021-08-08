@@ -559,7 +559,7 @@ class Program(object):
 
     def complain(self, msg):
         '''Print `msg` with the name of this program to `stderr`.'''
-        print('%s: %s' % (self.name, msg), file=sys.stdout)
+        print('%s: %s' % (self.name, msg), file=sys.stderr)
 
     def main(self, raw_args=None):
         '''Start to parse the raw arguments and send them to a
