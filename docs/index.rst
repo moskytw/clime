@@ -6,23 +6,8 @@
 Introduction
 ============
 
-.. image:: https://travis-ci.org/moskytw/clime.png
-   :target: https://travis-ci.org/moskytw/clime
-
-.. .. image:: https://pypip.in/v/clime/badge.png
-..    :target: https://pypi.python.org/pypi/clime
-..
-.. .. image:: https://pypip.in/d/clime/badge.png
-..    :target: https://pypi.python.org/pypi/clime
-
 Clime lets you convert any module into a multi-command CLI program with zero
 configuration.
-
-Here is a slide which introduces you to Clime:
-
-.. raw:: html
-
-    <iframe src="http://www.slideshare.net/slideshow/embed_code/17237148" width="400" height="337" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://www.slideshare.net/moskytw/clime" title="Introduction to Clime" target="_blank">Introduction to Clime</a> </strong> from <strong><a href="http://www.slideshare.net/moskytw" target="_blank">Mosky Liu</a></strong> </div>
 
 The main features:
 
