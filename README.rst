@@ -1,6 +1,11 @@
 The full version of this documentaion is at `clime.mosky.tw
 <http://clime.mosky.tw>`_.
 
+DEPRECATION
+===========
+
+This project is deprecated and is not maintained anymore. You may like `Click <https://click.palletsprojects.com/en/8.0.x/>`_ or `Typer <https://typer.tiangolo.com/>`_. Thank you for the years. ❤️
+
 Clime
 =====
 
